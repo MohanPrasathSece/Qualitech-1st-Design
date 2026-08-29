@@ -643,7 +643,7 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
                         className="h-full w-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
                       />
                       {product.featured && (
-                        <span className="absolute left-3 top-3 rounded-full bg-brand-orange px-2.5 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider text-white">
+                        <span className="absolute left-3 top-3 rounded-full bg-brand-yellow px-2.5 py-0.5 text-[0.62rem] font-extrabold uppercase tracking-wider text-graphite shadow-2xs">
                           Featured
                         </span>
                       )}

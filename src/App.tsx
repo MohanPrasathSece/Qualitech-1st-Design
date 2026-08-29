@@ -148,7 +148,7 @@ function Hero() {
         <div>
           <Reveal>
             <div className="flex items-center gap-3">
-              <span className="h-px w-10 bg-brand-orange" />
+              <span className="h-px w-10 bg-brand-yellow" />
               <span className="label-eyebrow">Established 1995</span>
             </div>
           </Reveal>
@@ -451,7 +451,7 @@ function About() {
         <div className="lg:sticky lg:top-32 lg:self-start">
           <Reveal>
             <div className="flex items-center gap-3">
-              <span className="h-px w-10 bg-brand-orange" />
+              <span className="h-px w-10 bg-brand-yellow" />
               <span className="label-eyebrow">About Qualitech</span>
             </div>
           </Reveal>
@@ -629,7 +629,7 @@ function Industries() {
                 aria-hidden="true"
               />
               <div className="absolute inset-x-0 bottom-0 p-6">
-                <span className="block h-px w-8 bg-brand-orange transition-all duration-500 group-hover:w-16" />
+                <span className="block h-px w-8 bg-brand-yellow transition-all duration-500 group-hover:w-16" />
                 <h3 className="mt-4 font-display text-lg font-bold text-background">{item.name}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-steel-light/80">{item.desc}</p>
               </div>
@@ -776,7 +776,7 @@ function ProductCatalogue({ onNavigateToShop }: ProductCatalogueProps) {
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
               <div className="flex items-center gap-3">
-                <span className="h-px w-10 bg-brand-orange" />
+                <span className="h-px w-10 bg-brand-yellow" />
                 <span className="label-eyebrow">Product Catalogue</span>
               </div>
               <h2 className="mt-5 font-display text-3xl font-bold leading-tight text-graphite sm:text-4xl">
