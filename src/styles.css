@@ -181,6 +181,11 @@
   background-size: 72px 72px;
 }
 
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
 @utility reveal {
   opacity: 0;
   transform: translateY(28px);

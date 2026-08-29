@@ -16,6 +16,7 @@ export interface Product {
   id: string;
   sku: string;
   name: string;
+  price?: number;
   category: "Connectors" | "Cable Assemblies" | "Fiber Optic Solutions" | "Antenna Solutions" | "Custom Solutions";
   subCategory: string;
   description: string;
@@ -34,6 +35,12 @@ export interface Product {
   featured?: boolean;
   image: string;
   inStock: boolean;
+}
+
+export function getProductPrice(p: Product): number {
+  if (p.price) return p.price;
+  const hash = p.sku.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  return ((hash % 12) + 1) * 65 + 45;
 }
 
 export const CATEGORIES = [

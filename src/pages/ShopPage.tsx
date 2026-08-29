@@ -5,7 +5,9 @@ import {
   SUBCATEGORIES,
   ALL_INDUSTRIES,
   Product,
+  getProductPrice,
 } from "@/data/products";
+import { Footer } from "@/components/site/Footer";
 
 interface ShopPageProps {
   onNavigateHome: (sectionId?: string) => void;
@@ -17,27 +19,33 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
   const [selectedIndustry, setSelectedIndustry] = useState<string | null>(null);
   const [inStockOnly, setInStockOnly] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState<"featured" | "name" | "sku">("featured");
+  const [sortBy, setSortBy] = useState<"featured" | "name" | "price-low" | "price-high">("featured");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [rfqItems, setRfqItems] = useState<{ product: Product; quantity: number }[]>([]);
-  const [isRfqOpen, setIsRfqOpen] = useState(false);
-  const [submittedRfq, setSubmittedRfq] = useState(false);
+  const [cartItems, setCartItems] = useState<{ product: Product; quantity: number }[]>([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [checkoutStep, setCheckoutStep] = useState<"cart" | "checkout" | "success">("cart");
+  const [addedToast, setAddedToast] = useState<string | null>(null);
+
+  // Mobile drawer & nav states
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
-  // Form inputs for RFQ
-  const [formData, setFormData] = useState({
+  // Form inputs for Checkout
+  const [orderForm, setOrderForm] = useState({
     name: "",
-    company: "",
     email: "",
     phone: "",
-    notes: "",
+    company: "",
+    address: "",
+    city: "",
+    postalCode: "",
   });
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  // Filter logic
+  // Filter & sort logic
   const filteredProducts = useMemo(() => {
     let result = PRODUCTS.filter((p) => {
       if (selectedCategory !== "All Products" && p.category !== selectedCategory) {
@@ -65,8 +73,10 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
 
     if (sortBy === "name") {
       result = [...result].sort((a, b) => a.name.localeCompare(b.name));
-    } else if (sortBy === "sku") {
-      result = [...result].sort((a, b) => a.sku.localeCompare(b.sku));
+    } else if (sortBy === "price-low") {
+      result = [...result].sort((a, b) => getProductPrice(a) - getProductPrice(b));
+    } else if (sortBy === "price-high") {
+      result = [...result].sort((a, b) => getProductPrice(b) - getProductPrice(a));
     } else {
       result = [...result].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
     }
@@ -74,8 +84,9 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
     return result;
   }, [selectedCategory, selectedSubCategory, selectedIndustry, inStockOnly, searchQuery, sortBy]);
 
-  const addToRfq = (product: Product) => {
-    setRfqItems((prev) => {
+  // Cart helper functions
+  const addToCart = (product: Product) => {
+    setCartItems((prev) => {
       const existing = prev.find((item) => item.product.id === product.id);
       if (existing) {
         return prev.map((item) =>
@@ -84,32 +95,54 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
       }
       return [...prev, { product, quantity: 1 }];
     });
-    setIsRfqOpen(true);
+
+    // Show temporary feedback toast
+    setAddedToast(product.name);
+    setTimeout(() => setAddedToast(null), 2400);
   };
 
-  const removeFromRfq = (productId: string) => {
-    setRfqItems((prev) => prev.filter((item) => item.product.id !== productId));
+  const removeFromCart = (productId: string) => {
+    setCartItems((prev) => prev.filter((item) => item.product.id !== productId));
   };
 
   const updateQuantity = (productId: string, qty: number) => {
     if (qty <= 0) {
-      removeFromRfq(productId);
+      removeFromCart(productId);
       return;
     }
-    setRfqItems((prev) =>
+    setCartItems((prev) =>
       prev.map((item) => (item.product.id === productId ? { ...item, quantity: qty } : item))
     );
   };
 
-  const handleRfqSubmit = (e: React.FormEvent) => {
+  const subtotal = useMemo(() => {
+    return cartItems.reduce(
+      (sum, item) => sum + getProductPrice(item.product) * item.quantity,
+      0
+    );
+  }, [cartItems]);
+
+  const totalItemsCount = useMemo(() => {
+    return cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  }, [cartItems]);
+
+  const handleCheckoutSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmittedRfq(true);
+    setCheckoutStep("success");
     setTimeout(() => {
-      setSubmittedRfq(false);
-      setRfqItems([]);
-      setIsRfqOpen(false);
-      setFormData({ name: "", company: "", email: "", phone: "", notes: "" });
-    }, 3000);
+      setCartItems([]);
+      setCheckoutStep("cart");
+      setIsCartOpen(false);
+      setOrderForm({
+        name: "",
+        email: "",
+        phone: "",
+        company: "",
+        address: "",
+        city: "",
+        postalCode: "",
+      });
+    }, 4000);
   };
 
   const clearAllFilters = () => {
@@ -120,33 +153,76 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
     setSearchQuery("");
   };
 
-  const hasActiveFilters =
-    selectedCategory !== "All Products" ||
-    selectedSubCategory !== null ||
-    selectedIndustry !== null ||
-    inStockOnly ||
-    searchQuery.trim() !== "";
+  const activeFiltersCount =
+    (selectedCategory !== "All Products" ? 1 : 0) +
+    (selectedSubCategory ? 1 : 0) +
+    (selectedIndustry ? 1 : 0) +
+    (inStockOnly ? 1 : 0) +
+    (searchQuery.trim() !== "" ? 1 : 0);
 
   return (
-    <div className="min-h-screen bg-[#fafbfc] text-foreground font-sans flex flex-col">
-      {/* ─── Full-width Header / Topbar ─── */}
-      <header className="sticky top-0 z-40 w-full border-b border-border bg-white/95 backdrop-blur-md">
-        <div className="flex items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 py-3.5">
-          {/* Brand Logo on far left */}
+    <div className="min-h-screen bg-[#fafbfc] text-foreground font-sans flex flex-col w-full overflow-x-hidden">
+      {/* ─── Added to Cart Toast ─── */}
+      {addedToast && (
+        <div className="fixed bottom-6 right-4 sm:right-6 z-50 flex items-center gap-3 rounded-2xl bg-graphite px-4 sm:px-5 py-3 text-white shadow-xl animate-in fade-in slide-in-from-bottom-4 duration-300 max-w-[calc(100vw-2rem)]">
+          <div className="flex h-6 w-6 sm:h-7 sm:w-7 shrink-0 items-center justify-center rounded-full bg-green-500 text-white font-bold text-xs">
+            ✓
+          </div>
+          <div className="text-xs min-w-0 flex-1">
+            <p className="font-semibold truncate">Added to Cart</p>
+            <p className="text-white/70 text-[0.7rem] truncate">{addedToast}</p>
+          </div>
           <button
-            onClick={() => onNavigateHome()}
-            className="flex items-center gap-3 cursor-pointer text-left shrink-0"
+            onClick={() => {
+              setAddedToast(null);
+              setIsCartOpen(true);
+            }}
+            className="ml-2 shrink-0 rounded-lg bg-white/15 px-2.5 py-1 text-[0.68rem] font-bold uppercase tracking-wider text-white hover:bg-white/25 cursor-pointer"
           >
-            <img
-              src="/logo.png"
-              alt="Qualitech Connectronics"
-              className="h-8 sm:h-9 w-auto shrink-0"
-              width={320}
-              height={80}
-            />
+            View Cart
           </button>
+        </div>
+      )}
 
-          {/* Simple Main Navigation */}
+      {/* ─── Header Navigation ─── */}
+      <header className="sticky top-0 z-40 w-full border-b border-border bg-white/95 backdrop-blur-md">
+        <div className="flex items-center justify-between gap-3 px-4 sm:px-6 lg:px-8 py-3.5">
+          <div className="flex items-center gap-3">
+            {/* Mobile Hamburger Button */}
+            <button
+              type="button"
+              aria-label="Toggle navigation"
+              onClick={() => setMobileNavOpen(!mobileNavOpen)}
+              className="flex h-9 w-9 shrink-0 flex-col items-center justify-center gap-1.5 rounded-lg border border-border md:hidden cursor-pointer"
+            >
+              <span
+                className={`h-px w-4 bg-foreground transition-transform duration-300 ${
+                  mobileNavOpen ? "translate-y-[2.5px] rotate-45" : ""
+                }`}
+              />
+              <span
+                className={`h-px w-4 bg-foreground transition-transform duration-300 ${
+                  mobileNavOpen ? "-translate-y-[2.5px] -rotate-45" : ""
+                }`}
+              />
+            </button>
+
+            {/* Brand Logo */}
+            <button
+              onClick={() => onNavigateHome()}
+              className="flex items-center gap-2 cursor-pointer text-left shrink-0"
+            >
+              <img
+                src="/logo.png"
+                alt="Qualitech Connectronics"
+                className="h-7 sm:h-9 w-auto shrink-0"
+                width={320}
+                height={80}
+              />
+            </button>
+          </div>
+
+          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6 lg:gap-8">
             <button
               onClick={() => onNavigateHome("top")}
@@ -166,7 +242,7 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
             >
               Facilities
             </button>
-            <span className="font-display text-[0.78rem] font-bold uppercase tracking-[0.14em] text-brand-blue border-b-2 border-brand-blue pb-1">
+            <span className="font-display text-[0.78rem] font-bold uppercase tracking-[0.14em] text-brand-blue border-b-2 border-brand-blue pb-0.5">
               Shop
             </span>
             <button
@@ -177,449 +253,446 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
             </button>
           </nav>
 
-          {/* Right Action buttons */}
-          <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
-            {/* Mobile filter toggle */}
+          {/* Cart Button */}
+          <div className="flex items-center gap-2 shrink-0">
             <button
-              onClick={() => setMobileFilterOpen(!mobileFilterOpen)}
-              className="lg:hidden inline-flex items-center gap-1.5 rounded-xl border border-border bg-white px-3 py-2 text-xs font-semibold text-graphite shadow-2xs"
+              onClick={() => {
+                setCheckoutStep("cart");
+                setIsCartOpen(true);
+              }}
+              className="relative inline-flex items-center gap-2 rounded-xl bg-graphite px-3.5 sm:px-4 py-2 font-display text-[0.72rem] sm:text-xs font-bold uppercase tracking-wider text-white shadow-xs transition-all duration-200 hover:bg-brand-blue cursor-pointer"
             >
-              <svg className="h-4 w-4 text-brand-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+              <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
-              <span>Filters</span>
-            </button>
-
-            {/* RFQ Quote Cart */}
-            <button
-              onClick={() => setIsRfqOpen(true)}
-              className="relative inline-flex items-center gap-2 rounded-xl bg-graphite px-4 py-2 font-display text-[0.72rem] font-bold uppercase tracking-wider text-white shadow-xs transition-all duration-200 hover:bg-brand-blue cursor-pointer"
-            >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-              </svg>
-              <span className="hidden sm:inline">RFQ Cart</span>
-              {rfqItems.length > 0 && (
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-brand-orange text-[0.68rem] font-black text-white">
-                  {rfqItems.reduce((sum, item) => sum + item.quantity, 0)}
+              <span>Cart</span>
+              {totalItemsCount > 0 && (
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-brand-blue text-[0.68rem] font-black text-white">
+                  {totalItemsCount}
                 </span>
               )}
             </button>
-
-            <button
-              onClick={() => onNavigateHome("contact")}
-              className="hidden xl:inline-flex items-center gap-1.5 rounded-xl border border-graphite/20 px-3.5 py-2 font-display text-[0.72rem] font-bold uppercase tracking-wider text-graphite hover:border-graphite"
-            >
-              Direct RFQ →
-            </button>
           </div>
         </div>
+
+        {/* Mobile Dropdown Nav Menu */}
+        {mobileNavOpen && (
+          <div className="border-t border-border bg-white px-5 py-3 md:hidden animate-in slide-in-from-top-2 duration-200">
+            <nav className="flex flex-col space-y-2">
+              <button
+                onClick={() => {
+                  setMobileNavOpen(false);
+                  onNavigateHome("top");
+                }}
+                className="py-2 text-left font-display text-xs font-semibold uppercase tracking-wider text-foreground hover:text-brand-blue"
+              >
+                Home
+              </button>
+              <button
+                onClick={() => {
+                  setMobileNavOpen(false);
+                  onNavigateHome("about");
+                }}
+                className="py-2 text-left font-display text-xs font-semibold uppercase tracking-wider text-foreground hover:text-brand-blue"
+              >
+                About Us
+              </button>
+              <button
+                onClick={() => {
+                  setMobileNavOpen(false);
+                  onNavigateHome("facilities");
+                }}
+                className="py-2 text-left font-display text-xs font-semibold uppercase tracking-wider text-foreground hover:text-brand-blue"
+              >
+                Facilities
+              </button>
+              <span className="py-2 text-left font-display text-xs font-bold uppercase tracking-wider text-brand-blue">
+                Shop (Active)
+              </span>
+              <button
+                onClick={() => {
+                  setMobileNavOpen(false);
+                  onNavigateHome("contact");
+                }}
+                className="py-2 text-left font-display text-xs font-semibold uppercase tracking-wider text-foreground hover:text-brand-blue"
+              >
+                Contact Us
+              </button>
+            </nav>
+          </div>
+        )}
       </header>
 
-      {/* ─── FULL-SCREEN E-COMMERCE SECTION: Flush Left Sidebar + Wide Product Grid ─── */}
-      <div className="flex-1 w-full flex flex-col lg:flex-row">
-        {/* ─── LEFT SIDEBAR: Moved fully to the left edge ─── */}
-        <aside
-          className={`${
-            mobileFilterOpen ? "block" : "hidden"
-          } lg:block w-full lg:w-72 xl:w-80 shrink-0 border-r border-border/80 bg-white lg:sticky lg:top-[61px] lg:h-[calc(100vh-61px)] lg:overflow-y-auto z-30`}
+      {/* ─── MOBILE CATEGORY PILL STRIP (Horizontal scroll for phones) ─── */}
+      <div className="lg:hidden w-full border-b border-border bg-white px-4 py-2.5 overflow-x-auto scrollbar-none flex items-center gap-2">
+        <button
+          onClick={() => setMobileFilterOpen(true)}
+          className="inline-flex items-center gap-1.5 rounded-full border border-graphite/30 bg-graphite/5 px-3 py-1.5 text-xs font-semibold text-graphite shrink-0 cursor-pointer"
         >
-          <div className="p-5 lg:p-6 space-y-6">
-            {/* Sidebar Title & Reset */}
-            <div className="flex items-center justify-between pb-3 border-b border-border/70">
-              <div className="flex items-center gap-2">
-                <span className="h-3 w-1 bg-brand-blue rounded-full" />
-                <h2 className="font-display text-xs font-bold uppercase tracking-[0.16em] text-graphite">
-                  Product Filters
-                </h2>
-              </div>
-              {hasActiveFilters && (
-                <button
-                  onClick={clearAllFilters}
-                  className="text-[0.68rem] font-bold uppercase tracking-wider text-brand-blue hover:underline cursor-pointer"
-                >
-                  Reset All
-                </button>
-              )}
-            </div>
+          <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+          </svg>
+          <span>Filters</span>
+          {activeFiltersCount > 0 && (
+            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-brand-blue text-[0.6rem] font-bold text-white">
+              {activeFiltersCount}
+            </span>
+          )}
+        </button>
 
-            {/* Categories Accordion */}
-            <div>
-              <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
-                Categories
-              </h3>
-              <div className="space-y-1">
-                {CATEGORIES.map((cat) => {
-                  const isActive = selectedCategory === cat;
-                  const subs = cat !== "All Products" ? SUBCATEGORIES[cat] || [] : [];
-                  const count = cat === "All Products" ? PRODUCTS.length : PRODUCTS.filter((p) => p.category === cat).length;
+        {CATEGORIES.map((cat) => {
+          const isActive = selectedCategory === cat;
+          return (
+            <button
+              key={cat}
+              onClick={() => {
+                setSelectedCategory(cat);
+                setSelectedSubCategory(null);
+              }}
+              className={`rounded-full px-3.5 py-1.5 text-xs font-medium shrink-0 transition-colors cursor-pointer ${
+                isActive
+                  ? "bg-brand-blue text-white font-semibold shadow-2xs"
+                  : "border border-border bg-steel-light/50 text-muted-foreground hover:text-graphite"
+              }`}
+            >
+              {cat}
+            </button>
+          );
+        })}
+      </div>
 
-                  return (
-                    <div key={cat} className="space-y-0.5">
-                      <button
-                        onClick={() => {
-                          setSelectedCategory(cat);
-                          setSelectedSubCategory(null);
-                        }}
-                        className={`group flex w-full items-center justify-between rounded-xl px-3 py-2 text-xs font-semibold transition-all cursor-pointer ${
-                          isActive
-                            ? "bg-brand-blue text-white shadow-2xs"
-                            : "text-graphite/80 hover:bg-steel-light hover:text-graphite"
-                        }`}
-                      >
-                        <span className="truncate">{cat}</span>
-                        <span
-                          className={`text-[0.68rem] rounded-full px-2 py-0.5 font-medium ${
-                            isActive ? "bg-white/20 text-white" : "bg-steel-light text-muted-foreground"
-                          }`}
-                        >
-                          {count}
-                        </span>
-                      </button>
+      {/* ─── FULL-SCREEN E-COMMERCE LAYOUT ─── */}
+      <div className="flex-1 w-full flex flex-col lg:flex-row min-h-0">
+        {/* ─── FLUSH LEFT SIDEBAR: Clean Desktop Sidebar / Mobile Modal Drawer ─── */}
+        <aside className="hidden lg:block w-72 xl:w-76 shrink-0 border-r border-border/80 bg-white lg:sticky lg:top-[61px] lg:h-[calc(100vh-61px)] lg:overflow-y-auto z-30 p-5 lg:p-6 space-y-6">
+          <div className="flex items-center justify-between pb-3 border-b border-border">
+            <h2 className="font-display text-xs font-bold uppercase tracking-[0.16em] text-graphite">
+              Categories
+            </h2>
+            {activeFiltersCount > 0 && (
+              <button
+                onClick={clearAllFilters}
+                className="text-[0.68rem] font-semibold text-brand-blue hover:underline cursor-pointer"
+              >
+                Reset
+              </button>
+            )}
+          </div>
 
-                      {/* Nested Subcategories */}
-                      {isActive && subs.length > 0 && (
-                        <div className="ml-3 border-l-2 border-brand-blue/30 pl-2.5 py-1 space-y-1">
-                          {subs.map((sub) => {
-                            const isSubActive = selectedSubCategory === sub;
-                            const subCount = PRODUCTS.filter((p) => p.subCategory === sub).length;
+          {/* Categories List */}
+          <div className="space-y-1">
+            {CATEGORIES.map((cat) => {
+              const isActive = selectedCategory === cat;
+              const subs = cat !== "All Products" ? SUBCATEGORIES[cat] || [] : [];
+              const count = cat === "All Products" ? PRODUCTS.length : PRODUCTS.filter((p) => p.category === cat).length;
 
-                            return (
-                              <button
-                                key={sub}
-                                onClick={() => setSelectedSubCategory(isSubActive ? null : sub)}
-                                className={`flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-[0.73rem] transition-colors cursor-pointer ${
-                                  isSubActive
-                                    ? "bg-brand-blue/10 font-bold text-brand-blue"
-                                    : "text-muted-foreground hover:text-graphite hover:bg-steel-light/50"
-                                }`}
-                              >
-                                <span className="truncate">{sub}</span>
-                                {subCount > 0 && (
-                                  <span className="text-[0.65rem] text-muted-foreground/60">
-                                    {subCount}
-                                  </span>
-                                )}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* In-Stock Filter Toggle */}
-            <div className="border-t border-border/70 pt-4">
-              <label className="flex items-center justify-between cursor-pointer">
-                <span className="text-xs font-semibold text-graphite">In Stock Only</span>
-                <input
-                  type="checkbox"
-                  checked={inStockOnly}
-                  onChange={(e) => setInStockOnly(e.target.checked)}
-                  className="h-4 w-4 rounded text-brand-blue focus:ring-brand-blue cursor-pointer"
-                />
-              </label>
-            </div>
-
-            {/* Industries Served Chips */}
-            <div className="border-t border-border/70 pt-4">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  Industry
-                </h3>
-                {selectedIndustry && (
+              return (
+                <div key={cat} className="space-y-0.5">
                   <button
-                    onClick={() => setSelectedIndustry(null)}
-                    className="text-[0.65rem] font-bold text-brand-blue hover:underline cursor-pointer"
+                    onClick={() => {
+                      setSelectedCategory(cat);
+                      setSelectedSubCategory(null);
+                    }}
+                    className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-xs font-semibold transition-colors cursor-pointer ${
+                      isActive
+                        ? "bg-brand-blue text-white font-bold"
+                        : "text-graphite/80 hover:bg-steel-light hover:text-graphite"
+                    }`}
                   >
-                    Clear
-                  </button>
-                )}
-              </div>
-              <div className="flex flex-wrap gap-1.5">
-                {ALL_INDUSTRIES.map((ind) => {
-                  const active = selectedIndustry === ind;
-                  return (
-                    <button
-                      key={ind}
-                      onClick={() => setSelectedIndustry(active ? null : ind)}
-                      className={`rounded-lg px-2.5 py-1 text-[0.68rem] font-semibold transition-all cursor-pointer ${
-                        active
-                          ? "bg-graphite text-white shadow-2xs"
-                          : "border border-border bg-white text-muted-foreground hover:border-brand-blue/40 hover:text-graphite"
+                    <span>{cat}</span>
+                    <span
+                      className={`text-[0.65rem] rounded-full px-2 py-0.5 ${
+                        isActive ? "bg-white/20 text-white" : "bg-steel-light text-muted-foreground"
                       }`}
                     >
-                      {ind}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+                      {count}
+                    </span>
+                  </button>
 
-            {/* OEM Custom Capability Box */}
-            <div className="rounded-2xl border border-brand-blue/25 bg-gradient-to-br from-brand-blue/5 via-white to-brand-blue/10 p-4">
-              <div className="flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-brand-blue" />
-                <h4 className="font-display text-[0.72rem] font-bold uppercase tracking-wider text-brand-blue">
-                  Custom Cable Harness
-                </h4>
-              </div>
-              <p className="mt-2 text-[0.76rem] leading-relaxed text-muted-foreground">
-                Need application-specific wire gauges, overmolding, or pinout drawings? Qualitech builds turnkey assemblies with 100% electrical testing.
-              </p>
-              <button
-                onClick={() => onNavigateHome("contact")}
-                className="mt-3.5 block w-full rounded-xl bg-brand-blue py-2 text-center font-display text-[0.68rem] font-bold uppercase tracking-wider text-white hover:bg-graphite transition-colors cursor-pointer shadow-2xs"
-              >
-                Inquire Custom Solution →
-              </button>
+                  {/* Subcategories (only active category) */}
+                  {isActive && subs.length > 0 && (
+                    <div className="ml-3 border-l-2 border-brand-blue/30 pl-2.5 py-1 space-y-0.5">
+                      {subs.map((sub) => {
+                        const isSubActive = selectedSubCategory === sub;
+                        return (
+                          <button
+                            key={sub}
+                            onClick={() => setSelectedSubCategory(isSubActive ? null : sub)}
+                            className={`block w-full text-left rounded-lg px-2.5 py-1.5 text-[0.74rem] transition-colors cursor-pointer ${
+                              isSubActive
+                                ? "bg-brand-blue/10 font-bold text-brand-blue"
+                                : "text-muted-foreground hover:text-graphite"
+                            }`}
+                          >
+                            {sub}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* In-Stock Filter */}
+          <div className="border-t border-border/80 pt-4">
+            <label className="flex items-center gap-2.5 cursor-pointer text-xs font-semibold text-graphite">
+              <input
+                type="checkbox"
+                checked={inStockOnly}
+                onChange={(e) => setInStockOnly(e.target.checked)}
+                className="h-4 w-4 rounded border-border text-brand-blue focus:ring-brand-blue cursor-pointer"
+              />
+              <span>In Stock Items Only</span>
+            </label>
+          </div>
+
+          {/* Industry Filter (Minimal Chips) */}
+          <div className="border-t border-border/80 pt-4">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
+              Industry Filter
+            </h3>
+            <div className="flex flex-wrap gap-1.5">
+              {ALL_INDUSTRIES.map((ind) => {
+                const active = selectedIndustry === ind;
+                return (
+                  <button
+                    key={ind}
+                    onClick={() => setSelectedIndustry(active ? null : ind)}
+                    className={`rounded-lg px-2.5 py-1 text-[0.68rem] font-semibold transition-all cursor-pointer ${
+                      active
+                        ? "bg-graphite text-white"
+                        : "border border-border bg-white text-muted-foreground hover:text-graphite hover:border-brand-blue/40"
+                    }`}
+                  >
+                    {ind}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </aside>
 
-        {/* ─── MAIN CONTENT AREA: Expands full width across the remaining screen ─── */}
-        <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 flex flex-col">
-          {/* Top Search & Filter Bar */}
-          <div className="bg-white rounded-2xl border border-border p-4 shadow-2xs mb-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              {/* Search Bar */}
-              <div className="relative flex-1 max-w-xl">
-                <svg
-                  className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search by part number, series, SKU (e.g. 86094648109755E1LF, D-Sub, DIN, M12)..."
-                  className="w-full rounded-xl border border-border/80 bg-[#fbfcfd] py-2.5 pl-10 pr-9 text-xs sm:text-sm text-graphite placeholder:text-muted-foreground/60 focus:border-brand-blue focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-blue/15"
-                />
-                {searchQuery && (
-                  <button
-                    onClick={() => setSearchQuery("")}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted-foreground hover:text-foreground"
-                  >
-                    ✕
-                  </button>
-                )}
-              </div>
-
-              {/* Sort & Count Controls */}
-              <div className="flex items-center justify-between md:justify-end gap-3 shrink-0">
-                <span className="text-xs font-semibold text-muted-foreground">
-                  <strong className="text-graphite">{filteredProducts.length}</strong> items
-                </span>
-
-                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <span>Sort:</span>
-                  <select
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value as any)}
-                    className="rounded-lg border border-border bg-white px-2.5 py-1.5 text-xs font-semibold text-graphite focus:outline-none focus:ring-1 focus:ring-brand-blue"
-                  >
-                    <option value="featured">Featured First</option>
-                    <option value="name">Name (A-Z)</option>
-                    <option value="sku">Part Number / SKU</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            {/* Active filter badges strip */}
-            {hasActiveFilters && (
-              <div className="mt-3 pt-3 border-t border-border/60 flex flex-wrap items-center gap-2">
-                <span className="text-[0.68rem] font-bold uppercase tracking-wider text-muted-foreground">
-                  Active Filters:
-                </span>
-                {selectedCategory !== "All Products" && (
-                  <span className="inline-flex items-center gap-1 rounded-md bg-brand-blue/10 px-2.5 py-0.5 text-xs font-semibold text-brand-blue">
-                    {selectedCategory}
-                    <button
-                      onClick={() => setSelectedCategory("All Products")}
-                      className="hover:text-graphite cursor-pointer"
-                    >
-                      ✕
-                    </button>
-                  </span>
-                )}
-                {selectedSubCategory && (
-                  <span className="inline-flex items-center gap-1 rounded-md bg-brand-blue/10 px-2.5 py-0.5 text-xs font-semibold text-brand-blue">
-                    {selectedSubCategory}
-                    <button
-                      onClick={() => setSelectedSubCategory(null)}
-                      className="hover:text-graphite cursor-pointer"
-                    >
-                      ✕
-                    </button>
-                  </span>
-                )}
-                {selectedIndustry && (
-                  <span className="inline-flex items-center gap-1 rounded-md bg-graphite/10 px-2.5 py-0.5 text-xs font-semibold text-graphite">
-                    Industry: {selectedIndustry}
-                    <button
-                      onClick={() => setSelectedIndustry(null)}
-                      className="hover:text-destructive cursor-pointer"
-                    >
-                      ✕
-                    </button>
-                  </span>
-                )}
-                {inStockOnly && (
-                  <span className="inline-flex items-center gap-1 rounded-md bg-green-100 text-green-800 px-2.5 py-0.5 text-xs font-semibold">
-                    In Stock Only
-                    <button onClick={() => setInStockOnly(false)} className="hover:text-destructive cursor-pointer">
-                      ✕
-                    </button>
-                  </span>
-                )}
-                {searchQuery && (
-                  <span className="inline-flex items-center gap-1 rounded-md bg-amber-100 text-amber-900 px-2.5 py-0.5 text-xs font-semibold">
-                    Search: "{searchQuery}"
-                    <button onClick={() => setSearchQuery("")} className="hover:text-destructive cursor-pointer">
-                      ✕
-                    </button>
-                  </span>
-                )}
+        {/* ─── MOBILE FILTER MODAL DRAWER ─── */}
+        {mobileFilterOpen && (
+          <div className="fixed inset-0 z-50 flex lg:hidden bg-black/50 backdrop-blur-xs">
+            <div className="relative flex h-full w-4/5 max-w-sm flex-col bg-white p-5 overflow-y-auto shadow-2xl animate-in slide-in-from-left duration-300">
+              <div className="flex items-center justify-between pb-3 border-b border-border">
+                <h3 className="font-display text-sm font-bold text-graphite">Filters</h3>
                 <button
-                  onClick={clearAllFilters}
-                  className="text-xs font-semibold text-brand-blue hover:underline ml-auto cursor-pointer"
+                  onClick={() => setMobileFilterOpen(false)}
+                  className="rounded-lg p-1.5 text-muted-foreground hover:bg-steel-light"
                 >
-                  Clear All
+                  ✕
                 </button>
               </div>
-            )}
+
+              {/* Mobile filter categories */}
+              <div className="py-4 space-y-4">
+                <div>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">
+                    Categories
+                  </h4>
+                  <div className="space-y-1">
+                    {CATEGORIES.map((cat) => (
+                      <button
+                        key={cat}
+                        onClick={() => {
+                          setSelectedCategory(cat);
+                          setSelectedSubCategory(null);
+                          setMobileFilterOpen(false);
+                        }}
+                        className={`block w-full text-left rounded-lg px-3 py-2 text-xs font-medium ${
+                          selectedCategory === cat ? "bg-brand-blue text-white font-bold" : "text-graphite hover:bg-steel-light"
+                        }`}
+                      >
+                        {cat}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="border-t border-border pt-4">
+                  <label className="flex items-center gap-2.5 cursor-pointer text-xs font-semibold text-graphite">
+                    <input
+                      type="checkbox"
+                      checked={inStockOnly}
+                      onChange={(e) => setInStockOnly(e.target.checked)}
+                      className="h-4 w-4 rounded text-brand-blue"
+                    />
+                    <span>In Stock Only</span>
+                  </label>
+                </div>
+
+                <div className="border-t border-border pt-4">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">
+                    Industry
+                  </h4>
+                  <div className="flex flex-wrap gap-1.5">
+                    {ALL_INDUSTRIES.map((ind) => (
+                      <button
+                        key={ind}
+                        onClick={() => {
+                          setSelectedIndustry(selectedIndustry === ind ? null : ind);
+                          setMobileFilterOpen(false);
+                        }}
+                        className={`rounded-lg px-2.5 py-1 text-[0.68rem] font-medium ${
+                          selectedIndustry === ind ? "bg-graphite text-white" : "border border-border bg-white text-muted-foreground"
+                        }`}
+                      >
+                        {ind}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={() => {
+                  clearAllFilters();
+                  setMobileFilterOpen(false);
+                }}
+                className="mt-auto w-full rounded-xl border border-border py-2.5 text-xs font-bold text-graphite"
+              >
+                Clear All Filters
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ─── MAIN EXPANSIVE PRODUCT SHOWCASE ─── */}
+        <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 flex flex-col">
+          {/* Search & Sort Bar */}
+          <div className="bg-white rounded-2xl border border-border p-3.5 sm:p-4 shadow-2xs mb-6 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+            <div className="relative w-full sm:max-w-md">
+              <svg
+                className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search products or part numbers..."
+                className="w-full rounded-xl border border-border bg-[#fafbfc] py-2 pl-10 pr-8 text-xs sm:text-sm text-graphite placeholder:text-muted-foreground/60 focus:border-brand-blue focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-blue/15"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted-foreground hover:text-foreground cursor-pointer"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+
+            <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-3 text-xs">
+              <span className="text-muted-foreground">
+                <strong className="text-graphite">{filteredProducts.length}</strong> items
+              </span>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as any)}
+                className="rounded-lg border border-border bg-white px-2.5 py-1.5 text-xs font-semibold text-graphite focus:outline-none focus:ring-1 focus:ring-brand-blue cursor-pointer"
+              >
+                <option value="featured">Featured</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="name">Name (A-Z)</option>
+              </select>
+            </div>
           </div>
 
-          {/* Full-width Product Grid (Responsive: 1col -> 2col -> 3col -> 4col -> 5col on wide screens) */}
+          {/* Clean, Non-overcomplicated Product Grid (Responsive: 1 col on phone -> 2 on tablet -> 3 on desktop -> 4 on wide) */}
           {filteredProducts.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-border bg-white p-12 text-center my-auto">
-              <svg className="mx-auto h-12 w-12 text-muted-foreground/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <h3 className="mt-4 font-display text-lg font-bold text-graphite">
-                No matching products found
-              </h3>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Try searching for other part numbers or reset the category filters.
-              </p>
+            <div className="rounded-2xl border border-dashed border-border bg-white p-8 sm:p-12 text-center my-auto">
+              <h3 className="font-display text-base font-bold text-graphite">No products found</h3>
+              <p className="mt-1 text-xs text-muted-foreground">Try clearing your filters or search terms.</p>
               <button
                 onClick={clearAllFilters}
-                className="mt-5 rounded-xl bg-graphite px-5 py-2.5 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-brand-blue"
+                className="mt-4 rounded-xl bg-graphite px-4 py-2 text-xs font-bold text-white hover:bg-brand-blue cursor-pointer"
               >
-                Reset Filters &amp; View All
+                View All
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5">
-              {filteredProducts.map((product) => (
-                <article
-                  key={product.id}
-                  className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-2xs transition-all duration-300 hover:-translate-y-1 hover:border-brand-blue/50 hover:shadow-md"
-                >
-                  {/* Image container */}
-                  <div className="relative h-44 w-full overflow-hidden bg-steel-light/70">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      loading="lazy"
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+              {filteredProducts.map((product) => {
+                const price = getProductPrice(product);
 
-                    {/* Part SKU badge */}
-                    <span className="absolute left-3 top-3 rounded-md bg-graphite/90 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider text-white backdrop-blur-xs">
-                      {product.sku}
-                    </span>
-
-                    {/* Featured / In Stock pill */}
-                    {product.featured ? (
-                      <span className="absolute right-3 top-3 rounded-md bg-brand-orange px-2 py-0.5 text-[0.6rem] font-bold uppercase tracking-wider text-white">
-                        Featured
-                      </span>
-                    ) : (
-                      <span className="absolute right-3 top-3 rounded-full bg-white/90 px-2 py-0.5 text-[0.6rem] font-semibold text-green-700 backdrop-blur-xs">
-                        ● In Stock
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Body Content */}
-                  <div className="flex flex-1 flex-col p-4">
-                    {/* Category breadcrumb */}
-                    <div className="text-[0.68rem] font-semibold text-brand-blue truncate">
-                      {product.category} &gt; {product.subCategory}
-                    </div>
-
-                    {/* Title */}
-                    <h3
+                return (
+                  <article
+                    key={product.id}
+                    className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-2xs transition-all duration-300 hover:-translate-y-1 hover:border-brand-blue/40 hover:shadow-md"
+                  >
+                    {/* Clean Product Image Container */}
+                    <div
                       onClick={() => setSelectedProduct(product)}
-                      className="mt-1.5 font-display text-sm font-bold leading-snug text-graphite group-hover:text-brand-blue transition-colors cursor-pointer line-clamp-2"
-                      title={product.name}
+                      className="relative h-44 sm:h-48 w-full overflow-hidden bg-steel-light/50 p-4 flex items-center justify-center cursor-pointer"
                     >
-                      {product.name}
-                    </h3>
-
-                    {/* Description */}
-                    <p className="mt-1.5 text-[0.76rem] leading-relaxed text-muted-foreground line-clamp-2">
-                      {product.description}
-                    </p>
-
-                    {/* Key Specs Pills */}
-                    <div className="mt-3 flex flex-wrap gap-1 border-t border-border/60 pt-2.5">
-                      {product.specs.contacts && (
-                        <span className="rounded bg-steel-light px-1.5 py-0.5 text-[0.62rem] font-medium text-graphite">
-                          {product.specs.contacts}
-                        </span>
-                      )}
-                      {product.specs.voltage && (
-                        <span className="rounded bg-steel-light px-1.5 py-0.5 text-[0.62rem] font-medium text-graphite">
-                          {product.specs.voltage}
-                        </span>
-                      )}
-                      {product.specs.ipRating && (
-                        <span className="rounded bg-green-50 text-green-700 px-1.5 py-0.5 text-[0.62rem] font-semibold">
-                          {product.specs.ipRating}
-                        </span>
-                      )}
-                      {product.specs.impedance && (
-                        <span className="rounded bg-steel-light px-1.5 py-0.5 text-[0.62rem] font-medium text-graphite">
-                          {product.specs.impedance}
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        loading="lazy"
+                        className="h-full w-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
+                      />
+                      {product.featured && (
+                        <span className="absolute left-3 top-3 rounded-full bg-brand-orange px-2.5 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider text-white">
+                          Featured
                         </span>
                       )}
                     </div>
 
-                    {/* Bottom CTA row */}
-                    <div className="mt-auto pt-3 border-t border-border/70 flex items-center justify-between gap-2">
-                      <button
-                        type="button"
+                    {/* Body: Clean, Uncluttered, Modern E-commerce */}
+                    <div className="flex flex-1 flex-col p-4 sm:p-5">
+                      <span className="text-[0.68rem] font-semibold text-muted-foreground">
+                        {product.subCategory}
+                      </span>
+
+                      <h3
                         onClick={() => setSelectedProduct(product)}
-                        className="text-[0.68rem] font-bold uppercase tracking-wider text-muted-foreground hover:text-brand-blue transition-colors cursor-pointer"
+                        className="mt-1 font-display text-sm font-bold text-graphite group-hover:text-brand-blue transition-colors cursor-pointer line-clamp-2"
+                        title={product.name}
                       >
-                        Specs →
-                      </button>
+                        {product.name}
+                      </h3>
 
-                      <button
-                        type="button"
-                        onClick={() => addToRfq(product)}
-                        className="inline-flex items-center gap-1.5 rounded-lg bg-graphite px-3 py-1.5 font-display text-[0.65rem] font-bold uppercase tracking-wider text-white shadow-2xs transition-all hover:bg-brand-blue hover:shadow-xs cursor-pointer"
-                      >
-                        <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                        </svg>
-                        Add to Quote
-                      </button>
+                      <p className="mt-1 text-[0.68rem] text-muted-foreground/80 font-mono">
+                        SKU: {product.sku}
+                      </p>
+
+                      {/* Price & Add to Cart Button */}
+                      <div className="mt-auto pt-4 border-t border-border/80 flex items-center justify-between gap-2 sm:gap-3">
+                        <div>
+                          <span className="text-[0.62rem] sm:text-[0.65rem] text-muted-foreground uppercase block font-semibold leading-none">
+                            Price
+                          </span>
+                          <span className="font-display text-base sm:text-lg font-bold text-graphite">
+                            ₹{price.toLocaleString()}
+                          </span>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => addToCart(product)}
+                          className="inline-flex items-center gap-1.5 rounded-xl bg-graphite px-3.5 sm:px-4 py-2 sm:py-2.5 font-display text-[0.72rem] sm:text-xs font-bold uppercase tracking-wider text-white shadow-xs transition-all hover:bg-brand-blue hover:shadow-md cursor-pointer shrink-0"
+                        >
+                          <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                          </svg>
+                          <span>Add to Cart</span>
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                </article>
-              ))}
+                  </article>
+                );
+              })}
             </div>
           )}
         </main>
@@ -628,257 +701,306 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
       {/* ─── Product Detail Modal ─── */}
       {selectedProduct && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
-          <div className="relative max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-white p-6 sm:p-8 shadow-2xl">
+          <div className="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white p-5 sm:p-8 shadow-2xl">
             <button
               onClick={() => setSelectedProduct(null)}
-              className="absolute right-5 top-5 rounded-full p-2 text-muted-foreground hover:bg-steel-light hover:text-foreground cursor-pointer"
+              className="absolute right-4 top-4 rounded-full p-2 text-muted-foreground hover:bg-steel-light hover:text-foreground cursor-pointer"
             >
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
 
-            <div className="grid gap-8 sm:grid-cols-2">
-              <div className="overflow-hidden rounded-xl border border-border bg-steel-light">
+            <div className="grid gap-6 sm:grid-cols-2 items-center">
+              <div className="h-48 sm:h-56 overflow-hidden rounded-xl border border-border bg-steel-light/50 p-4 flex items-center justify-center">
                 <img
                   src={selectedProduct.image}
                   alt={selectedProduct.name}
-                  className="h-64 w-full object-cover"
+                  className="h-full w-full object-contain mix-blend-multiply"
                 />
               </div>
 
               <div>
-                <span className="rounded-md bg-brand-blue/10 px-2.5 py-1 text-xs font-bold text-brand-blue uppercase tracking-wider">
+                <span className="text-xs font-mono font-semibold text-brand-blue">
                   {selectedProduct.sku}
                 </span>
-                <h2 className="mt-3 font-display text-xl font-bold text-graphite sm:text-2xl">
+                <h2 className="mt-1 font-display text-base sm:text-lg font-bold text-graphite">
                   {selectedProduct.name}
                 </h2>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  {selectedProduct.category} &gt; {selectedProduct.subCategory}
-                </p>
+                <div className="mt-2.5">
+                  <span className="font-display text-xl sm:text-2xl font-bold text-graphite">
+                    ₹{getProductPrice(selectedProduct).toLocaleString()}
+                  </span>
+                  <span className="text-xs text-muted-foreground ml-2">per unit</span>
+                </div>
 
-                <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                <p className="mt-3 text-xs leading-relaxed text-muted-foreground line-clamp-3 sm:line-clamp-none">
                   {selectedProduct.description}
                 </p>
 
-                <div className="mt-6">
+                <div className="mt-4 sm:mt-5">
                   <button
                     onClick={() => {
-                      addToRfq(selectedProduct);
+                      addToCart(selectedProduct);
                       setSelectedProduct(null);
                     }}
-                    className="w-full rounded-xl bg-graphite py-3.5 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-brand-blue transition-colors cursor-pointer"
+                    className="w-full rounded-xl bg-graphite py-3 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-brand-blue transition-colors cursor-pointer shadow-sm"
                   >
-                    Add to Quote Inquiry
+                    Add to Cart • ₹{getProductPrice(selectedProduct).toLocaleString()}
                   </button>
                 </div>
               </div>
             </div>
 
-            {/* Features & Specs in modal */}
-            <div className="mt-8 grid gap-6 border-t border-border pt-6 sm:grid-cols-2">
-              <div>
-                <h3 className="font-display text-xs font-bold uppercase tracking-wider text-graphite">
-                  Key Technical Features
-                </h3>
-                <ul className="mt-3 space-y-2 text-xs text-muted-foreground">
-                  {selectedProduct.features.map((feat, i) => (
-                    <li key={i} className="flex items-start gap-2">
-                      <svg className="h-4 w-4 shrink-0 text-brand-blue mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span>{feat}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="font-display text-xs font-bold uppercase tracking-wider text-graphite">
-                  Electrical &amp; Mechanical Specs
-                </h3>
-                <div className="mt-3 divide-y divide-border text-xs">
-                  {Object.entries(selectedProduct.specs).map(([key, val]) => (
-                    <div key={key} className="flex justify-between py-1.5">
-                      <span className="capitalize text-muted-foreground">{key.replace(/([A-Z])/g, " $1")}:</span>
-                      <span className="font-semibold text-graphite">{val}</span>
-                    </div>
-                  ))}
-                </div>
+            {/* Specifications list */}
+            <div className="mt-5 sm:mt-6 border-t border-border pt-4 sm:pt-5">
+              <h3 className="font-display text-xs font-bold uppercase tracking-wider text-graphite mb-2.5">
+                Key Specifications
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                {Object.entries(selectedProduct.specs).map(([k, v]) => (
+                  <div key={k} className="flex justify-between rounded-lg bg-steel-light/60 px-3 py-1.5">
+                    <span className="capitalize text-muted-foreground">{k}:</span>
+                    <span className="font-semibold text-graphite">{v}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* ─── RFQ Slide-out Drawer ─── */}
-      {isRfqOpen && (
+      {/* ─── E-COMMERCE CART & CHECKOUT DRAWER ─── */}
+      {isCartOpen && (
         <div className="fixed inset-0 z-50 flex justify-end bg-black/50 backdrop-blur-xs">
-          <div className="relative flex h-full w-full max-w-md flex-col bg-white shadow-2xl">
-            {/* Header */}
-            <div className="flex items-center justify-between border-b border-border px-6 py-5">
-              <div>
+          <div className="relative flex h-full w-full max-w-md flex-col bg-white shadow-2xl animate-in slide-in-from-right duration-300">
+            {/* Drawer Header */}
+            <div className="flex items-center justify-between border-b border-border px-5 sm:px-6 py-4">
+              <div className="flex items-center gap-2">
+                <svg className="h-5 w-5 text-brand-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
                 <h3 className="font-display text-base font-bold text-graphite">
-                  Request for Quote (RFQ)
+                  {checkoutStep === "cart" ? "Shopping Cart" : checkoutStep === "checkout" ? "Checkout" : "Order Complete"}
                 </h3>
-                <p className="text-xs text-muted-foreground">
-                  {rfqItems.length} products selected for OEM quotation
-                </p>
+                <span className="rounded-full bg-steel-light px-2 py-0.5 text-xs font-bold text-graphite">
+                  {totalItemsCount}
+                </span>
               </div>
+
               <button
-                onClick={() => setIsRfqOpen(false)}
+                onClick={() => setIsCartOpen(false)}
                 className="rounded-lg p-1.5 text-muted-foreground hover:bg-steel-light hover:text-foreground cursor-pointer"
               >
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                ✕
               </button>
             </div>
 
-            {/* Body */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-6">
-              {submittedRfq ? (
-                <div className="rounded-2xl border border-green-200 bg-green-50 p-8 text-center">
-                  <svg className="mx-auto h-12 w-12 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <h4 className="mt-3 font-display text-base font-bold text-green-800">
-                    Inquiry Submitted Successfully!
+            {/* Drawer Body */}
+            <div className="flex-1 overflow-y-auto p-5 sm:p-6">
+              {checkoutStep === "success" ? (
+                <div className="rounded-2xl border border-green-200 bg-green-50 p-6 sm:p-8 text-center my-auto">
+                  <div className="mx-auto flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-green-500 text-white font-bold text-xl sm:text-2xl">
+                    ✓
+                  </div>
+                  <h4 className="mt-4 font-display text-base sm:text-lg font-bold text-green-900">
+                    Order Placed Successfully!
                   </h4>
                   <p className="mt-2 text-xs text-green-700 leading-relaxed">
-                    Our engineering and sales team will review your specifications and contact you within 24 hours.
+                    Thank you for your order! Your confirmation and commercial invoice have been sent to your email.
                   </p>
                 </div>
+              ) : checkoutStep === "checkout" ? (
+                /* Checkout Form */
+                <form onSubmit={handleCheckoutSubmit} className="space-y-3.5 sm:space-y-4">
+                  <div className="rounded-xl bg-steel-light/70 p-3 text-xs flex justify-between">
+                    <span className="text-muted-foreground">Order Total ({totalItemsCount} items):</span>
+                    <strong className="text-graphite font-display text-sm">₹{subtotal.toLocaleString()}</strong>
+                  </div>
+
+                  <h4 className="font-display text-xs font-bold uppercase tracking-wider text-graphite pt-1">
+                    Shipping &amp; Contact Details
+                  </h4>
+
+                  <input
+                    type="text"
+                    required
+                    placeholder="Full Name *"
+                    value={orderForm.name}
+                    onChange={(e) => setOrderForm({ ...orderForm, name: e.target.value })}
+                    className="w-full rounded-xl border border-border px-3.5 py-2.5 text-xs sm:text-sm focus:border-brand-blue focus:outline-none"
+                  />
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <input
+                      type="email"
+                      required
+                      placeholder="Email Address *"
+                      value={orderForm.email}
+                      onChange={(e) => setOrderForm({ ...orderForm, email: e.target.value })}
+                      className="w-full rounded-xl border border-border px-3.5 py-2.5 text-xs sm:text-sm focus:border-brand-blue focus:outline-none"
+                    />
+                    <input
+                      type="tel"
+                      required
+                      placeholder="Phone Number *"
+                      value={orderForm.phone}
+                      onChange={(e) => setOrderForm({ ...orderForm, phone: e.target.value })}
+                      className="w-full rounded-xl border border-border px-3.5 py-2.5 text-xs sm:text-sm focus:border-brand-blue focus:outline-none"
+                    />
+                  </div>
+
+                  <input
+                    type="text"
+                    placeholder="Company Name (Optional)"
+                    value={orderForm.company}
+                    onChange={(e) => setOrderForm({ ...orderForm, company: e.target.value })}
+                    className="w-full rounded-xl border border-border px-3.5 py-2.5 text-xs sm:text-sm focus:border-brand-blue focus:outline-none"
+                  />
+
+                  <input
+                    type="text"
+                    required
+                    placeholder="Delivery Address *"
+                    value={orderForm.address}
+                    onChange={(e) => setOrderForm({ ...orderForm, address: e.target.value })}
+                    className="w-full rounded-xl border border-border px-3.5 py-2.5 text-xs sm:text-sm focus:border-brand-blue focus:outline-none"
+                  />
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <input
+                      type="text"
+                      required
+                      placeholder="City *"
+                      value={orderForm.city}
+                      onChange={(e) => setOrderForm({ ...orderForm, city: e.target.value })}
+                      className="w-full rounded-xl border border-border px-3.5 py-2.5 text-xs sm:text-sm focus:border-brand-blue focus:outline-none"
+                    />
+                    <input
+                      type="text"
+                      required
+                      placeholder="PIN Code *"
+                      value={orderForm.postalCode}
+                      onChange={(e) => setOrderForm({ ...orderForm, postalCode: e.target.value })}
+                      className="w-full rounded-xl border border-border px-3.5 py-2.5 text-xs sm:text-sm focus:border-brand-blue focus:outline-none"
+                    />
+                  </div>
+
+                  <div className="pt-3 flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setCheckoutStep("cart")}
+                      className="w-1/3 rounded-xl border border-border py-2.5 sm:py-3 text-xs font-semibold text-graphite hover:bg-steel-light cursor-pointer"
+                    >
+                      ← Back
+                    </button>
+                    <button
+                      type="submit"
+                      className="w-2/3 rounded-xl bg-brand-blue py-2.5 sm:py-3 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-graphite shadow-sm cursor-pointer"
+                    >
+                      Place Order • ₹{subtotal.toLocaleString()}
+                    </button>
+                  </div>
+                </form>
               ) : (
+                /* Cart Items List */
                 <>
-                  {rfqItems.length === 0 ? (
-                    <div className="py-12 text-center">
-                      <p className="text-sm text-muted-foreground">
-                        Your RFQ list is currently empty.
-                      </p>
-                      <p className="mt-1 text-xs text-muted-foreground/80">
-                        Click "Add to Quote" on any product card to begin.
-                      </p>
+                  {cartItems.length === 0 ? (
+                    <div className="py-16 text-center">
+                      <svg className="mx-auto h-12 w-12 text-muted-foreground/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                      </svg>
+                      <p className="mt-3 text-sm font-semibold text-graphite">Your cart is empty</p>
+                      <p className="mt-1 text-xs text-muted-foreground">Add products from the catalog to see them here.</p>
                     </div>
                   ) : (
-                    <div className="space-y-3">
-                      {rfqItems.map(({ product, quantity }) => (
-                        <div
-                          key={product.id}
-                          className="flex items-center justify-between gap-3 rounded-xl border border-border p-3"
-                        >
-                          <div className="min-w-0 flex-1">
-                            <span className="text-[0.62rem] font-bold text-brand-blue uppercase">
-                              {product.sku}
-                            </span>
-                            <h4 className="text-xs font-bold text-graphite truncate">{product.name}</h4>
-                          </div>
+                    <div className="divide-y divide-border">
+                      {cartItems.map(({ product, quantity }) => {
+                        const price = getProductPrice(product);
 
-                          <div className="flex items-center gap-2">
-                            <input
-                              type="number"
-                              min="1"
-                              value={quantity}
-                              onChange={(e) => updateQuantity(product.id, parseInt(e.target.value) || 1)}
-                              className="w-14 rounded-lg border border-border px-2 py-1 text-center text-xs font-semibold"
+                        return (
+                          <div key={product.id} className="py-3.5 flex items-center gap-3">
+                            <img
+                              src={product.image}
+                              alt={product.name}
+                              className="h-12 w-12 sm:h-14 sm:w-14 rounded-lg bg-steel-light object-contain p-1 shrink-0"
                             />
-                            <button
-                              onClick={() => removeFromRfq(product.id)}
-                              className="text-xs text-muted-foreground hover:text-destructive cursor-pointer p-1"
-                            >
-                              ✕
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
 
-                  {/* Submission Form */}
-                  {rfqItems.length > 0 && (
-                    <form onSubmit={handleRfqSubmit} className="space-y-3 border-t border-border pt-6">
-                      <h4 className="font-display text-xs font-bold uppercase tracking-wider text-graphite">
-                        Your Contact Information
-                      </h4>
-                      <div>
-                        <input
-                          type="text"
-                          required
-                          placeholder="Your Name *"
-                          value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          className="w-full rounded-xl border border-border px-3.5 py-2 text-xs focus:border-brand-blue focus:outline-none"
-                        />
-                      </div>
-                      <div>
-                        <input
-                          type="text"
-                          required
-                          placeholder="Company / OEM Name *"
-                          value={formData.company}
-                          onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                          className="w-full rounded-xl border border-border px-3.5 py-2 text-xs focus:border-brand-blue focus:outline-none"
-                        />
-                      </div>
-                      <div className="grid grid-cols-2 gap-2">
-                        <input
-                          type="email"
-                          required
-                          placeholder="Work Email *"
-                          value={formData.email}
-                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          className="w-full rounded-xl border border-border px-3.5 py-2 text-xs focus:border-brand-blue focus:outline-none"
-                        />
-                        <input
-                          type="tel"
-                          required
-                          placeholder="Phone Number *"
-                          value={formData.phone}
-                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          className="w-full rounded-xl border border-border px-3.5 py-2 text-xs focus:border-brand-blue focus:outline-none"
-                        />
-                      </div>
-                      <div>
-                        <textarea
-                          rows={3}
-                          placeholder="Project details, target volume, specific pinout requirements..."
-                          value={formData.notes}
-                          onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                          className="w-full rounded-xl border border-border px-3.5 py-2 text-xs focus:border-brand-blue focus:outline-none resize-none"
-                        />
-                      </div>
-                      <button
-                        type="submit"
-                        className="w-full rounded-xl bg-brand-blue py-3 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-graphite transition-colors shadow-sm cursor-pointer"
-                      >
-                        Submit Request for Quote →
-                      </button>
-                    </form>
+                            <div className="flex-1 min-w-0">
+                              <h4 className="text-xs font-bold text-graphite truncate">{product.name}</h4>
+                              <p className="text-[0.68rem] text-muted-foreground font-mono">₹{price.toLocaleString()} each</p>
+
+                              {/* Quantity controls */}
+                              <div className="mt-2 flex items-center gap-2">
+                                <div className="inline-flex items-center rounded-lg border border-border">
+                                  <button
+                                    onClick={() => updateQuantity(product.id, quantity - 1)}
+                                    className="px-2 py-0.5 text-xs text-muted-foreground hover:text-graphite cursor-pointer"
+                                  >
+                                    -
+                                  </button>
+                                  <span className="px-2 text-xs font-bold text-graphite">{quantity}</span>
+                                  <button
+                                    onClick={() => updateQuantity(product.id, quantity + 1)}
+                                    className="px-2 py-0.5 text-xs text-muted-foreground hover:text-graphite cursor-pointer"
+                                  >
+                                    +
+                                  </button>
+                                </div>
+
+                                <button
+                                  onClick={() => removeFromCart(product.id)}
+                                  className="text-[0.68rem] text-destructive hover:underline cursor-pointer ml-auto"
+                                >
+                                  Remove
+                                </button>
+                              </div>
+                            </div>
+
+                            <div className="text-right shrink-0">
+                              <span className="font-display text-xs font-bold text-graphite">
+                                ₹{(price * quantity).toLocaleString()}
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
                   )}
                 </>
               )}
             </div>
+
+            {/* Drawer Footer / Summary */}
+            {checkoutStep === "cart" && cartItems.length > 0 && (
+              <div className="border-t border-border p-5 sm:p-6 bg-[#fafbfc] space-y-3">
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>Subtotal:</span>
+                  <span className="font-semibold text-graphite">₹{subtotal.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>Shipping:</span>
+                  <span className="font-semibold text-green-700">Free</span>
+                </div>
+                <div className="flex justify-between text-sm font-bold text-graphite border-t border-border/80 pt-2">
+                  <span>Total:</span>
+                  <span className="text-base text-brand-blue font-display">₹{subtotal.toLocaleString()}</span>
+                </div>
+
+                <button
+                  onClick={() => setCheckoutStep("checkout")}
+                  className="w-full rounded-xl bg-brand-blue py-3 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-graphite transition-colors shadow-sm cursor-pointer"
+                >
+                  Proceed to Checkout →
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}
 
-      {/* ─── Simple Footer ─── */}
-      <footer className="w-full border-t border-border bg-graphite-deep py-6 text-steel mt-auto">
-        <div className="px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="rounded-xl bg-white p-1.5 shadow-2xs">
-              <img src="/logo.png" alt="Qualitech" className="h-6 w-auto" />
-            </div>
-            <p className="text-xs text-steel">
-              Precision Connections. Engineered for Performance.
-            </p>
-          </div>
-          <p className="text-xs text-steel/80">
-            © {new Date().getFullYear()} Qualitech Connectronics Private Limited. All rights reserved.
-          </p>
-        </div>
-      </footer>
+      {/* ─── FULL CORPORATE FOOTER: Matching Landing Page ─── */}
+      <Footer onNavigate={onNavigateHome} />
     </div>
   );
 }
