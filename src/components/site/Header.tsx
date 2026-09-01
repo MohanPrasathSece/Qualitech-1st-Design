@@ -63,10 +63,8 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
-        scrolled
-          ? "border-b border-border bg-background/90 backdrop-blur-md"
-          : "border-b border-transparent bg-background/40 backdrop-blur-sm"
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 border-b border-border bg-white/95 backdrop-blur-md ${
+        scrolled ? "shadow-sm" : "shadow-xs"
       }`}
     >
       <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-5 py-4 sm:px-8 lg:py-5">
