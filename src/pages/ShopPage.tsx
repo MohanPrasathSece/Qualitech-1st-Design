@@ -100,21 +100,21 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
       {/* ─── Exact Same Header Navigation as Home ─── */}
       <Header onNavigate={onNavigateHome} currentPage="products" />
 
-      {/* ─── Page Banner ─── */}
-      <div className="bg-graphite-deep text-white px-4 sm:px-8 py-8 border-b border-border/20">
+      {/* ─── Page Banner (Properly padded below fixed header) ─── */}
+      <div className="bg-graphite-deep text-white px-4 sm:px-8 pt-28 sm:pt-32 pb-8 sm:pb-10 border-b border-border/20 relative z-10">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
               <span className="h-1.5 w-1.5 rounded-full bg-brand-yellow" />
               <span className="font-display text-[0.68rem] font-bold uppercase tracking-[0.2em] text-steel">
-                Electronics Components & Cable Assemblies
+                Distribution &amp; Manufacturing
               </span>
             </div>
             <h1 className="mt-2 font-display text-2xl sm:text-3xl font-bold tracking-tight">
-              Products Catalogue
+              Products &amp; Services
             </h1>
             <p className="mt-1 text-xs sm:text-sm text-steel max-w-2xl">
-              Explore our authorized distribution lines for Amphenol and Zolex, and custom-engineered cable assemblies. Click on any Amphenol product to view detailed specifications on the official Amphenol portal.
+              Explore our authorized distribution lines for Amphenol and Zolex, and custom-engineered cable assembly manufacturing. Click on any Amphenol product to view detailed specifications on the official Amphenol portal.
             </p>
           </div>
 
@@ -129,6 +129,17 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
             >
               <span className="h-2 w-2 rounded-full bg-[#009fe3]" />
               Amphenol Distribution
+            </button>
+            <button
+              onClick={() => {
+                setSelectedCategory("Electronics Components");
+                setSelectedBrand("Zolex");
+                setSelectedSubCategory(null);
+              }}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-3.5 py-2 text-xs font-semibold hover:bg-white/20 transition-colors"
+            >
+              <span className="h-2 w-2 rounded-full bg-brand-blue" />
+              Zolex Distribution
             </button>
             <button
               onClick={() => {
@@ -186,7 +197,7 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
       {/* ─── FULL-SCREEN CATALOGUE LAYOUT ─── */}
       <div className="flex-1 w-full flex flex-col lg:flex-row min-h-0">
         {/* ─── FLUSH LEFT SIDEBAR: Desktop Sidebar ─── */}
-        <aside className="hidden lg:block w-72 xl:w-76 shrink-0 border-r border-border/80 bg-white lg:sticky lg:top-[61px] lg:h-[calc(100vh-61px)] lg:overflow-y-auto z-30 p-5 lg:p-6 space-y-6">
+        <aside className="hidden lg:block w-72 xl:w-76 shrink-0 border-r border-border/80 bg-white lg:sticky lg:top-[74px] lg:h-[calc(100vh-74px)] lg:overflow-y-auto z-30 p-5 lg:p-6 space-y-6">
           <div className="flex items-center justify-between pb-3 border-b border-border">
             <h2 className="font-display text-xs font-bold uppercase tracking-[0.16em] text-graphite">
               Categories

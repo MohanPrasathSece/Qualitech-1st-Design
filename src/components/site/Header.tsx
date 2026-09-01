@@ -17,14 +17,14 @@ export const NAV: NavItem[] = [
   { label: "Home", href: "#top" },
   { label: "About Us", href: "#about" },
   {
-    label: "Products",
+    label: "Products & Services",
     href: "#products",
     isPage: true,
     children: [
-      { label: "Amphenol", href: "https://www.amphenol-cs.com/product-series/gnss.html", external: true },
-      { label: "Zolex", href: "https://zolex.in/product/", external: true },
-      { label: "Custom Cable Assemblies", href: "#products" },
-      { label: "Wire Harnesses", href: "#products" },
+      { label: "Amphenol (Electronics Components)", href: "https://www.amphenol-cs.com/product-series/gnss.html", external: true },
+      { label: "Zolex (Electronics Components)", href: "https://zolex.in/product/", external: true },
+      { label: "Manufacturing — Custom Cable Assemblies", href: "#products" },
+      { label: "Manufacturing — Wire Harnesses", href: "#products" },
     ],
   },
   { label: "Contact Us", href: "#contact" },
@@ -89,7 +89,7 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
                 <div key={item.label} className="relative" ref={dropdownRef}>
                   <button
                     onClick={() => setProductsDropdown((v) => !v)}
-                    className={`font-display text-[0.78rem] font-semibold uppercase tracking-[0.14em] transition-colors duration-300 hover:text-foreground cursor-pointer inline-flex items-center gap-1 ${
+                    className={`font-display text-[0.78rem] font-semibold uppercase tracking-[0.14em] transition-colors duration-300 hover:text-foreground cursor-pointer inline-flex items-center gap-1.5 ${
                       item.isPage && currentPage === "products"
                         ? "text-brand-blue font-bold border-b-2 border-brand-blue pb-0.5"
                         : "text-muted-foreground"
@@ -103,68 +103,90 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
 
                   {/* Desktop Dropdown */}
                   {productsDropdown && (
-                    <div className="absolute left-1/2 top-full mt-3 -translate-x-1/2 w-72 overflow-hidden rounded-2xl border border-border bg-background shadow-[var(--shadow-panel)] animate-in fade-in slide-in-from-top-2 duration-200">
-                      <div className="p-2">
-                        <p className="px-3 py-1.5 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
-                          Electronics Components
-                        </p>
-                        {item.children.filter(c => c.label === "Amphenol" || c.label === "Zolex").map((child) => (
-                          child.external ? (
-                            <a
-                              key={child.label}
-                              href={child.href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium text-graphite transition-colors hover:bg-steel-light"
-                              onClick={() => setProductsDropdown(false)}
-                            >
-                              <span>{child.label}</span>
-                              <svg className="h-3.5 w-3.5 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                              </svg>
-                            </a>
-                          ) : (
-                            <button
-                              key={child.label}
-                              onClick={() => {
-                                setProductsDropdown(false);
-                                onNavigate(child.href, true);
-                              }}
-                              className="flex w-full items-center rounded-xl px-3 py-2.5 text-left text-sm font-medium text-graphite transition-colors hover:bg-steel-light cursor-pointer"
-                            >
-                              {child.label}
-                            </button>
-                          )
-                        ))}
+                    <div className="absolute left-1/2 top-full mt-3 -translate-x-1/2 w-80 overflow-hidden rounded-2xl border border-border bg-background shadow-[var(--shadow-panel)] animate-in fade-in slide-in-from-top-2 duration-200">
+                      <div className="p-3">
+                        <div className="px-3 py-1.5 flex items-center justify-between">
+                          <p className="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                            Distribution of Components
+                          </p>
+                          <span className="text-[0.6rem] text-brand-blue font-semibold uppercase">Official Partners</span>
+                        </div>
 
-                        <div className="mx-3 my-1.5 border-t border-border" />
+                        <a
+                          href="https://www.amphenol-cs.com/product-series/gnss.html"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium text-graphite transition-colors hover:bg-steel-light"
+                          onClick={() => setProductsDropdown(false)}
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className="h-2 w-2 rounded-full bg-[#004f9e]" />
+                            <span className="font-semibold">Amphenol</span>
+                            <span className="text-[0.68rem] text-muted-foreground">(Connectors & Antennas)</span>
+                          </div>
+                          <svg className="h-3.5 w-3.5 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                        </a>
 
-                        <p className="px-3 py-1.5 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
-                          Cable Assemblies
-                        </p>
-                        {item.children.filter(c => c.label !== "Amphenol" && c.label !== "Zolex").map((child) => (
-                          <button
-                            key={child.label}
-                            onClick={() => {
-                              setProductsDropdown(false);
-                              onNavigate(child.href, true);
-                            }}
-                            className="flex w-full items-center rounded-xl px-3 py-2.5 text-left text-sm font-medium text-graphite transition-colors hover:bg-steel-light cursor-pointer"
-                          >
-                            {child.label}
-                          </button>
-                        ))}
+                        <a
+                          href="https://zolex.in/product/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium text-graphite transition-colors hover:bg-steel-light"
+                          onClick={() => setProductsDropdown(false)}
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className="h-2 w-2 rounded-full bg-brand-blue" />
+                            <span className="font-semibold">Zolex</span>
+                            <span className="text-[0.68rem] text-muted-foreground">(Components)</span>
+                          </div>
+                          <svg className="h-3.5 w-3.5 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                        </a>
 
-                        <div className="mx-3 my-1.5 border-t border-border" />
+                        <div className="mx-3 my-2 border-t border-border" />
+
+                        <div className="px-3 py-1.5 flex items-center justify-between">
+                          <p className="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                            Manufacturing — Qualitech
+                          </p>
+                          <span className="text-[0.6rem] text-brand-yellow font-semibold uppercase">In-House</span>
+                        </div>
 
                         <button
                           onClick={() => {
                             setProductsDropdown(false);
                             onNavigate("#products", true);
                           }}
-                          className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-[0.72rem] font-bold uppercase tracking-wider text-brand-blue transition-colors hover:bg-brand-blue/5 cursor-pointer"
+                          className="flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-sm font-medium text-graphite transition-colors hover:bg-steel-light cursor-pointer"
                         >
-                          View All Products & Services →
+                          <span>Custom Cable Assemblies</span>
+                          <span className="text-[0.68rem] text-muted-foreground">→</span>
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            setProductsDropdown(false);
+                            onNavigate("#products", true);
+                          }}
+                          className="flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-sm font-medium text-graphite transition-colors hover:bg-steel-light cursor-pointer"
+                        >
+                          <span>Custom Wire Harnesses</span>
+                          <span className="text-[0.68rem] text-muted-foreground">→</span>
+                        </button>
+
+                        <div className="mx-3 my-2 border-t border-border" />
+
+                        <button
+                          onClick={() => {
+                            setProductsDropdown(false);
+                            onNavigate("#products", true);
+                          }}
+                          className="flex w-full items-center justify-center gap-2 rounded-xl bg-graphite/5 px-3 py-2.5 text-center text-[0.72rem] font-bold uppercase tracking-wider text-brand-blue transition-colors hover:bg-brand-blue hover:text-white cursor-pointer"
+                        >
+                          View Full Products & Services Catalogue →
                         </button>
                       </div>
                     </div>
@@ -214,7 +236,7 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
       {/* Mobile Menu */}
       <div
         className={`overflow-hidden rounded-b-2xl border-t border-border bg-background transition-[max-height] duration-500 lg:hidden ${
-          open ? "max-h-[500px]" : "max-h-0"
+          open ? "max-h-[520px]" : "max-h-0"
         }`}
       >
         <nav className="flex flex-col px-5 py-2 sm:px-8">
@@ -234,53 +256,56 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
                   {mobileProductsOpen && (
                     <div className="border-b border-border/70 pb-2 pl-4">
                       <p className="py-1.5 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
-                        Electronics Components
+                        Distribution — Electronics Components
                       </p>
-                      {item.children.filter(c => c.label === "Amphenol" || c.label === "Zolex").map((child) => (
-                        child.external ? (
-                          <a
-                            key={child.label}
-                            href={child.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 py-2 text-[0.82rem] text-muted-foreground hover:text-foreground"
-                            onClick={() => { setOpen(false); setMobileProductsOpen(false); }}
-                          >
-                            {child.label}
-                            <svg className="h-3 w-3 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                            </svg>
-                          </a>
-                        ) : (
-                          <button
-                            key={child.label}
-                            onClick={() => {
-                              setOpen(false);
-                              setMobileProductsOpen(false);
-                              onNavigate(child.href, true);
-                            }}
-                            className="block w-full py-2 text-left text-[0.82rem] text-muted-foreground hover:text-foreground cursor-pointer"
-                          >
-                            {child.label}
-                          </button>
-                        )
-                      ))}
-                      <p className="py-1.5 mt-1 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-muted-foreground border-t border-border/50">
-                        Cable Assemblies
+                      <a
+                        href="https://www.amphenol-cs.com/product-series/gnss.html"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 py-2 text-[0.82rem] font-medium text-foreground hover:text-brand-blue"
+                        onClick={() => { setOpen(false); setMobileProductsOpen(false); }}
+                      >
+                        <span>Amphenol (Official Portal)</span>
+                        <svg className="h-3 w-3 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                      </a>
+                      <a
+                        href="https://zolex.in/product/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 py-2 text-[0.82rem] font-medium text-foreground hover:text-brand-blue"
+                        onClick={() => { setOpen(false); setMobileProductsOpen(false); }}
+                      >
+                        <span>Zolex (Official Portal)</span>
+                        <svg className="h-3 w-3 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                      </a>
+
+                      <p className="py-1.5 mt-2 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-muted-foreground border-t border-border/50">
+                        Manufacturing — Cable Assemblies
                       </p>
-                      {item.children.filter(c => c.label !== "Amphenol" && c.label !== "Zolex").map((child) => (
-                        <button
-                          key={child.label}
-                          onClick={() => {
-                            setOpen(false);
-                            setMobileProductsOpen(false);
-                            onNavigate(child.href, true);
-                          }}
-                          className="block w-full py-2 text-left text-[0.82rem] text-muted-foreground hover:text-foreground cursor-pointer"
-                        >
-                          {child.label}
-                        </button>
-                      ))}
+                      <button
+                        onClick={() => {
+                          setOpen(false);
+                          setMobileProductsOpen(false);
+                          onNavigate("#products", true);
+                        }}
+                        className="block w-full py-2 text-left text-[0.82rem] text-muted-foreground hover:text-foreground cursor-pointer"
+                      >
+                        Custom Cable Assemblies
+                      </button>
+                      <button
+                        onClick={() => {
+                          setOpen(false);
+                          setMobileProductsOpen(false);
+                          onNavigate("#products", true);
+                        }}
+                        className="block w-full py-2 text-left text-[0.82rem] text-muted-foreground hover:text-foreground cursor-pointer"
+                      >
+                        Custom Wire Harnesses
+                      </button>
                     </div>
                   )}
                 </div>

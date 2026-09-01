@@ -8,7 +8,7 @@ export interface NavItem {
 export const FOOTER_COMPANY: NavItem[] = [
   { label: "Home", href: "#top" },
   { label: "About Us", href: "#about" },
-  { label: "Products", href: "#products", isPage: true },
+  { label: "Products & Services", href: "#products", isPage: true },
   { label: "Contact Us", href: "#contact" },
 ];
 
