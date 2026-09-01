@@ -4,6 +4,7 @@ export interface NavChild {
   label: string;
   href: string;
   external?: boolean;
+  isPage?: boolean;
 }
 
 export interface NavItem {
@@ -15,19 +16,19 @@ export interface NavItem {
 
 export const NAV: NavItem[] = [
   { label: "Home", href: "#top" },
-  { label: "About Us", href: "#about" },
+  { label: "About Us", href: "#about-page", isPage: true },
   {
     label: "Products & Services",
     href: "#products",
     isPage: true,
     children: [
-      { label: "Amphenol (Electronics Components)", href: "https://www.amphenol-cs.com/product-series/gnss.html", external: true },
-      { label: "Zolex (Electronics Components)", href: "https://zolex.in/product/", external: true },
-      { label: "Manufacturing — Custom Cable Assemblies", href: "#products" },
-      { label: "Manufacturing — Wire Harnesses", href: "#products" },
+      { label: "Amphenol (Components & Antennas)", href: "#amphenol", isPage: true },
+      { label: "Zolex (Official Portal)", href: "https://zolex.in/product/", external: true },
+      { label: "Manufacturing (Cable Assemblies)", href: "#manufacturing", isPage: true },
     ],
   },
-  { label: "Contact Us", href: "#contact" },
+  { label: "Manufacturing", href: "#manufacturing", isPage: true },
+  { label: "Contact Us", href: "#contact-page", isPage: true },
 ];
 
 export interface HeaderProps {
@@ -90,7 +91,7 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
                   <button
                     onClick={() => setProductsDropdown((v) => !v)}
                     className={`font-display text-[0.78rem] font-semibold uppercase tracking-[0.14em] transition-colors duration-300 hover:text-foreground cursor-pointer inline-flex items-center gap-1.5 ${
-                      item.isPage && currentPage === "products"
+                      item.isPage && (currentPage === "products" || currentPage === "amphenol" || currentPage === "manufacturing")
                         ? "text-brand-blue font-bold border-b-2 border-brand-blue pb-0.5"
                         : "text-muted-foreground"
                     }`}
@@ -109,26 +110,25 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
                           <p className="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
                             Distribution of Components
                           </p>
-                          <span className="text-[0.6rem] text-brand-blue font-semibold uppercase">Official Partners</span>
+                          <span className="text-[0.6rem] text-brand-blue font-semibold uppercase">Authorized</span>
                         </div>
 
-                        <a
-                          href="https://www.amphenol-cs.com/product-series/gnss.html"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium text-graphite transition-colors hover:bg-steel-light"
-                          onClick={() => setProductsDropdown(false)}
+                        {/* Amphenol Page Link */}
+                        <button
+                          onClick={() => {
+                            setProductsDropdown(false);
+                            onNavigate("#amphenol", true);
+                          }}
+                          className="flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-sm font-medium text-graphite transition-colors hover:bg-steel-light cursor-pointer"
                         >
                           <div className="flex items-center gap-2">
                             <span className="h-2 w-2 rounded-full bg-[#004f9e]" />
-                            <span className="font-semibold">Amphenol</span>
-                            <span className="text-[0.68rem] text-muted-foreground">(Connectors & Antennas)</span>
+                            <span className="font-semibold">Amphenol Page</span>
                           </div>
-                          <svg className="h-3.5 w-3.5 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                        </a>
+                          <span className="text-[0.68rem] text-brand-blue font-bold">Details →</span>
+                        </button>
 
+                        {/* Zolex External Link */}
                         <a
                           href="https://zolex.in/product/"
                           target="_blank"
@@ -138,8 +138,7 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
                         >
                           <div className="flex items-center gap-2">
                             <span className="h-2 w-2 rounded-full bg-brand-blue" />
-                            <span className="font-semibold">Zolex</span>
-                            <span className="text-[0.68rem] text-muted-foreground">(Components)</span>
+                            <span className="font-semibold">Zolex Products</span>
                           </div>
                           <svg className="h-3.5 w-3.5 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -155,26 +154,19 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
                           <span className="text-[0.6rem] text-brand-yellow font-semibold uppercase">In-House</span>
                         </div>
 
+                        {/* Manufacturing Page Link */}
                         <button
                           onClick={() => {
                             setProductsDropdown(false);
-                            onNavigate("#products", true);
+                            onNavigate("#manufacturing", true);
                           }}
                           className="flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-sm font-medium text-graphite transition-colors hover:bg-steel-light cursor-pointer"
                         >
-                          <span>Custom Cable Assemblies</span>
-                          <span className="text-[0.68rem] text-muted-foreground">→</span>
-                        </button>
-
-                        <button
-                          onClick={() => {
-                            setProductsDropdown(false);
-                            onNavigate("#products", true);
-                          }}
-                          className="flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-sm font-medium text-graphite transition-colors hover:bg-steel-light cursor-pointer"
-                        >
-                          <span>Custom Wire Harnesses</span>
-                          <span className="text-[0.68rem] text-muted-foreground">→</span>
+                          <div className="flex items-center gap-2">
+                            <span className="h-2 w-2 rounded-full bg-brand-yellow" />
+                            <span className="font-semibold">Manufacturing Capabilities</span>
+                          </div>
+                          <span className="text-[0.68rem] text-brand-yellow font-bold">Details →</span>
                         </button>
 
                         <div className="mx-3 my-2 border-t border-border" />
@@ -195,12 +187,18 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
               );
             }
 
+            const isActive =
+              (item.href === "#top" && currentPage === "home") ||
+              (item.href === "#about-page" && currentPage === "about") ||
+              (item.href === "#manufacturing" && currentPage === "manufacturing") ||
+              (item.href === "#contact-page" && currentPage === "contact");
+
             return (
               <button
                 key={item.label}
                 onClick={() => onNavigate(item.href, item.isPage)}
                 className={`font-display text-[0.78rem] font-semibold uppercase tracking-[0.14em] transition-colors duration-300 hover:text-foreground cursor-pointer ${
-                  item.isPage && currentPage === "products"
+                  isActive
                     ? "text-brand-blue font-bold border-b-2 border-brand-blue pb-0.5"
                     : "text-muted-foreground"
                 }`}
@@ -210,7 +208,7 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
             );
           })}
           <button
-            onClick={() => onNavigate("#contact")}
+            onClick={() => onNavigate("#contact-page", true)}
             className="group inline-flex items-center gap-2 rounded-xl border border-graphite px-5 py-2.5 font-display text-[0.72rem] font-bold uppercase tracking-[0.18em] text-graphite transition-colors duration-300 hover:bg-graphite hover:text-background cursor-pointer"
           >
             Request a Quote
@@ -236,95 +234,107 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
       {/* Mobile Menu */}
       <div
         className={`overflow-hidden rounded-b-2xl border-t border-border bg-background transition-[max-height] duration-500 lg:hidden ${
-          open ? "max-h-[520px]" : "max-h-0"
+          open ? "max-h-[560px]" : "max-h-0"
         }`}
       >
         <nav className="flex flex-col px-5 py-2 sm:px-8">
-          {NAV.map((item) => {
-            if (item.children) {
-              return (
-                <div key={item.label}>
-                  <button
-                    onClick={() => setMobileProductsOpen((v) => !v)}
-                    className="flex w-full items-center justify-between border-b border-border/70 py-3.5 text-left font-display text-sm font-semibold uppercase tracking-[0.14em] text-foreground cursor-pointer"
-                  >
-                    {item.label}
-                    <svg className={`h-3.5 w-3.5 transition-transform duration-200 ${mobileProductsOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-                  {mobileProductsOpen && (
-                    <div className="border-b border-border/70 pb-2 pl-4">
-                      <p className="py-1.5 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
-                        Distribution — Electronics Components
-                      </p>
-                      <a
-                        href="https://www.amphenol-cs.com/product-series/gnss.html"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 py-2 text-[0.82rem] font-medium text-foreground hover:text-brand-blue"
-                        onClick={() => { setOpen(false); setMobileProductsOpen(false); }}
-                      >
-                        <span>Amphenol (Official Portal)</span>
-                        <svg className="h-3 w-3 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                      </a>
-                      <a
-                        href="https://zolex.in/product/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 py-2 text-[0.82rem] font-medium text-foreground hover:text-brand-blue"
-                        onClick={() => { setOpen(false); setMobileProductsOpen(false); }}
-                      >
-                        <span>Zolex (Official Portal)</span>
-                        <svg className="h-3 w-3 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                      </a>
+          <button
+            onClick={() => {
+              setOpen(false);
+              onNavigate("#top");
+            }}
+            className="border-b border-border/70 py-3 text-left font-display text-sm font-semibold uppercase tracking-[0.14em] text-foreground"
+          >
+            Home
+          </button>
+          <button
+            onClick={() => {
+              setOpen(false);
+              onNavigate("#about-page", true);
+            }}
+            className="border-b border-border/70 py-3 text-left font-display text-sm font-semibold uppercase tracking-[0.14em] text-foreground"
+          >
+            About Us
+          </button>
 
-                      <p className="py-1.5 mt-2 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-muted-foreground border-t border-border/50">
-                        Manufacturing — Cable Assemblies
-                      </p>
-                      <button
-                        onClick={() => {
-                          setOpen(false);
-                          setMobileProductsOpen(false);
-                          onNavigate("#products", true);
-                        }}
-                        className="block w-full py-2 text-left text-[0.82rem] text-muted-foreground hover:text-foreground cursor-pointer"
-                      >
-                        Custom Cable Assemblies
-                      </button>
-                      <button
-                        onClick={() => {
-                          setOpen(false);
-                          setMobileProductsOpen(false);
-                          onNavigate("#products", true);
-                        }}
-                        className="block w-full py-2 text-left text-[0.82rem] text-muted-foreground hover:text-foreground cursor-pointer"
-                      >
-                        Custom Wire Harnesses
-                      </button>
-                    </div>
-                  )}
-                </div>
-              );
-            }
+          {/* Expandable Products & Services */}
+          <div>
+            <button
+              onClick={() => setMobileProductsOpen((v) => !v)}
+              className="flex w-full items-center justify-between border-b border-border/70 py-3 text-left font-display text-sm font-semibold uppercase tracking-[0.14em] text-foreground cursor-pointer"
+            >
+              <span>Products &amp; Services</span>
+              <svg className={`h-3.5 w-3.5 transition-transform duration-200 ${mobileProductsOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {mobileProductsOpen && (
+              <div className="border-b border-border/70 pb-2 pl-4">
+                <button
+                  onClick={() => {
+                    setOpen(false);
+                    setMobileProductsOpen(false);
+                    onNavigate("#amphenol", true);
+                  }}
+                  className="block w-full py-2 text-left text-[0.82rem] font-medium text-foreground hover:text-brand-blue"
+                >
+                  Amphenol Page (Connectors &amp; Antennas)
+                </button>
+                <a
+                  href="https://zolex.in/product/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 py-2 text-[0.82rem] font-medium text-foreground hover:text-brand-blue"
+                  onClick={() => { setOpen(false); setMobileProductsOpen(false); }}
+                >
+                  <span>Zolex (Official Portal)</span>
+                  <svg className="h-3 w-3 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </a>
+                <button
+                  onClick={() => {
+                    setOpen(false);
+                    setMobileProductsOpen(false);
+                    onNavigate("#manufacturing", true);
+                  }}
+                  className="block w-full py-2 text-left text-[0.82rem] font-medium text-foreground hover:text-brand-blue"
+                >
+                  Manufacturing (Cable Assemblies)
+                </button>
+                <button
+                  onClick={() => {
+                    setOpen(false);
+                    setMobileProductsOpen(false);
+                    onNavigate("#products", true);
+                  }}
+                  className="block w-full py-2 text-left text-[0.82rem] font-bold text-brand-blue"
+                >
+                  Full Products Catalogue →
+                </button>
+              </div>
+            )}
+          </div>
 
-            return (
-              <button
-                key={item.label}
-                onClick={() => {
-                  setOpen(false);
-                  onNavigate(item.href, item.isPage);
-                }}
-                className="border-b border-border/70 py-3.5 text-left font-display text-sm font-semibold uppercase tracking-[0.14em] text-foreground cursor-pointer"
-              >
-                {item.label}
-              </button>
-            );
-          })}
+          <button
+            onClick={() => {
+              setOpen(false);
+              onNavigate("#manufacturing", true);
+            }}
+            className="border-b border-border/70 py-3 text-left font-display text-sm font-semibold uppercase tracking-[0.14em] text-foreground"
+          >
+            Manufacturing
+          </button>
+
+          <button
+            onClick={() => {
+              setOpen(false);
+              onNavigate("#contact-page", true);
+            }}
+            className="border-b border-border/70 py-3 text-left font-display text-sm font-semibold uppercase tracking-[0.14em] text-foreground"
+          >
+            Contact Us
+          </button>
         </nav>
       </div>
     </header>

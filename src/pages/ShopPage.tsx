@@ -100,9 +100,10 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
       {/* ─── Exact Same Header Navigation as Home ─── */}
       <Header onNavigate={onNavigateHome} currentPage="products" />
 
-      {/* ─── Page Banner (Properly padded below fixed header) ─── */}
-      <div className="bg-graphite-deep text-white px-4 sm:px-8 pt-28 sm:pt-32 pb-8 sm:pb-10 border-b border-border/20 relative z-10">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* ─── Page Banner (Rich Navy Blue Theme properly padded below fixed header) ─── */}
+      <div className="bg-graphite-deep text-white px-4 sm:px-8 pt-28 sm:pt-36 pb-12 sm:pb-16 border-b border-border/20 relative z-10 overflow-hidden">
+        <div className="absolute inset-0 hairline-grid opacity-25 pointer-events-none" />
+        <div className="relative max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
             <div className="flex items-center gap-2">
               <span className="h-1.5 w-1.5 rounded-full bg-brand-yellow" />
@@ -110,11 +111,11 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
                 Distribution &amp; Manufacturing
               </span>
             </div>
-            <h1 className="mt-2 font-display text-2xl sm:text-3xl font-bold tracking-tight">
+            <h1 className="mt-3 font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
               Products &amp; Services
             </h1>
-            <p className="mt-1 text-xs sm:text-sm text-steel max-w-2xl">
-              Explore our authorized distribution lines for Amphenol and Zolex, and custom-engineered cable assembly manufacturing. Click on any Amphenol product to view detailed specifications on the official Amphenol portal.
+            <p className="mt-3 text-xs sm:text-sm text-steel max-w-2xl leading-relaxed">
+              Explore our authorized distribution lines for Amphenol and Zolex, alongside custom-engineered cable assembly manufacturing. Click on any Amphenol product to view detailed specifications on the official Amphenol portal.
             </p>
           </div>
 
@@ -125,7 +126,11 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
                 setSelectedBrand("Amphenol");
                 setSelectedSubCategory(null);
               }}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-3.5 py-2 text-xs font-semibold hover:bg-white/20 transition-colors"
+              className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-semibold transition-all cursor-pointer ${
+                selectedCategory === "Electronics Components" && selectedBrand === "Amphenol"
+                  ? "bg-[#004f9e] text-white shadow-md ring-2 ring-white/20"
+                  : "border border-white/20 bg-white/10 text-white hover:bg-white/20"
+              }`}
             >
               <span className="h-2 w-2 rounded-full bg-[#009fe3]" />
               Amphenol Distribution
@@ -136,9 +141,13 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
                 setSelectedBrand("Zolex");
                 setSelectedSubCategory(null);
               }}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-3.5 py-2 text-xs font-semibold hover:bg-white/20 transition-colors"
+              className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-semibold transition-all cursor-pointer ${
+                selectedCategory === "Electronics Components" && selectedBrand === "Zolex"
+                  ? "bg-brand-blue text-white shadow-md ring-2 ring-white/20"
+                  : "border border-white/20 bg-white/10 text-white hover:bg-white/20"
+              }`}
             >
-              <span className="h-2 w-2 rounded-full bg-brand-blue" />
+              <span className="h-2 w-2 rounded-full bg-brand-blue-soft" />
               Zolex Distribution
             </button>
             <button
@@ -147,7 +156,11 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
                 setSelectedBrand("Qualitech");
                 setSelectedSubCategory(null);
               }}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-3.5 py-2 text-xs font-semibold hover:bg-white/20 transition-colors"
+              className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-semibold transition-all cursor-pointer ${
+                selectedCategory === "Cable Assemblies" && selectedBrand === "Qualitech"
+                  ? "bg-brand-yellow text-graphite font-bold shadow-md"
+                  : "border border-white/20 bg-white/10 text-white hover:bg-white/20"
+              }`}
             >
               <span className="h-2 w-2 rounded-full bg-brand-yellow" />
               Cable Assembly Manufacturing

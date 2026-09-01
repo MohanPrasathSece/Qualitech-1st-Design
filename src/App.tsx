@@ -14,6 +14,10 @@ import { Counter, Reveal } from "@/components/site/reveal";
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
 import { ShopPage } from "@/pages/ShopPage";
+import { AboutPage } from "@/pages/AboutPage";
+import { ManufacturingPage } from "@/pages/ManufacturingPage";
+import { AmphenolPage } from "@/pages/AmphenolPage";
+import { ContactPage } from "@/pages/ContactPage";
 
 export default Home;
 
@@ -655,29 +659,27 @@ function FinalCTA() {
 
 
 
-/* ─── Home (root component) ─── */
+/* ─── Root App Component & Multi-Page Router ─── */
+
+type PageType = "home" | "products" | "about" | "manufacturing" | "amphenol" | "contact";
 
 function Home() {
-  const [currentPage, setCurrentPage] = useState<"home" | "products">(() => {
-    if (typeof window !== "undefined") {
-      const hash = window.location.hash.toLowerCase();
-      const path = window.location.pathname.toLowerCase();
-      if (hash === "#products" || hash === "#shop" || path === "/products" || path === "/shop") {
-        return "products";
-      }
-    }
+  const getPageFromHash = (): PageType => {
+    if (typeof window === "undefined") return "home";
+    const hash = window.location.hash.toLowerCase();
+    if (hash === "#products" || hash === "#shop") return "products";
+    if (hash === "#about-page" || hash === "#about-us") return "about";
+    if (hash === "#manufacturing" || hash === "#cable-assemblies") return "manufacturing";
+    if (hash === "#amphenol") return "amphenol";
+    if (hash === "#contact-page" || hash === "#contact-us") return "contact";
     return "home";
-  });
+  };
+
+  const [currentPage, setCurrentPage] = useState<PageType>(getPageFromHash);
 
   useEffect(() => {
     const handleLocationChange = () => {
-      const hash = window.location.hash.toLowerCase();
-      const path = window.location.pathname.toLowerCase();
-      if (hash === "#products" || hash === "#shop" || path === "/products" || path === "/shop") {
-        setCurrentPage("products");
-      } else {
-        setCurrentPage("home");
-      }
+      setCurrentPage(getPageFromHash());
     };
     window.addEventListener("popstate", handleLocationChange);
     window.addEventListener("hashchange", handleLocationChange);
@@ -688,13 +690,44 @@ function Home() {
   }, []);
 
   const handleNavigate = (target: string, isPage?: boolean) => {
-    if (isPage || target === "#products" || target === "#shop") {
+    const cleanTarget = target.toLowerCase();
+
+    if (cleanTarget === "#products" || cleanTarget === "#shop") {
       setCurrentPage("products");
       window.history.pushState(null, "", "#products");
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
 
+    if (cleanTarget === "#about-page" || cleanTarget === "#about-us") {
+      setCurrentPage("about");
+      window.history.pushState(null, "", "#about-page");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    if (cleanTarget === "#manufacturing" || cleanTarget === "#cable-assemblies") {
+      setCurrentPage("manufacturing");
+      window.history.pushState(null, "", "#manufacturing");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    if (cleanTarget === "#amphenol") {
+      setCurrentPage("amphenol");
+      window.history.pushState(null, "", "#amphenol");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    if (cleanTarget === "#contact-page" || cleanTarget === "#contact-us") {
+      setCurrentPage("contact");
+      window.history.pushState(null, "", "#contact-page");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    // Navigating back to Home page sections
     if (currentPage !== "home") {
       setCurrentPage("home");
       window.history.pushState(null, "", target);
@@ -719,13 +752,31 @@ function Home() {
     }
   };
 
+  // Render individual page components
   if (currentPage === "products") {
-    return <ShopPage onNavigateHome={(target) => handleNavigate(target || "#top")} />;
+    return <ShopPage onNavigateHome={handleNavigate} />;
   }
 
+  if (currentPage === "about") {
+    return <AboutPage onNavigate={handleNavigate} />;
+  }
+
+  if (currentPage === "manufacturing") {
+    return <ManufacturingPage onNavigate={handleNavigate} />;
+  }
+
+  if (currentPage === "amphenol") {
+    return <AmphenolPage onNavigate={handleNavigate} />;
+  }
+
+  if (currentPage === "contact") {
+    return <ContactPage onNavigate={handleNavigate} />;
+  }
+
+  // Home Page
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <Header onNavigate={handleNavigate} currentPage={currentPage} />
+      <Header onNavigate={handleNavigate} currentPage="home" />
       <main>
         <Hero />
         <Stats />
