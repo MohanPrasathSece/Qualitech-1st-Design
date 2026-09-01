@@ -1,21 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import heroHarness from "@/assets/hero-harness.jpg";
 import aboutFactory from "@/assets/about-factory.jpg";
 import cardCable from "@/assets/card-cable-assemblies.jpg";
-import cardConnectors from "@/assets/card-connectors.jpg";
 import cardFacilities from "@/assets/card-facilities.jpg";
 import indTelecom from "@/assets/ind-telecom.jpg";
 import indPower from "@/assets/ind-power.jpg";
 import indDefense from "@/assets/ind-defense.jpg";
 import indRailways from "@/assets/ind-railways.jpg";
 import facilitiesWide from "@/assets/facilities-wide.jpg";
-import p1 from "@/assets/p1.jpg";
-import p2 from "@/assets/p2.jpg";
-import p3 from "@/assets/p3.jpg";
-import p4 from "@/assets/p4.jpg";
-import p5 from "@/assets/p5.jpg";
-import p6 from "@/assets/p6.jpg";
 
 import { Counter, Reveal } from "@/components/site/reveal";
 import { Footer } from "@/components/site/Footer";
@@ -29,13 +22,23 @@ export interface NavItem {
   label: string;
   href: string;
   isPage?: boolean;
+  children?: { label: string; href: string; external?: boolean }[];
 }
 
 const NAV: NavItem[] = [
   { label: "Home", href: "#top" },
   { label: "About Us", href: "#about" },
-  { label: "Facilities", href: "#facilities" },
-  { label: "Shop", href: "#products", isPage: true },
+  {
+    label: "Products",
+    href: "#products",
+    isPage: true,
+    children: [
+      { label: "Amphenol", href: "https://www.amphenol-cs.com/product-series/gnss.html", external: true },
+      { label: "Zolex", href: "https://zolex.in/product/", external: true },
+      { label: "Custom Cable Assemblies", href: "#products" },
+      { label: "Wire Harnesses", href: "#products" },
+    ],
+  },
   { label: "Contact Us", href: "#contact" },
 ];
 
@@ -47,12 +50,26 @@ interface HeaderProps {
 function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [productsDropdown, setProductsDropdown] = useState(false);
+  const [mobileProductsOpen, setMobileProductsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setProductsDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
@@ -78,19 +95,110 @@ function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
         </button>
 
         <nav className="hidden items-center gap-7 lg:flex">
-          {NAV.map((item) => (
-            <button
-              key={item.label}
-              onClick={() => onNavigate(item.href, item.isPage)}
-              className={`font-display text-[0.78rem] font-semibold uppercase tracking-[0.14em] transition-colors duration-300 hover:text-foreground cursor-pointer ${
-                item.isPage && currentPage === "products"
-                  ? "text-brand-blue font-bold border-b-2 border-brand-blue pb-0.5"
-                  : "text-muted-foreground"
-              }`}
-            >
-              {item.label}
-            </button>
-          ))}
+          {NAV.map((item) => {
+            if (item.children) {
+              return (
+                <div key={item.label} className="relative" ref={dropdownRef}>
+                  <button
+                    onClick={() => setProductsDropdown((v) => !v)}
+                    className={`font-display text-[0.78rem] font-semibold uppercase tracking-[0.14em] transition-colors duration-300 hover:text-foreground cursor-pointer inline-flex items-center gap-1 ${
+                      item.isPage && currentPage === "products"
+                        ? "text-brand-blue font-bold border-b-2 border-brand-blue pb-0.5"
+                        : "text-muted-foreground"
+                    }`}
+                  >
+                    {item.label}
+                    <svg className={`h-3 w-3 transition-transform duration-200 ${productsDropdown ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  {/* Desktop Dropdown */}
+                  {productsDropdown && (
+                    <div className="absolute left-1/2 top-full mt-3 -translate-x-1/2 w-72 overflow-hidden rounded-2xl border border-border bg-background shadow-[var(--shadow-panel)] animate-in fade-in slide-in-from-top-2 duration-200">
+                      <div className="p-2">
+                        <p className="px-3 py-1.5 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                          Electronics Components
+                        </p>
+                        {item.children.filter(c => c.label === "Amphenol" || c.label === "Zolex").map((child) => (
+                          child.external ? (
+                            <a
+                              key={child.label}
+                              href={child.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium text-graphite transition-colors hover:bg-steel-light"
+                              onClick={() => setProductsDropdown(false)}
+                            >
+                              <span>{child.label}</span>
+                              <svg className="h-3.5 w-3.5 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                              </svg>
+                            </a>
+                          ) : (
+                            <button
+                              key={child.label}
+                              onClick={() => {
+                                setProductsDropdown(false);
+                                onNavigate(child.href, true);
+                              }}
+                              className="flex w-full items-center rounded-xl px-3 py-2.5 text-left text-sm font-medium text-graphite transition-colors hover:bg-steel-light cursor-pointer"
+                            >
+                              {child.label}
+                            </button>
+                          )
+                        ))}
+
+                        <div className="mx-3 my-1.5 border-t border-border" />
+
+                        <p className="px-3 py-1.5 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                          Cable Assemblies
+                        </p>
+                        {item.children.filter(c => c.label !== "Amphenol" && c.label !== "Zolex").map((child) => (
+                          <button
+                            key={child.label}
+                            onClick={() => {
+                              setProductsDropdown(false);
+                              onNavigate(child.href, true);
+                            }}
+                            className="flex w-full items-center rounded-xl px-3 py-2.5 text-left text-sm font-medium text-graphite transition-colors hover:bg-steel-light cursor-pointer"
+                          >
+                            {child.label}
+                          </button>
+                        ))}
+
+                        <div className="mx-3 my-1.5 border-t border-border" />
+
+                        <button
+                          onClick={() => {
+                            setProductsDropdown(false);
+                            onNavigate("#products", true);
+                          }}
+                          className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-[0.72rem] font-bold uppercase tracking-wider text-brand-blue transition-colors hover:bg-brand-blue/5 cursor-pointer"
+                        >
+                          View All Products & Services →
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            }
+
+            return (
+              <button
+                key={item.label}
+                onClick={() => onNavigate(item.href, item.isPage)}
+                className={`font-display text-[0.78rem] font-semibold uppercase tracking-[0.14em] transition-colors duration-300 hover:text-foreground cursor-pointer ${
+                  item.isPage && currentPage === "products"
+                    ? "text-brand-blue font-bold border-b-2 border-brand-blue pb-0.5"
+                    : "text-muted-foreground"
+                }`}
+              >
+                {item.label}
+              </button>
+            );
+          })}
           <button
             onClick={() => onNavigate("#contact")}
             className="group inline-flex items-center gap-2 rounded-xl border border-graphite px-5 py-2.5 font-display text-[0.72rem] font-bold uppercase tracking-[0.18em] text-graphite transition-colors duration-300 hover:bg-graphite hover:text-background cursor-pointer"
@@ -115,24 +223,95 @@ function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
         </button>
       </div>
 
+      {/* Mobile Menu */}
       <div
         className={`overflow-hidden rounded-b-2xl border-t border-border bg-background transition-[max-height] duration-500 lg:hidden ${
-          open ? "max-h-96" : "max-h-0"
+          open ? "max-h-[500px]" : "max-h-0"
         }`}
       >
         <nav className="flex flex-col px-5 py-2 sm:px-8">
-          {NAV.map((item) => (
-            <button
-              key={item.label}
-              onClick={() => {
-                setOpen(false);
-                onNavigate(item.href, item.isPage);
-              }}
-              className="border-b border-border/70 py-3.5 text-left font-display text-sm font-semibold uppercase tracking-[0.14em] text-foreground cursor-pointer"
-            >
-              {item.label}
-            </button>
-          ))}
+          {NAV.map((item) => {
+            if (item.children) {
+              return (
+                <div key={item.label}>
+                  <button
+                    onClick={() => setMobileProductsOpen((v) => !v)}
+                    className="flex w-full items-center justify-between border-b border-border/70 py-3.5 text-left font-display text-sm font-semibold uppercase tracking-[0.14em] text-foreground cursor-pointer"
+                  >
+                    {item.label}
+                    <svg className={`h-3.5 w-3.5 transition-transform duration-200 ${mobileProductsOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  {mobileProductsOpen && (
+                    <div className="border-b border-border/70 pb-2 pl-4">
+                      <p className="py-1.5 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                        Electronics Components
+                      </p>
+                      {item.children.filter(c => c.label === "Amphenol" || c.label === "Zolex").map((child) => (
+                        child.external ? (
+                          <a
+                            key={child.label}
+                            href={child.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 py-2 text-[0.82rem] text-muted-foreground hover:text-foreground"
+                            onClick={() => { setOpen(false); setMobileProductsOpen(false); }}
+                          >
+                            {child.label}
+                            <svg className="h-3 w-3 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                          </a>
+                        ) : (
+                          <button
+                            key={child.label}
+                            onClick={() => {
+                              setOpen(false);
+                              setMobileProductsOpen(false);
+                              onNavigate(child.href, true);
+                            }}
+                            className="block w-full py-2 text-left text-[0.82rem] text-muted-foreground hover:text-foreground cursor-pointer"
+                          >
+                            {child.label}
+                          </button>
+                        )
+                      ))}
+                      <p className="py-1.5 mt-1 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-muted-foreground border-t border-border/50">
+                        Cable Assemblies
+                      </p>
+                      {item.children.filter(c => c.label !== "Amphenol" && c.label !== "Zolex").map((child) => (
+                        <button
+                          key={child.label}
+                          onClick={() => {
+                            setOpen(false);
+                            setMobileProductsOpen(false);
+                            onNavigate(child.href, true);
+                          }}
+                          className="block w-full py-2 text-left text-[0.82rem] text-muted-foreground hover:text-foreground cursor-pointer"
+                        >
+                          {child.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+
+            return (
+              <button
+                key={item.label}
+                onClick={() => {
+                  setOpen(false);
+                  onNavigate(item.href, item.isPage);
+                }}
+                className="border-b border-border/70 py-3.5 text-left font-display text-sm font-semibold uppercase tracking-[0.14em] text-foreground cursor-pointer"
+              >
+                {item.label}
+              </button>
+            );
+          })}
         </nav>
       </div>
     </header>
@@ -162,21 +341,20 @@ function Hero() {
 
           <Reveal delay={220}>
             <p className="mt-6 max-w-xl font-display text-base font-semibold text-graphite sm:text-lg">
-              Custom Wire &amp; Cable Harness Solutions for Demanding Industries
+              Distribution of Electronics Components &amp; Manufacturing of Cable Assemblies
             </p>
           </Reveal>
 
           <Reveal delay={300}>
             <p className="mt-4 max-w-xl text-[0.95rem] leading-relaxed text-muted-foreground">
-              Qualitech Connectronics delivers high-quality custom-built wire and cable harnesses,
-              cable assemblies and connector solutions for OEM applications.
+              Qualitech Connectronics delivers high-quality electronics components from trusted brands like Amphenol and Zolex, along with custom-built wire and cable harnesses for OEM applications.
             </p>
           </Reveal>
 
           <Reveal delay={380}>
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
               <a
-                href="#what-we-do"
+                href="#business"
                 className="group inline-flex items-center justify-center gap-3 rounded-xl bg-graphite px-7 py-4 font-display text-[0.72rem] font-bold uppercase tracking-[0.2em] text-white transition-all duration-300 hover:bg-brand-blue shadow-sm"
               >
                 Explore Our Solutions
@@ -215,8 +393,8 @@ const STATS = [
   { value: 1995, label: "Established", plain: true },
   { value: 30, suffix: "+", label: "Years of Experience" },
   { text: "OEM", label: "Focused Solutions" },
+  { value: 2, label: "Business Verticals" },
   { value: 4, label: "Key Industries" },
-  { value: 1995, label: "Year Founded", plain: true },
 ];
 
 function Stats() {
@@ -249,193 +427,143 @@ function Stats() {
   );
 }
 
-/* ─── Authorized & Supported Products (Flowing Logo Carousel) ─── */
+/* ─── Business Structure (NEW — Prominent Section) ─── */
 
-const BRAND_LOGOS = [
-  {
-    id: "belden",
-    name: "Belden",
-    content: (
-      <div className="flex flex-col items-center justify-center text-center">
-        <div className="flex items-center tracking-tighter">
-          <span className="font-extrabold text-2xl text-[#00519e] tracking-tight">BEL</span>
-          <svg className="h-6 w-5 mx-0.5 text-[#00519e]" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M4 3h7a8 8 0 0 1 8 8 8 8 0 0 1-8 8H4V3zm4 3v10h3a5 5 0 0 0 5-5 5 5 0 0 0-5-5H8z"/>
-            <path d="M10 6a4 4 0 0 1 4 4 4 4 0 0 1-4 4V6z" fill="#0072ce" opacity="0.6"/>
-          </svg>
-          <span className="font-extrabold text-2xl text-[#00519e] tracking-tight">EN</span>
-        </div>
-        <span className="text-[0.52rem] font-bold tracking-wider text-[#00873d] uppercase mt-0.5">
-          Sending All The Right Signals
-        </span>
-      </div>
-    ),
-  },
-  {
-    id: "bulgin",
-    name: "Bulgin",
-    content: (
-      <div className="flex items-center gap-2.5">
-        <svg className="h-8 w-8 shrink-0" viewBox="0 0 32 32" fill="none">
-          <polygon points="12,2 20,6 12,11 4,7" fill="#6d397d" />
-          <polygon points="4,7 12,11 12,20 4,16" fill="#4d2458" />
-          <polygon points="12,11 20,6 20,15 12,20" fill="#582d64" />
-          <polygon points="18,12 26,16 18,21 10,17" fill="#009fe3" />
-          <polygon points="10,17 18,21 18,28 10,24" fill="#007bb3" />
-          <polygon points="18,21 26,16 26,23 18,28" fill="#008ecc" />
-          <polygon points="8,23 12,25 8,27 4,25" fill="#a4a9ad" />
-          <polygon points="4,25 8,27 8,30 4,28" fill="#888c90" />
-          <polygon points="8,27 12,25 12,28 8,30" fill="#999ea2" />
-        </svg>
-        <div className="flex flex-col text-left">
-          <span className="font-bold text-xl text-[#4a4f54] leading-tight font-sans lowercase tracking-tight">
-            bulgin
-          </span>
-          <span className="text-[0.52rem] text-muted-foreground leading-none">
-            a brand of Elektron Technology
-          </span>
-        </div>
-      </div>
-    ),
-  },
-  {
-    id: "lemo",
-    name: "LEMO",
-    content: (
-      <div className="flex items-center gap-2">
-        <svg className="h-7 w-7 text-[#0066b2]" viewBox="0 0 36 36" fill="currentColor">
-          <circle cx="18" cy="18" r="16" fill="none" stroke="currentColor" strokeWidth="2.5"/>
-          <path d="M12 11h4v10h8v4H12V11z"/>
-          <polygon points="8,18 12,14 12,22"/>
-        </svg>
-        <div className="flex items-center">
-          <span className="font-extrabold italic text-2xl tracking-wider text-[#0066b2]">
-            LEMO
-          </span>
-          <span className="text-[0.6rem] font-bold text-[#0066b2] self-start ml-0.5">®</span>
-        </div>
-      </div>
-    ),
-  },
-  {
-    id: "chogori",
-    name: "Chogori",
-    content: (
-      <div className="flex flex-col items-center justify-center text-center">
-        <div className="flex items-center">
-          <span className="font-black text-2xl text-[#d82423] tracking-wider uppercase">
-            CHOGORI
-          </span>
-          <span className="text-[0.6rem] font-bold text-[#d82423] self-start ml-0.5">®</span>
-        </div>
-        <span className="text-[0.52rem] text-[#333333] font-medium mt-0.5">
-          Shenzhen Chogori Technology Co.,Ltd
-        </span>
-      </div>
-    ),
-  },
-  {
-    id: "harting",
-    name: "HARTING",
-    content: (
-      <div className="flex items-center gap-2.5">
-        <div className="h-7 w-7 bg-[#fed100] rounded-sm flex items-center justify-center border border-[#e5bc00] shadow-2xs">
-          <span className="font-black text-lg text-black font-sans leading-none">H</span>
-        </div>
-        <div className="flex flex-col text-left">
-          <span className="font-black text-xl text-graphite tracking-wide uppercase leading-tight font-sans">
-            HARTING
-          </span>
-          <span className="text-[0.5rem] font-semibold tracking-wider text-muted-foreground uppercase">
-            Pushing Performance
-          </span>
-        </div>
-      </div>
-    ),
-  },
-  {
-    id: "amphenol",
-    name: "Amphenol",
-    content: (
-      <div className="flex items-center gap-2">
-        <svg className="h-7 w-7 text-[#004f9e]" viewBox="0 0 32 32" fill="currentColor">
-          <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" strokeWidth="2"/>
-          <path d="M8 16c2-6 6-6 8 0s6 6 8 0" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
-        </svg>
-        <span className="font-extrabold text-xl text-[#004f9e] tracking-tight">
-          Amphenol
-        </span>
-      </div>
-    ),
-  },
-  {
-    id: "phoenix",
-    name: "Phoenix Contact",
-    content: (
-      <div className="flex items-center gap-2.5">
-        <div className="h-7 w-7 bg-[#00805e] rounded-sm flex items-center justify-center">
-          <svg className="h-4 w-4 text-white" viewBox="0 0 24 24" fill="currentColor">
-            <polygon points="6,4 14,12 6,20 10,20 18,12 10,4"/>
-          </svg>
-        </div>
-        <div className="flex flex-col text-left">
-          <span className="font-black text-sm text-graphite uppercase tracking-tight leading-none">
-            PHOENIX
-          </span>
-          <span className="font-bold text-xs text-[#00805e] uppercase tracking-wider leading-none mt-0.5">
-            CONTACT
-          </span>
-        </div>
-      </div>
-    ),
-  },
-  {
-    id: "te",
-    name: "TE Connectivity",
-    content: (
-      <div className="flex items-center gap-2">
-        <div className="bg-[#e86c00] text-white font-black text-sm px-2 py-1 rounded-sm leading-none">
-          TE
-        </div>
-        <span className="font-bold text-base text-graphite tracking-tight lowercase">
-          connectivity
-        </span>
-      </div>
-    ),
-  },
-];
-
-function AuthorizedProducts() {
-  const loop = [...BRAND_LOGOS, ...BRAND_LOGOS, ...BRAND_LOGOS];
-
+function BusinessStructure() {
   return (
-    <section className="border-b border-border/70 bg-[#f8fafd] py-14 lg:py-18 overflow-hidden">
-      <div className="mx-auto max-w-7xl px-5 sm:px-8 text-center">
+    <section id="business" className="surface-steel border-b border-border">
+      <div className="mx-auto max-w-7xl px-5 py-24 sm:px-8 lg:py-32">
         <Reveal>
-          <h2 className="font-display text-2xl font-bold text-graphite sm:text-3xl">
-            Authorized and Supported Products
+          <div className="flex items-center gap-3">
+            <span className="h-px w-10 bg-brand-orange" />
+            <span className="label-eyebrow">What We Do</span>
+          </div>
+          <h2 className="mt-7 max-w-3xl font-display text-3xl font-bold leading-tight text-graphite sm:text-4xl lg:text-[2.75rem]">
+            Two Focused Business Areas
           </h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Trusted global interconnect manufacturers and certified components
+          <p className="mt-4 max-w-2xl text-[0.95rem] leading-relaxed text-muted-foreground">
+            Qualitech Connectronics operates in two core verticals — delivering both world-class electronics components and custom-engineered cable assembly solutions.
           </p>
         </Reveal>
-      </div>
 
-      <div className="relative mt-10 overflow-hidden">
-        {/* Soft edge fades */}
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-[#f8fafd] to-transparent sm:w-36" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-[#f8fafd] to-transparent sm:w-36" />
+        <div className="mt-14 grid gap-8 lg:grid-cols-2">
+          {/* Card 01: Distribution */}
+          <Reveal delay={100}>
+            <article className="group relative h-full overflow-hidden rounded-2xl border border-border bg-background transition-all duration-500 ease-[var(--ease-precise)] hover:-translate-y-2 hover:shadow-[var(--shadow-lift)]">
+              <span className="absolute inset-x-0 top-0 z-10 h-1 w-0 rounded-t-2xl bg-brand-blue transition-all duration-500 ease-[var(--ease-precise)] group-hover:w-full" />
 
-        {/* Marquee track flowing right to left */}
-        <div className="marquee-track flex w-max gap-6 items-center">
-          {loop.map((brand, i) => (
-            <div
-              key={`${brand.id}-${i}`}
-              className="w-[260px] h-[105px] shrink-0 rounded-xl border border-border/80 bg-white px-6 py-4 flex items-center justify-center shadow-xs transition-all duration-300 hover:border-brand-blue/50 hover:shadow-md"
-            >
-              {brand.content}
-            </div>
-          ))}
+              <div className="p-8 sm:p-10">
+                <div className="flex items-center gap-4">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-blue/10 font-display text-lg font-bold text-brand-blue">
+                    01
+                  </span>
+                  <div>
+                    <h3 className="font-display text-xl font-bold text-graphite sm:text-2xl">
+                      Distribution of Electronics Components
+                    </h3>
+                  </div>
+                </div>
+
+                <p className="mt-5 text-[0.95rem] leading-relaxed text-muted-foreground">
+                  Authorized distribution of premium electronics components from trusted global brands for industrial and OEM applications.
+                </p>
+
+                {/* Partner Brand Cards */}
+                <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                  {/* Amphenol */}
+                  <a
+                    href="https://www.amphenol-cs.com/product-series/gnss.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group/card flex items-center gap-3 rounded-xl border border-border bg-white p-4 transition-all duration-300 hover:border-[#004f9e]/40 hover:shadow-md"
+                  >
+                    <svg className="h-8 w-8 text-[#004f9e] shrink-0" viewBox="0 0 32 32" fill="currentColor">
+                      <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" strokeWidth="2"/>
+                      <path d="M8 16c2-6 6-6 8 0s6 6 8 0" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+                    </svg>
+                    <div className="min-w-0 flex-1">
+                      <span className="font-display text-base font-extrabold text-[#004f9e]">Amphenol</span>
+                      <p className="text-[0.68rem] text-muted-foreground">View Products →</p>
+                    </div>
+                    <svg className="h-4 w-4 text-muted-foreground/50 shrink-0 transition-transform group-hover/card:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+
+                  {/* Zolex */}
+                  <a
+                    href="https://zolex.in/product/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group/card flex items-center gap-3 rounded-xl border border-border bg-white p-4 transition-all duration-300 hover:border-brand-blue/40 hover:shadow-md"
+                  >
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-blue text-white font-display font-extrabold text-xs shrink-0">
+                      Z
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <span className="font-display text-base font-extrabold text-graphite">Zolex</span>
+                      <p className="text-[0.68rem] text-muted-foreground">View Products →</p>
+                    </div>
+                    <svg className="h-4 w-4 text-muted-foreground/50 shrink-0 transition-transform group-hover/card:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </article>
+          </Reveal>
+
+          {/* Card 02: Manufacturing */}
+          <Reveal delay={200}>
+            <article className="group relative h-full overflow-hidden rounded-2xl border border-border bg-background transition-all duration-500 ease-[var(--ease-precise)] hover:-translate-y-2 hover:shadow-[var(--shadow-lift)]">
+              <span className="absolute inset-x-0 top-0 z-10 h-1 w-0 rounded-t-2xl bg-brand-yellow transition-all duration-500 ease-[var(--ease-precise)] group-hover:w-full" />
+
+              <div className="overflow-hidden">
+                <img
+                  src={cardCable}
+                  alt="Custom cable assembly manufacturing"
+                  loading="lazy"
+                  width={900}
+                  height={500}
+                  className="h-52 w-full object-cover transition-transform duration-[1200ms] ease-[var(--ease-precise)] group-hover:scale-110"
+                />
+              </div>
+
+              <div className="p-8 sm:p-10">
+                <div className="flex items-center gap-4">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-yellow/20 font-display text-lg font-bold text-graphite">
+                    02
+                  </span>
+                  <div>
+                    <h3 className="font-display text-xl font-bold text-graphite sm:text-2xl">
+                      Manufacturing of Cable Assemblies
+                    </h3>
+                  </div>
+                </div>
+
+                <p className="mt-5 text-[0.95rem] leading-relaxed text-muted-foreground">
+                  Custom wire and cable harness solutions — designed, manufactured and 100% tested to your exact OEM specifications.
+                </p>
+
+                <ul className="mt-5 space-y-2">
+                  {["Custom Cable Assemblies", "Wire Harnesses", "Application-specific Assemblies", "OEM Requirements"].map((item) => (
+                    <li key={item} className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                      <span className="h-1 w-1 rounded-full bg-brand-yellow shrink-0" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+
+                <a
+                  href="#contact"
+                  className="group/btn mt-7 inline-flex items-center gap-3 font-display text-[0.72rem] font-bold uppercase tracking-[0.2em] text-graphite"
+                >
+                  Discuss Your Requirement
+                  <span className="h-px w-8 bg-graphite transition-all duration-300 group-hover/btn:w-14" />
+                </a>
+              </div>
+            </article>
+          </Reveal>
         </div>
       </div>
     </section>
@@ -465,8 +593,9 @@ function About() {
             <div className="mt-7 space-y-5 text-[0.95rem] leading-relaxed text-muted-foreground">
               <p>
                 Qualitech was established in 1995 by a team of dedicated professionals. Having
-                successfully managed the company for nearly two decades, Qualitech is now a leading
-                provider of high quality custom built Wire and cable harnesses to OEMs.
+                successfully managed the company for nearly three decades, Qualitech is now a trusted name in
+                distribution of electronics components and manufacturing of high quality custom built
+                wire and cable harnesses for OEMs.
               </p>
               <p>
                 The right combination of dedicated and excellent manpower along with the latest
@@ -477,10 +606,10 @@ function About() {
           </Reveal>
           <Reveal delay={260}>
             <a
-              href="#what-we-do"
+              href="#business"
               className="group mt-9 inline-flex items-center gap-3 font-display text-[0.72rem] font-bold uppercase tracking-[0.2em] text-graphite"
             >
-              Discover Our Story
+              Discover Our Solutions
               <span className="h-px w-8 bg-graphite transition-all duration-300 group-hover:w-14" />
             </a>
           </Reveal>
@@ -506,81 +635,6 @@ function About() {
             </div>
           </div>
         </Reveal>
-      </div>
-    </section>
-  );
-}
-
-/* ─── What We Do ─── */
-
-const WHAT_WE_DO = [
-  {
-    num: "01",
-    title: "Cable Assemblies",
-    image: cardCable,
-    copy: "Custom-built wire and cable harness solutions designed and manufactured to your exact OEM specifications, 100% electrically tested.",
-  },
-  {
-    num: "02",
-    title: "Connectors",
-    image: cardConnectors,
-    copy: "A comprehensive range of DSUB, DIN, IDC, HARTING and speciality connectors for industrial, telecom, power and defence applications.",
-  },
-  {
-    num: "03",
-    title: "Facilities",
-    image: cardFacilities,
-    copy: "Modern manufacturing facilities combining latest technology with experienced manpower to deliver precision and reliability.",
-  },
-];
-
-function WhatWeDo() {
-  return (
-    <section id="what-we-do" className="surface-steel border-y border-border">
-      <div className="mx-auto max-w-7xl px-5 py-24 sm:px-8 lg:py-32">
-        <Reveal>
-          <div className="flex items-center gap-3">
-            <span className="h-px w-10 bg-brand-orange" />
-            <span className="label-eyebrow">What We Do</span>
-          </div>
-          <h2 className="mt-7 max-w-2xl font-display text-3xl font-bold leading-tight text-graphite sm:text-4xl">
-            Engineered Connectivity Solutions
-          </h2>
-          <p className="mt-4 max-w-2xl text-[0.95rem] leading-relaxed text-muted-foreground">
-            From standard connectors to fully custom cable harness assemblies, we engineer solutions built around your exact requirements.
-          </p>
-        </Reveal>
-
-        <div className="mt-14 grid gap-6 md:grid-cols-3">
-          {WHAT_WE_DO.map((item, i) => (
-            <Reveal key={item.title} delay={i * 110}>
-              <article className="group relative h-full overflow-hidden rounded-2xl border border-border bg-background transition-all duration-500 ease-[var(--ease-precise)] hover:-translate-y-2 hover:shadow-[var(--shadow-lift)]">
-                <span className="absolute inset-x-0 top-0 z-10 h-0.5 w-0 rounded-t-2xl bg-brand-blue transition-all duration-500 ease-[var(--ease-precise)] group-hover:w-full" />
-                <div className="overflow-hidden">
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    loading="lazy"
-                    width={900}
-                    height={700}
-                    className="h-56 w-full object-cover transition-transform duration-[1200ms] ease-[var(--ease-precise)] group-hover:scale-110"
-                  />
-                </div>
-                <div className="flex flex-col p-7">
-                  <span className="font-display text-[0.7rem] font-bold tracking-[0.2em] text-brand-blue">
-                    {item.num}
-                  </span>
-                  <h3 className="mt-3 font-display text-xl font-bold text-graphite">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{item.copy}</p>
-                  <span className="mt-7 inline-flex items-center gap-3 font-display text-[0.7rem] font-bold uppercase tracking-[0.2em] text-graphite">
-                    Learn More
-                    <span className="transition-transform duration-300 group-hover:translate-x-2">→</span>
-                  </span>
-                </div>
-              </article>
-            </Reveal>
-          ))}
-        </div>
       </div>
     </section>
   );
@@ -637,18 +691,6 @@ function Industries() {
           </Reveal>
         ))}
       </div>
-
-      <Reveal delay={450}>
-        <div className="mt-10 text-center">
-          <a
-            href="#industries"
-            className="group inline-flex items-center gap-3 font-display text-[0.72rem] font-bold uppercase tracking-[0.2em] text-graphite transition-colors duration-300 hover:text-brand-blue"
-          >
-            Explore All Industries
-            <span className="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
-          </a>
-        </div>
-      </Reveal>
     </section>
   );
 }
@@ -752,23 +794,13 @@ function FacilitiesPreview() {
   );
 }
 
-/* ─── Product Catalogue ─── */
+/* ─── Products Overview (replaces old Product Catalogue) ─── */
 
-const PRODUCT_MARQUEE = [
-  { image: p1, name: "Circular Connectors" },
-  { image: p2, name: "Rectangular Housings" },
-  { image: p3, name: "Coaxial Connectors" },
-  { image: p4, name: "Shielded Cables" },
-  { image: p5, name: "Glands & Backshells" },
-  { image: p6, name: "Terminals & Blocks" },
-];
-
-interface ProductCatalogueProps {
-  onNavigateToShop?: () => void;
+interface ProductsOverviewProps {
+  onNavigateToProducts?: () => void;
 }
 
-function ProductCatalogue({ onNavigateToShop }: ProductCatalogueProps) {
-  const loop = [...PRODUCT_MARQUEE, ...PRODUCT_MARQUEE];
+function ProductsOverview({ onNavigateToProducts }: ProductsOverviewProps) {
   return (
     <section id="shop" className="border-y border-border bg-background py-20 lg:py-28">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
@@ -777,50 +809,79 @@ function ProductCatalogue({ onNavigateToShop }: ProductCatalogueProps) {
             <div>
               <div className="flex items-center gap-3">
                 <span className="h-px w-10 bg-brand-yellow" />
-                <span className="label-eyebrow">Product Catalogue</span>
+                <span className="label-eyebrow">Our Products & Services</span>
               </div>
               <h2 className="mt-5 font-display text-3xl font-bold leading-tight text-graphite sm:text-4xl">
-                Authorized &amp; Supported Products
+                Solutions You Can Trust
               </h2>
               <p className="mt-3 max-w-2xl text-[0.95rem] leading-relaxed text-muted-foreground">
-                High-reliability connectors, backshells, shielded cables, and custom interconnect components for demanding OEM applications.
+                From globally trusted electronics component brands to custom-engineered cable assemblies — explore our complete product and service offerings.
               </p>
             </div>
             <button
-              onClick={onNavigateToShop}
+              onClick={onNavigateToProducts}
               className="self-start sm:self-auto rounded-xl bg-graphite px-6 py-3 font-display text-[0.72rem] font-bold uppercase tracking-[0.2em] text-white transition-all duration-300 hover:bg-brand-blue shadow-sm inline-flex items-center gap-2 shrink-0 cursor-pointer"
             >
-              Browse Full Shop &amp; Catalog →
+              View All Products & Services →
             </button>
           </div>
         </Reveal>
-      </div>
 
-      {/* Marquee */}
-      <div className="relative mt-12 overflow-hidden">
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-background to-transparent sm:w-32" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-background to-transparent sm:w-32" />
-        <div className="marquee-track flex w-max gap-5">
-          {loop.map((item, i) => (
-            <figure
-              key={`${item.name}-${i}`}
-              className="group w-[240px] shrink-0 overflow-hidden rounded-xl border border-border bg-steel-light transition-colors duration-300 hover:border-brand-blue/50 sm:w-[300px]"
+        {/* Two Column Product Preview */}
+        <div className="mt-12 grid gap-6 md:grid-cols-2">
+          <Reveal delay={100}>
+            <a
+              href="https://www.amphenol-cs.com/product-series/gnss.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative flex h-64 overflow-hidden rounded-2xl border border-border bg-graphite-deep transition-all duration-500 hover:shadow-[var(--shadow-lift)]"
             >
-              <div className="overflow-hidden bg-background">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  loading="lazy"
-                  width={700}
-                  height={560}
-                  className="h-40 w-full object-cover transition-transform duration-700 ease-[var(--ease-precise)] group-hover:scale-105 sm:h-48"
-                />
+              <div className="absolute inset-0 bg-gradient-to-br from-[#004f9e]/90 via-graphite-deep/80 to-transparent" />
+              <div className="relative flex flex-col justify-end p-8">
+                <span className="text-[0.6rem] font-bold uppercase tracking-[0.2em] text-white/60">
+                  Distribution
+                </span>
+                <h3 className="mt-2 font-display text-xl font-bold text-white sm:text-2xl">
+                  Electronics Components
+                </h3>
+                <p className="mt-2 text-sm text-white/70">
+                  Amphenol · Zolex
+                </p>
+                <span className="mt-4 inline-flex items-center gap-2 font-display text-[0.72rem] font-bold uppercase tracking-[0.18em] text-brand-yellow transition-transform duration-300 group-hover:translate-x-2">
+                  View Amphenol Products
+                  <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </span>
               </div>
-              <figcaption className="px-5 py-4 font-display text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                {item.name}
-              </figcaption>
-            </figure>
-          ))}
+            </a>
+          </Reveal>
+
+          <Reveal delay={200}>
+            <div className="group relative flex h-64 overflow-hidden rounded-2xl border border-border bg-graphite-deep transition-all duration-500 hover:shadow-[var(--shadow-lift)]">
+              <img
+                src={cardFacilities}
+                alt="Cable assembly manufacturing"
+                loading="lazy"
+                className="absolute inset-0 h-full w-full object-cover opacity-40 transition-transform duration-[1200ms] group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-br from-graphite-deep/85 via-graphite-deep/60 to-transparent" />
+              <div className="relative flex flex-col justify-end p-8">
+                <span className="text-[0.6rem] font-bold uppercase tracking-[0.2em] text-white/60">
+                  Manufacturing
+                </span>
+                <h3 className="mt-2 font-display text-xl font-bold text-white sm:text-2xl">
+                  Cable Assemblies
+                </h3>
+                <p className="mt-2 text-sm text-white/70">
+                  Custom wire harnesses · OEM solutions
+                </p>
+                <span className="mt-4 inline-flex items-center gap-2 font-display text-[0.72rem] font-bold uppercase tracking-[0.18em] text-brand-yellow transition-transform duration-300 group-hover:translate-x-2">
+                  Discuss Your Requirement →
+                </span>
+              </div>
+            </div>
+          </Reveal>
         </div>
       </div>
     </section>
@@ -839,11 +900,10 @@ function FinalCTA() {
             <span className="label-eyebrow">Get in Touch</span>
           </div>
           <h2 className="mt-5 max-w-xl font-display text-3xl font-bold leading-tight text-graphite sm:text-4xl lg:text-5xl">
-            Looking for a Custom Cable Solution?
+            Ready to Discuss Your Requirements?
           </h2>
           <p className="mt-4 max-w-lg text-[0.95rem] leading-relaxed text-muted-foreground">
-            Tell us about your application and requirements. Our engineering team will work with you
-            to develop the right connectivity solution.
+            Whether you need electronics components or a custom cable assembly solution — our team is here to help.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
@@ -872,6 +932,7 @@ function FinalCTA() {
             >
               +91-40-27140004
             </a>
+            {/* TODO: Add Gopi Sir's contact number once provided by client */}
             <p className="label-eyebrow mt-6">Email</p>
             <a
               href="mailto:info@qualitechindia.in"
@@ -879,6 +940,13 @@ function FinalCTA() {
             >
               info@qualitechindia.in
             </a>
+            <p className="label-eyebrow mt-6">Address</p>
+            <div className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              <p className="font-semibold text-graphite">Qualitech Connectronics Private Limited</p>
+              <p>Plot No. 37/B, Phase-V, IDA, Cherlapally,</p>
+              <p>Hyderabad, Medchal-Malkajgiri,</p>
+              <p>Telangana – 500051</p>
+            </div>
           </div>
         </Reveal>
       </div>
@@ -962,13 +1030,12 @@ function Home() {
       <main>
         <Hero />
         <Stats />
-        <AuthorizedProducts />
+        <BusinessStructure />
         <About />
-        <WhatWeDo />
         <Industries />
         <Why />
         <FacilitiesPreview />
-        <ProductCatalogue onNavigateToShop={() => handleNavigate("#products", true)} />
+        <ProductsOverview onNavigateToProducts={() => handleNavigate("#products", true)} />
         <FinalCTA />
       </main>
       <Footer onNavigate={handleNavigate} />
