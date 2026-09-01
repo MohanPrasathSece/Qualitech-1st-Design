@@ -8,9 +8,10 @@ import {
   Product,
 } from "@/data/products";
 import { Footer } from "@/components/site/Footer";
+import { Header } from "@/components/site/Header";
 
 interface ShopPageProps {
-  onNavigateHome: (sectionId?: string) => void;
+  onNavigateHome: (sectionId?: string, isPage?: boolean) => void;
 }
 
 export function ShopPage({ onNavigateHome }: ShopPageProps) {
@@ -23,8 +24,7 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
   const [sortBy, setSortBy] = useState<"featured" | "name">("featured");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-  // Mobile drawer & nav states
-  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  // Mobile filter drawer state
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
   useEffect(() => {
@@ -97,134 +97,8 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
 
   return (
     <div className="min-h-screen bg-[#fafbfc] text-foreground font-sans flex flex-col w-full overflow-x-hidden">
-      {/* ─── Header Navigation ─── */}
-      <header className="sticky top-0 z-40 w-full border-b border-border bg-white/95 backdrop-blur-md">
-        <div className="flex items-center justify-between gap-3 px-4 sm:px-6 lg:px-8 py-3.5">
-          <div className="flex items-center gap-3">
-            {/* Mobile Hamburger Button */}
-            <button
-              type="button"
-              aria-label="Toggle navigation"
-              onClick={() => setMobileNavOpen(!mobileNavOpen)}
-              className="flex h-9 w-9 shrink-0 flex-col items-center justify-center gap-1.5 rounded-lg border border-border md:hidden cursor-pointer"
-            >
-              <span
-                className={`h-px w-4 bg-foreground transition-transform duration-300 ${
-                  mobileNavOpen ? "translate-y-[2.5px] rotate-45" : ""
-                }`}
-              />
-              <span
-                className={`h-px w-4 bg-foreground transition-transform duration-300 ${
-                  mobileNavOpen ? "-translate-y-[2.5px] -rotate-45" : ""
-                }`}
-              />
-            </button>
-
-            {/* Brand Logo */}
-            <button
-              onClick={() => onNavigateHome()}
-              className="flex items-center gap-2 cursor-pointer text-left shrink-0"
-            >
-              <img
-                src="/logo.png"
-                alt="Qualitech Connectronics"
-                className="h-7 sm:h-9 w-auto shrink-0"
-                width={320}
-                height={80}
-              />
-            </button>
-          </div>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-6 lg:gap-8">
-            <button
-              onClick={() => onNavigateHome("top")}
-              className="font-display text-[0.78rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
-            >
-              Home
-            </button>
-            <button
-              onClick={() => onNavigateHome("about")}
-              className="font-display text-[0.78rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
-            >
-              About Us
-            </button>
-            <button
-              onClick={() => onNavigateHome("business")}
-              className="font-display text-[0.78rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
-            >
-              Business Verticals
-            </button>
-            <span className="font-display text-[0.78rem] font-bold uppercase tracking-[0.14em] text-brand-blue border-b-2 border-brand-blue pb-0.5">
-              Products Catalogue
-            </span>
-            <button
-              onClick={() => onNavigateHome("contact")}
-              className="font-display text-[0.78rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
-            >
-              Contact Us
-            </button>
-          </nav>
-
-          {/* Request Quote CTA */}
-          <div className="flex items-center gap-2 shrink-0">
-            <button
-              onClick={() => onNavigateHome("contact")}
-              className="inline-flex items-center gap-2 rounded-xl bg-graphite px-4 sm:px-5 py-2 font-display text-[0.72rem] sm:text-xs font-bold uppercase tracking-wider text-white shadow-xs transition-all duration-200 hover:bg-brand-blue cursor-pointer"
-            >
-              <span>Request a Quote</span>
-              <span>→</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Dropdown Nav Menu */}
-        {mobileNavOpen && (
-          <div className="border-t border-border bg-white px-5 py-3 md:hidden animate-in slide-in-from-top-2 duration-200">
-            <nav className="flex flex-col space-y-2">
-              <button
-                onClick={() => {
-                  setMobileNavOpen(false);
-                  onNavigateHome("top");
-                }}
-                className="py-2 text-left font-display text-xs font-semibold uppercase tracking-wider text-foreground hover:text-brand-blue"
-              >
-                Home
-              </button>
-              <button
-                onClick={() => {
-                  setMobileNavOpen(false);
-                  onNavigateHome("about");
-                }}
-                className="py-2 text-left font-display text-xs font-semibold uppercase tracking-wider text-foreground hover:text-brand-blue"
-              >
-                About Us
-              </button>
-              <button
-                onClick={() => {
-                  setMobileNavOpen(false);
-                  onNavigateHome("business");
-                }}
-                className="py-2 text-left font-display text-xs font-semibold uppercase tracking-wider text-foreground hover:text-brand-blue"
-              >
-                Business Verticals
-              </button>
-              <span className="py-2 text-left font-display text-xs font-bold uppercase tracking-wider text-brand-blue">
-                Products Catalogue (Active)
-              </span>
-              <button
-                onClick={() => {
-                  setMobileNavOpen(false);
-                  onNavigateHome("contact");
-                }}
-                className="py-2 text-left font-display text-xs font-semibold uppercase tracking-wider text-foreground hover:text-brand-blue"
-              >
-                Contact Us
-              </button>
-            </nav>
-          </div>
-        )}
-      </header>
+      {/* ─── Exact Same Header Navigation as Home ─── */}
+      <Header onNavigate={onNavigateHome} currentPage="products" />
 
       {/* ─── Page Banner ─── */}
       <div className="bg-graphite-deep text-white px-4 sm:px-8 py-8 border-b border-border/20">
