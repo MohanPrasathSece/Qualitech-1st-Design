@@ -7,16 +7,16 @@ export interface NavItem {
 
 export const FOOTER_COMPANY: NavItem[] = [
   { label: "Home", href: "#top" },
-  { label: "About Us", href: "#about" },
+  { label: "About Us", href: "#about-page", isPage: true },
   { label: "Products & Services", href: "#products", isPage: true },
-  { label: "Contact Us", href: "#contact" },
+  { label: "Contact Us", href: "#contact-page", isPage: true },
 ];
 
 export const FOOTER_PRODUCTS: NavItem[] = [
-  { label: "Amphenol", href: "https://www.amphenol-cs.com/product-series/gnss.html", external: true },
-  { label: "Zolex", href: "https://zolex.in/product/", external: true },
-  { label: "Custom Cable Assemblies", href: "#products", isPage: true },
-  { label: "Wire Harnesses", href: "#products", isPage: true },
+  { label: "Amphenol", href: "#amphenol", isPage: true },
+  { label: "Zolex", href: "#zolex", isPage: true },
+  { label: "Custom Cable Assemblies", href: "#manufacturing", isPage: true },
+  { label: "Wire Harnesses", href: "#manufacturing", isPage: true },
 ];
 
 export const FOOTER_INDUSTRIES = [

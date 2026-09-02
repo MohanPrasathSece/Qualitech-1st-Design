@@ -31,31 +31,31 @@ export function AmphenolPage({ onNavigate }: AmphenolPageProps) {
       items: [
         {
           name: "Circular MIL-Spec Connectors",
-          series: "MIL-DTL-38999 / MIL-DTL-26482",
+          series: "MIL-DTL-38999 / MIL-DTL-26482 / SheerPwr",
           desc: "Ruggedized circular connectors with bayonet and threaded couplings for defence and aerospace.",
           image: p1,
-          url: "https://www.amphenol-cs.com/product-series/gnss.html",
+          url: "https://www.amphenol-cs.com/product-series/sheerpwr-circular.html",
         },
         {
           name: "Industrial Circular Connectors",
-          series: "M12 / M8 / Heavy-Duty C-Series",
+          series: "M12 / M8 / IP67 Single Pair Ethernet",
           desc: "IP67/IP68 sealed circular connectors for factory automation, robotic sensors, and fieldbuses.",
           image: p3,
-          url: "https://www.amphenol-cs.com/product-series/gnss.html",
+          url: "https://www.amphenol-cs.com/product-series/single-pair-ethernet-ip67.html",
         },
         {
           name: "D-Subminiature Connectors",
           series: "Standard & High-Density D-Sub",
           desc: "Stamped and machined pin D-sub connectors with EMI shielding for data communications.",
           image: p2,
-          url: "https://www.amphenol-cs.com/product-series/gnss.html",
+          url: "https://www.amphenol-cs.com/connectors/d-sub.html",
         },
         {
           name: "PCB & Board-to-Board Headers",
-          series: "High-Speed Backplane & Mezzanine",
+          series: "High-Speed Backplane & Mezzanine (Paladin / ExaMAX)",
           desc: "High-density differential pair connectors and PCB headers for computing and control racks.",
           image: p6,
-          url: "https://www.amphenol-cs.com/product-series/gnss.html",
+          url: "https://www.amphenol-cs.com/product-series/paladin.html",
         },
       ],
     },
@@ -77,21 +77,21 @@ export function AmphenolPage({ onNavigate }: AmphenolPageProps) {
           series: "600 MHz - 6 GHz Sub-6GHz",
           desc: "Low-profile outdoor puck and panel antennas for telematics kiosks, smart meters, and routers.",
           image: p2,
-          url: "https://www.amphenol-cs.com/product-series/gnss.html",
+          url: "https://www.amphenol-cs.com/product-series/cellular.html",
         },
         {
           name: "Wi-Fi & Bluetooth Dipoles",
           series: "2.4 GHz / 5.8 GHz Dual-Band",
           desc: "Articulated rubber duck and terminal antennas for industrial gateways and wireless APs.",
           image: p3,
-          url: "https://www.amphenol-cs.com/product-series/gnss.html",
+          url: "https://www.amphenol-cs.com/product-series/wi-fi-bluetooth.html",
         },
         {
           name: "Internal Embedded FPC Antennas",
-          series: "NB-IoT / LoRa / LTE-M",
+          series: "NB-IoT / LoRa / LTE-M / Embedded",
           desc: "Ultra-thin flexible peel-and-stick antennas with IPEX micro coaxial leads for compact devices.",
           image: p4,
-          url: "https://www.amphenol-cs.com/product-series/gnss.html",
+          url: "https://www.amphenol-cs.com/product-series/embedded-antenna.html",
         },
       ],
     },
@@ -106,14 +106,14 @@ export function AmphenolPage({ onNavigate }: AmphenolPageProps) {
           series: "SMA / BNC / N-Type / TNC",
           desc: "50Ω & 75Ω precision coaxial connectors with gold-plated contacts and PTFE dielectrics.",
           image: p4,
-          url: "https://www.amphenol-cs.com/product-series/gnss.html",
+          url: "https://www.amphenol-cs.com/product-series/filter-rf-bnc.html",
         },
         {
           name: "Precision RF Cable Assemblies",
           series: "Low-Loss Micro-Coax Leads",
           desc: "Factory verified VSWR performance for radar, wireless base stations, and RF test racks.",
           image: p5,
-          url: "https://www.amphenol-cs.com/product-series/gnss.html",
+          url: "https://www.amphenol-cs.com/catalogsearch/result?query=coaxial",
         },
       ],
     },
@@ -128,14 +128,14 @@ export function AmphenolPage({ onNavigate }: AmphenolPageProps) {
           series: "LC / SC / MTP / MPO",
           desc: "Zirconia ceramic ferrule optical connectors engineered for minimal signal attenuation.",
           image: indTelecom,
-          url: "https://www.amphenol-cs.com/product-series/gnss.html",
+          url: "https://www.amphenol-cs.com/fiber-optics.html",
         },
         {
           name: "Optical Patch Cords",
           series: "Duplex Single-Mode (9/125µm)",
           desc: "Armored LSZH fiber patch leads for telecom exchanges, substations, and data centers.",
           image: p3,
-          url: "https://www.amphenol-cs.com/product-series/gnss.html",
+          url: "https://www.amphenol-cs.com/fiber-optics.html",
         },
       ],
     },
@@ -173,7 +173,7 @@ export function AmphenolPage({ onNavigate }: AmphenolPageProps) {
 
             <div className="mt-8">
               <a
-                href="https://www.amphenol-cs.com/product-series/gnss.html"
+                href="https://www.amphenol-cs.com/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-xl bg-[#004f9e] px-6 py-3.5 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-white hover:text-graphite transition-all shadow-md"

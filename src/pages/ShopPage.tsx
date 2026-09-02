@@ -91,7 +91,7 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
     if (product.externalUrl) {
       window.open(product.externalUrl, "_blank", "noopener,noreferrer");
     } else {
-      onNavigateHome("contact");
+      onNavigateHome("#contact-page", true);
     }
   };
 
@@ -688,7 +688,7 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
                     <button
                       onClick={() => {
                         setSelectedProduct(null);
-                        onNavigateHome("contact");
+                        onNavigateHome("#contact-page", true);
                       }}
                       className="w-full rounded-xl bg-graphite py-3 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-brand-blue transition-colors cursor-pointer shadow-sm"
                     >

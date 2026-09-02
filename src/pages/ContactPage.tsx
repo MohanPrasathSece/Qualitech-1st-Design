@@ -252,13 +252,19 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                   <div className="mt-4 flex flex-wrap gap-2">
                     <button
                       onClick={() => onNavigate("#amphenol", true)}
-                      className="rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/20 transition-colors"
+                      className="rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/20 transition-colors cursor-pointer"
                     >
                       Amphenol Page →
                     </button>
                     <button
+                      onClick={() => onNavigate("#zolex", true)}
+                      className="rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/20 transition-colors cursor-pointer"
+                    >
+                      Zolex Page →
+                    </button>
+                    <button
                       onClick={() => onNavigate("#manufacturing", true)}
-                      className="rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/20 transition-colors"
+                      className="rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/20 transition-colors cursor-pointer"
                     >
                       Manufacturing Page →
                     </button>

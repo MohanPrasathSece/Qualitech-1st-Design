@@ -93,7 +93,7 @@ export const PRODUCTS: Product[] = [
     featured: true,
     image: p1,
     inStock: true,
-    externalUrl: "https://www.amphenol-cs.com/product-series/gnss.html",
+    externalUrl: "https://www.amphenol-cs.com/product-series/sheerpwr-circular.html",
   },
   {
     id: "amp-industrial-circ",
@@ -117,7 +117,7 @@ export const PRODUCTS: Product[] = [
     featured: true,
     image: p3,
     inStock: true,
-    externalUrl: "https://www.amphenol-cs.com/product-series/gnss.html",
+    externalUrl: "https://www.amphenol-cs.com/product-series/single-pair-ethernet-ip67.html",
   },
   {
     id: "amp-dsub-connectors",
@@ -141,7 +141,7 @@ export const PRODUCTS: Product[] = [
     featured: false,
     image: p2,
     inStock: true,
-    externalUrl: "https://www.amphenol-cs.com/product-series/gnss.html",
+    externalUrl: "https://www.amphenol-cs.com/connectors/d-sub.html",
   },
   {
     id: "amp-pcb-connectors",
@@ -165,7 +165,7 @@ export const PRODUCTS: Product[] = [
     featured: false,
     image: p6,
     inStock: true,
-    externalUrl: "https://www.amphenol-cs.com/product-series/gnss.html",
+    externalUrl: "https://www.amphenol-cs.com/product-series/paladin.html",
   },
 
   // ═══════════════════════════════════════════
@@ -217,7 +217,7 @@ export const PRODUCTS: Product[] = [
     featured: true,
     image: p2,
     inStock: true,
-    externalUrl: "https://www.amphenol-cs.com/product-series/gnss.html",
+    externalUrl: "https://www.amphenol-cs.com/product-series/cellular.html",
   },
   {
     id: "amp-wifi-antenna",
@@ -241,7 +241,7 @@ export const PRODUCTS: Product[] = [
     featured: false,
     image: p4,
     inStock: true,
-    externalUrl: "https://www.amphenol-cs.com/product-series/gnss.html",
+    externalUrl: "https://www.amphenol-cs.com/product-series/wi-fi-bluetooth.html",
   },
 
   // ═══════════════════════════════════════════
@@ -269,7 +269,7 @@ export const PRODUCTS: Product[] = [
     featured: true,
     image: p4,
     inStock: true,
-    externalUrl: "https://www.amphenol-cs.com/product-series/gnss.html",
+    externalUrl: "https://www.amphenol-cs.com/product-series/filter-rf-bnc.html",
   },
   {
     id: "amp-rf-cables",
@@ -293,7 +293,7 @@ export const PRODUCTS: Product[] = [
     featured: false,
     image: p5,
     inStock: true,
-    externalUrl: "https://www.amphenol-cs.com/product-series/gnss.html",
+    externalUrl: "https://www.amphenol-cs.com/catalogsearch/result?query=coaxial",
   },
 
   // ═══════════════════════════════════════════
@@ -321,11 +321,11 @@ export const PRODUCTS: Product[] = [
     featured: false,
     image: indTelecom,
     inStock: true,
-    externalUrl: "https://www.amphenol-cs.com/product-series/gnss.html",
+    externalUrl: "https://www.amphenol-cs.com/fiber-optics.html",
   },
 
   // ═══════════════════════════════════════════
-  // ZOLEX — Products (Official URL: https://zolex.in/product/)
+  // ZOLEX — Products
   // ═══════════════════════════════════════════
   {
     id: "zolex-components-1",
@@ -334,22 +334,22 @@ export const PRODUCTS: Product[] = [
     category: "Electronics Components",
     subCategory: "Zolex — Components",
     brand: "Zolex",
-    description: "Zolex electronics components distributed by Qualitech Connectronics. View the full catalogue on Zolex's official website.",
+    description: "Zolex electronics components distributed by Qualitech Connectronics. High-reliability terminal blocks and interconnect systems.",
     features: [
       "High-reliability electronic components",
       "Industrial, telecom and commercial grades",
-      "Distributed by Qualitech Connectronics",
+      "Authorized supply from Qualitech Connectronics",
     ],
     specs: {
       Brand: "Zolex",
       Type: "Electronics Components",
-      Website: "zolex.in/product/",
+      Distribution: "Qualitech Connectronics",
     },
     industries: ["Industrial Automation", "Telecommunications", "Consumer Electronics"],
     featured: true,
     image: p3,
     inStock: true,
-    externalUrl: "https://zolex.in/product/",
+    isEnquiry: true,
   },
   {
     id: "zolex-components-2",
@@ -362,18 +362,18 @@ export const PRODUCTS: Product[] = [
     features: [
       "Robust industrial design",
       "Multiple pin configurations",
-      "Explore official catalogue",
+      "IP67 environmental protection",
     ],
     specs: {
       Brand: "Zolex",
       Type: "Industrial Connectors",
-      Website: "zolex.in/product/",
+      Distribution: "Qualitech Connectronics",
     },
     industries: ["Industrial Automation", "Power & Energy"],
     featured: false,
     image: p6,
     inStock: true,
-    externalUrl: "https://zolex.in/product/",
+    isEnquiry: true,
   },
   {
     id: "zolex-components-3",
@@ -386,18 +386,18 @@ export const PRODUCTS: Product[] = [
     features: [
       "Board-level components",
       "Standard pitch configurations",
-      "View products on Zolex portal",
+      "High durability contact materials",
     ],
     specs: {
       Brand: "Zolex",
       Type: "PCB Interconnects",
-      Website: "zolex.in/product/",
+      Distribution: "Qualitech Connectronics",
     },
     industries: ["Consumer Electronics", "Industrial Automation", "Telecommunications"],
     featured: false,
     image: p2,
     inStock: true,
-    externalUrl: "https://zolex.in/product/",
+    isEnquiry: true,
   },
 
   // ═══════════════════════════════════════════
