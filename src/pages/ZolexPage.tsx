@@ -15,7 +15,7 @@ interface ZolexPageProps {
 }
 
 export function ZolexPage({ onNavigate }: ZolexPageProps) {
-  const [openSection, setOpenSection] = useState<string>("industrial-connectors");
+  const [openSection, setOpenSection] = useState<string>("copper-lugs");
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -23,140 +23,218 @@ export function ZolexPage({ onNavigate }: ZolexPageProps) {
 
   const PRODUCT_SECTIONS = [
     {
-      id: "industrial-connectors",
-      name: "Industrial Connectors",
-      tagline: "Heavy-Duty, Sensor & Field-Attachable Circular Connectors",
-      desc: "Zolex delivers high-performance industrial connector solutions engineered for harsh industrial automation, field instrumentation, and power distribution systems.",
+      id: "copper-lugs",
+      name: "Copper Tube Lugs & Connectors",
+      tagline: "High-Conductivity Electrolytic Copper Crimping Lugs & Splices",
+      desc: "Manufactured from 99.9% pure ETP copper with uniform electro-tin plating for superior corrosion resistance and low electrical resistance in heavy electrical applications.",
       items: [
         {
-          name: "Industrial Circular & Sensor Connectors",
-          series: "M12 / M8 / M16 Series",
-          desc: "IP67 sealed industrial sensor and actuator connectors with screw, crimp, and push-pull terminations.",
+          name: "Copper Tube Lugs With Inspection Window",
+          series: "Standard Single Hole Series",
+          desc: "Precision drawn seamless copper tube lugs with inspection hole to verify full cable insertion prior to crimping.",
           image: p3,
-          specs: "IP67 / IP68 · A/B/D-Coded · Industrial Automation",
+          specs: "1.5 mm² to 1000 mm² · ETP Copper 99.9% · Electro-Tinned",
+          url: "https://zolex.in/product/copper-tube-crimping-lugs-one-hole-standard-series-with-inspection-window/",
         },
         {
-          name: "Heavy-Duty Multipole Connectors",
-          series: "HD Series Rectangular",
-          desc: "Rugged die-cast aluminum housing multipole power and signal connectors for machinery and control panels.",
+          name: "Heavy Duty Copper Tube Lugs",
+          series: "Heavy Duty Long Barrel Series",
+          desc: "Engineered with heavier wall thickness and longer barrels for maximum pull-out strength in vibration-prone industrial motors and transformers.",
           image: p6,
-          specs: "Up to 500V / 16A · IP65 Hoods & Housings",
+          specs: "Heavy Wall Construction · High Mechanical Strength · 600V - 33kV",
+          url: "https://zolex.in/product/copper-tube-crimping-lugs-one-hole-heavy-duty/",
         },
         {
-          name: "Waterproof Cable Connectors",
-          series: "WP-Lock Quick Disconnect",
-          desc: "Quick-connect bayonet and threaded waterproof inline connectors for outdoor and harsh factory environments.",
+          name: "Two-Hole & Four-Hole Copper Lugs",
+          series: "Dual & Multi-Stud Fixation",
+          desc: "Two-hole fixing lugs designed to prevent terminal rotation in high-vibration switchboards, busbars, and generator terminations.",
           image: cardConnectors,
-          specs: "UV-Resistant · IP68 Submersible · Quick-Lock",
+          specs: "Anti-Rotation Design · Standard & Custom Stud Hole Centers",
+          url: "https://zolex.in/product/copper-tube-crimping-lugs-two-hole/",
+        },
+        {
+          name: "Copper Through Connectors & Reducers",
+          series: "Butt Splice & In-Line Links",
+          desc: "Solid drawn copper inline ferrules and reducing links for permanent inline jointing of stranded copper cables.",
+          image: p4,
+          specs: "Internal Wire Stop · Seamless Drawn Tube · High Pull-Off Force",
+          url: "https://zolex.in/product/copper-tube-crimping-through-connectors/",
         },
       ],
     },
     {
-      id: "terminal-blocks",
-      name: "Terminal Blocks & DIN-Rail",
-      tagline: "Modular DIN-Rail Terminal Blocks & Distribution Systems",
-      desc: "Comprehensive DIN-rail connection solutions including push-in, screw clamp, and spring cage terminal blocks for electrical control panels.",
+      id: "crimp-terminals",
+      name: "Crimp Terminals",
+      tagline: "Insulated, Non-Insulated Ring, Fork, Pin & End Sleeves",
+      desc: "High-reliability control wiring terminals made from high-conductivity electrolytic copper with brazed/butted seams and color-coded PVC/nylon insulation.",
       items: [
         {
-          name: "Push-In DIN-Rail Terminal Blocks",
-          series: "ZK Push-In Series",
-          desc: "Tool-free fast wiring terminal blocks with integrated test points and jumper channels for rapid panel building.",
+          name: "Insulated Ring Type Terminals",
+          series: "Vinyl & Double Grip Series",
+          desc: "Standard and double-grip insulated ring tongue terminals for secure screw stud termination in control panels.",
           image: p2,
-          specs: "0.2mm² - 16mm² · Push-In Technology · DIN-Rail 35mm",
+          specs: "0.5 mm² - 10 mm² · Color Coded (Red/Blue/Yellow) · UL Standard",
+          url: "https://zolex.in/product/insulated-ring-type-terminals/",
         },
         {
-          name: "Screw-Clamp Feed-Through Blocks",
-          series: "STB High-Torque Series",
-          desc: "Vibration-proof screw clamp terminals engineered for high clamping force and long-term electrical reliability.",
+          name: "Insulated Fork / Spade Terminals",
+          series: "Flanged & Locking Spade Series",
+          desc: "Fork terminals allowing rapid installation without completely removing mounting screws in terminal blocks.",
           image: p4,
-          specs: "600V Rated · UL94 V-0 Flame Retardant",
+          specs: "Brazed Seam Barrel · Funnel Entry Insulation · DIN/JIS Compatible",
+          url: "https://zolex.in/product/insulated-fork-type-terminals/",
         },
         {
-          name: "Power Distribution Blocks",
-          series: "PDB Modular Units",
-          desc: "Compact multi-pole power distribution blocks for splitting main power feeds across control sub-circuits.",
+          name: "Insulated Pin Type Terminals",
+          series: "Solid Pin & Flat Blade Series",
+          desc: "Solid copper round pin and flat blade terminals for inserting stranded wire into compression-type screw terminal strips.",
+          image: p3,
+          specs: "Electrolytic Copper · Vibration Resistant · Easy Wire Insertion",
+          url: "https://zolex.in/product/insulated-pin-type-terminals/",
+        },
+        {
+          name: "Cord End Sleeves (Bootlace Ferrules)",
+          series: "Single & Twin Wire End Sleeves",
+          desc: "French and German color-coded insulated ferrules preventing wire splaying in spring-clamp and screw-cage terminal blocks.",
+          image: p6,
+          specs: "0.25 mm² - 50 mm² · Twin Wire Formats · Halogen-Free Polypropylene",
+          url: "https://zolex.in/product/insulated-end-sleeve/",
+        },
+      ],
+    },
+    {
+      id: "aluminium-bimetallic",
+      name: "Aluminium & Bimetallic Lugs",
+      tagline: "Friction-Welded Bimetallic Lugs & High-Grade Aluminium Connectors",
+      desc: "Engineered for terminating aluminium conductors onto copper busbars, eliminating galvanic corrosion through metallurgical friction welding.",
+      items: [
+        {
+          name: "Bimetallic Lugs (Al/Cu Friction Welded)",
+          series: "Bi-Metal Palm-to-Barrel Welded",
+          desc: "High-conductivity pure copper palm friction-welded to an EC-grade aluminium barrel with neutral barrier joint grease.",
+          image: p6,
+          specs: "Friction Welded Al/Cu · Anti-Oxidant Greased · 16 mm² to 630 mm²",
+          url: "https://zolex.in/product/bimetallic-crimping-lugs-al-cu-2/",
+        },
+        {
+          name: "Aluminium Tube Crimping Lugs",
+          series: "1-Hole Standard & Solid Section",
+          desc: "Manufactured from pure aluminium tube (99.5% purity) for distribution cables and renewable energy power feeds.",
+          image: p3,
+          specs: "99.5% Aluminium Purity · Pre-filled Compound Option · DIN Standards",
+          url: "https://zolex.in/product/aluminium-tube-crimping-lugs-one-hole/",
+        },
+        {
+          name: "Bimetallic Reducing Links & Connectors",
+          series: "Aluminium-to-Copper In-Line Splices",
+          desc: "Friction-welded bimetallic transition connectors for joining dissimilar aluminium and copper cables inline.",
+          image: p4,
+          specs: "Direct Al-to-Cu Jointing · Zero Galvanic Corrosion · High Tensile",
+          url: "https://zolex.in/product/bimetallic-crimping-reducing-links-al-cu/",
+        },
+      ],
+    },
+    {
+      id: "ss-cable-ties",
+      name: "Stainless Steel Cable Ties",
+      tagline: "Grade 304 & 316 Ball Lock, Ladder & Coated Stainless Steel Ties",
+      desc: "Extreme-temperature and flame-proof cable bundling ties engineered for offshore, petrochemical, defense, and harsh outdoor environments.",
+      items: [
+        {
+          name: "Roller Ball Lock SS Cable Ties",
+          series: "Pure 304 & 316 Stainless Steel",
+          desc: "Self-locking ball mechanism ties providing rapid installation and high loop tensile strength up to 250 lbs.",
+          image: cardConnectors,
+          specs: "Widths 4.6mm & 7.9mm · Temp -80°C to +538°C · Non-Flammable",
+          url: "https://zolex.in/product/roller-ball-lock-type-steel-cable-ties-coated/",
+        },
+        {
+          name: "Polyester Coated SS Cable Ties",
+          series: "Fully Coated Marine Grade",
+          desc: "Pure 316 SS ties with smooth black polyester coating providing edge protection for fragile cable jackets.",
+          image: p2,
+          specs: "Black Polyester Coated · High UV & Salt Spray Resistance",
+          url: "https://zolex.in/product/roller-ball-lock-type-steel-cable-ties-coated-2/",
+        },
+        {
+          name: "Cable Marker Tags & Carrier Strips",
+          series: "SS Embossed Identification Tags",
+          desc: "Grade 316 stainless steel cable identification tags and carrier strips for permanent asset marking.",
+          image: p4,
+          specs: "Chemical & Fire Proof · Custom Lettering / Barcode Carrier",
+          url: "https://zolex.in/product/cable-marker-tags-carrier-strips/",
+        },
+      ],
+    },
+    {
+      id: "cable-glands",
+      name: "Cable Glands & Accessories",
+      tagline: "Industrial, Weatherproof & Flameproof Brass & Polyamide Cable Glands",
+      desc: "Complete ingress sealing and mechanical retention solutions for armoured and unarmoured cables in hazardous and industrial enclosures.",
+      items: [
+        {
+          name: "Double Compression Flameproof Gland",
+          series: "Ex d / Ex e Zone 1 & Zone 2",
+          desc: "Heavy-duty brass double compression cable gland for armoured cables in hazardous gas/dust industrial environments.",
+          image: cardConnectors,
+          specs: "Flameproof & Weatherproof · IP66 / IP67 / IP68 · Brass / Nickel Plated",
+          url: "https://zolex.in/product/double-compression-flameproof-cable-gland/",
+        },
+        {
+          name: "Single Compression Cable Glands (BW / CW)",
+          series: "Industrial Armoured Glands",
+          desc: "Standard single compression glands with clamping rings for SWA (steel wire armoured) cables.",
+          image: p6,
+          specs: "BS 6121 Part 1 · Brass CZ121 · Earth Continuity Verified",
+          url: "https://zolex.in/product/bw-industrial-cable-gland/",
+        },
+        {
+          name: "IP68 Polyamide & Brass Glands",
+          series: "Metric & PG Cable Glands",
+          desc: "High-grade polyamide nylon and nickel-plated brass cable glands with neoprene sealing ring and integrated strain relief.",
+          image: p4,
+          specs: "IP68 Submersible · Metric M12 - M63 & PG7 - PG48 · Locknut Included",
+          url: "https://zolex.in/product/ip68-cable-gland/",
+        },
+        {
+          name: "Gland Accessories (Shrouds, Earth Tags, Reducers)",
+          series: "Complete Installation Kit",
+          desc: "PVC shrouds, brass lock nuts, nickel-plated earth continuity tags, stop plugs, and thread reducers.",
+          image: p3,
+          specs: "Corrosion Proof · Flame Retardant PVC Shrouds · Full Thread Sizes",
+          url: "https://zolex.in/product/pvc-shroud/",
+        },
+      ],
+    },
+    {
+      id: "earthing-tools",
+      name: "Earthing Accessories & Tools",
+      tagline: "Copper Bonded Earth Rods, Clamps & Professional Installation Tools",
+      desc: "Comprehensive lightning protection, grounding systems, and precision mechanical tensioning tools for heavy electrical installations.",
+      items: [
+        {
+          name: "Copper Bonded Earth Rods",
+          series: "Molecularly Bonded (UL 467)",
+          desc: "High-tensile low carbon steel core molecularly bonded with 99.9% pure electrolytic copper for 30+ year grounding lifespan.",
           image: indPower,
-          specs: "Up to 160A / 1000V · Finger-Safe IP20 Touch Proof",
-        },
-      ],
-    },
-    {
-      id: "pcb-interconnects",
-      name: "PCB Interconnects & Headers",
-      tagline: "Board-to-Board, Wire-to-Board & Pluggable Terminal Blocks",
-      desc: "High-density PCB interconnects, pin headers, and Eurostyle pluggable terminal blocks for electronic assemblies and embedded systems.",
-      items: [
-        {
-          name: "Pluggable PCB Terminal Blocks",
-          series: "Eurostyle 3.81mm / 5.08mm",
-          desc: "Two-piece plug and header connectors enabling swift field replacement and modular electronic assembly.",
-          image: p6,
-          specs: "3.5mm, 3.81mm, 5.0mm, 5.08mm Pitch · 300V/15A",
+          specs: "14.2mm & 17.2mm Dia · Copper Layer 100µm - 254µm · Threaded / Unthreaded",
+          url: "https://zolex.in/product/copper-bonded-earth-rod/",
         },
         {
-          name: "Pin & Box Headers",
-          series: "0.1\" (2.54mm) & 2.0mm Pitch",
-          desc: "Straight and right-angle PCB pin headers with gold or tin plating for reliable board-to-board interconnects.",
-          image: p2,
-          specs: "Single & Dual Row · SMT & Through-Hole Options",
-        },
-        {
-          name: "Screw PCB Terminal Blocks",
-          series: "Miniature Fixed Blocks",
-          desc: "Compact low-profile fixed PCB terminal blocks for space-constrained industrial electronics and IoT boards.",
+          name: "Rod-to-Cable Clamps & Connectors",
+          series: "Type 'G' & Type 'A' Heavy Duty",
+          desc: "High-strength naval brass and copper alloy clamps providing high torque connection between earth rod and ground conductors.",
           image: p3,
-          specs: "High Torque · Copper Alloy Terminals · UL Approved",
-        },
-      ],
-    },
-    {
-      id: "wiring-accessories",
-      name: "Wiring Ducts & Cable Management",
-      tagline: "Slotted Wiring Ducts, Cable Glands & Panel Accessories",
-      desc: "Engineered panel-building accessories ensuring clean cable routing, strain relief, and environmental sealing in industrial enclosures.",
-      items: [
-        {
-          name: "Slotted Industrial Wiring Ducts",
-          series: "PVC & Halogen-Free Ducts",
-          desc: "High-impact rigid PVC slotted wire raceways with snap-on covers for neat control cabinet wire organization.",
-          image: cardConnectors,
-          specs: "Wide & Narrow Slot · UL94 V-0 Self-Extinguishing",
+          specs: "High Clamping Torque · Corrosion Resistant · C-Connectors & U-Bolts",
+          url: "https://zolex.in/product/rod-to-cable-clamp-type-g/",
         },
         {
-          name: "Metallic & Nylon Cable Glands",
-          series: "PG & Metric IP68 Glands",
-          desc: "Nickel-plated brass and polyamide cable glands providing superior strain relief and IP68 ingress sealing.",
-          image: p4,
-          specs: "IP68 Dust & Water Proof · Spiral Strain Relief",
-        },
-        {
-          name: "Cable Ties & Protective Sleeving",
-          series: "Industrial Grade Fasteners",
-          desc: "UV-resistant nylon 6/6 cable ties, expandable braided sleeving, and spiral wraps for harness bundling.",
+          name: "SS Cable Tie Tensioning & Cutting Gun",
+          series: "Automatic Tie Gun Tool",
+          desc: "Heavy-duty ergonomic steel tie tensioning gun that automatically cuts flush with adjustable preset tension.",
           image: p2,
-          specs: "Operating Temp -40°C to +85°C · High Tensile Strength",
-        },
-      ],
-    },
-    {
-      id: "relays-modules",
-      name: "Relays & Interface Modules",
-      tagline: "Industrial Relay Modules & Signal Conditioning",
-      desc: "Compact DIN-rail interface relays and optocoupler modules for electrical isolation, signal amplification, and PLC interfacing.",
-      items: [
-        {
-          name: "Slim Interface Relay Modules",
-          series: "6.2mm Ultra-Slim Series",
-          desc: "High-density pluggable relays with LED status indicators and integrated freewheeling protection diodes.",
-          image: p4,
-          specs: "6.2mm Width · 24VDC / 230VAC Coil Options · 6A SPDT",
-        },
-        {
-          name: "Multi-Channel Relay Boards",
-          series: "4 / 8 / 16 Channel Modules",
-          desc: "Pre-wired DIN-rail mount relay boards for direct interfacing with PLC I/O cards and CNC controllers.",
-          image: p6,
-          specs: "Optocoupler Isolated · Independent Fuse Protection",
+          specs: "For SS Ties up to 7.9mm · Auto Flush Cut-Off · Ergonomic Grip",
+          url: "https://zolex.in/product/cable-tie-tensioning-cutting-automatic-gun/",
         },
       ],
     },
@@ -186,27 +264,31 @@ export function ZolexPage({ onNavigate }: ZolexPageProps) {
                   Zolex Components
                 </h1>
                 <p className="mt-1 font-display text-xs sm:text-sm font-semibold text-brand-blue-soft uppercase tracking-wider">
-                  Industrial Connectors · Terminal Blocks · Wiring Ducts · Relays
+                  Copper Crimping Lugs · Terminals · SS Cable Ties · Cable Glands · Earthing
                 </p>
               </div>
             </div>
             <p className="mt-5 max-w-2xl text-[0.95rem] leading-relaxed text-steel">
-              Qualitech Connectronics is an authorized distribution partner for Zolex industrial electronics and interconnect components in India. Sourced directly with verified quality, local stock availability, and complete engineering support for OEMs.
+              Qualitech Connectronics is an authorized distribution partner for Zolex (Zeeta Electrical Engineering Pvt. Ltd.) in India. Explore Zolex's comprehensive range of electrical lugs, terminals, cable glands, and ties below with direct access to official product documentation.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
-              <button
-                onClick={() => onNavigate("#contact-page", true)}
+              <a
+                href="https://zolex.in/product/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-xl bg-brand-blue px-6 py-3.5 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-white hover:text-graphite transition-all shadow-md cursor-pointer"
               >
-                <span>Request Zolex Quote</span>
-                <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-              </button>
+                <span>Visit Zolex Official Portal</span>
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
               <button
-                onClick={() => onNavigate("#products", true)}
+                onClick={() => onNavigate("#contact-page", true)}
                 className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-6 py-3.5 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-white/20 transition-all cursor-pointer"
               >
-                <span>Browse All Products</span>
+                <span>Request Zolex Quote →</span>
               </button>
             </div>
           </Reveal>
@@ -221,8 +303,8 @@ export function ZolexPage({ onNavigate }: ZolexPageProps) {
               ✓
             </div>
             <div>
-              <h4 className="font-display text-xs sm:text-sm font-bold text-graphite">100% Genuine</h4>
-              <p className="text-[0.72rem] text-muted-foreground">Direct authorized sourcing</p>
+              <h4 className="font-display text-xs sm:text-sm font-bold text-graphite">99.9% Pure ETP Copper</h4>
+              <p className="text-[0.72rem] text-muted-foreground">High conductivity electro-tinned</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -230,8 +312,8 @@ export function ZolexPage({ onNavigate }: ZolexPageProps) {
               ⚡
             </div>
             <div>
-              <h4 className="font-display text-xs sm:text-sm font-bold text-graphite">Local Stock</h4>
-              <p className="text-[0.72rem] text-muted-foreground">Fast dispatch from Hyderabad</p>
+              <h4 className="font-display text-xs sm:text-sm font-bold text-graphite">Immediate Local Stock</h4>
+              <p className="text-[0.72rem] text-muted-foreground">Fast dispatch across OEM clients</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -239,8 +321,8 @@ export function ZolexPage({ onNavigate }: ZolexPageProps) {
               ⚙
             </div>
             <div>
-              <h4 className="font-display text-xs sm:text-sm font-bold text-graphite">OEM Integration</h4>
-              <p className="text-[0.72rem] text-muted-foreground">Kitting with cable harnesses</p>
+              <h4 className="font-display text-xs sm:text-sm font-bold text-graphite">Harness Integration</h4>
+              <p className="text-[0.72rem] text-muted-foreground">Kitting with Qualitech cable looms</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -248,8 +330,8 @@ export function ZolexPage({ onNavigate }: ZolexPageProps) {
               📋
             </div>
             <div>
-              <h4 className="font-display text-xs sm:text-sm font-bold text-graphite">Full Datasheets</h4>
-              <p className="text-[0.72rem] text-muted-foreground">Technical compliance & test reports</p>
+              <h4 className="font-display text-xs sm:text-sm font-bold text-graphite">Tested to Standards</h4>
+              <p className="text-[0.72rem] text-muted-foreground">IS / BS / IEC &amp; DIN compliance</p>
             </div>
           </div>
         </div>
@@ -266,7 +348,7 @@ export function ZolexPage({ onNavigate }: ZolexPageProps) {
                   Zolex Product Lines
                 </h2>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Select a category to explore components, specifications, and applications.
+                  Select a category to view product series and direct official catalog links.
                 </p>
               </div>
 
@@ -307,7 +389,7 @@ export function ZolexPage({ onNavigate }: ZolexPageProps) {
                   </p>
                 </div>
 
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                   {sec.items.map((item) => (
                     <article
                       key={item.name}
@@ -327,22 +409,26 @@ export function ZolexPage({ onNavigate }: ZolexPageProps) {
                         <h4 className="mt-1 font-display text-sm font-bold text-graphite">
                           {item.name}
                         </h4>
-                        <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                        <p className="mt-2 text-xs text-muted-foreground leading-relaxed line-clamp-3">
                           {item.desc}
                         </p>
 
-                        <div className="mt-3 rounded-lg bg-steel-light/60 px-3 py-1.5 text-[0.68rem] font-mono text-graphite">
+                        <div className="mt-3 rounded-lg bg-steel-light/60 px-3 py-1.5 text-[0.65rem] font-mono text-graphite line-clamp-2">
                           {item.specs}
                         </div>
 
-                        <div className="mt-auto pt-4 border-t border-border/80">
-                          <button
-                            onClick={() => onNavigate("#contact-page", true)}
+                        <div className="mt-auto pt-4 border-t border-border/80 flex flex-col gap-2">
+                          <a
+                            href={item.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="w-full inline-flex items-center justify-center gap-1.5 rounded-xl bg-brand-blue px-3.5 py-2 font-display text-xs font-bold uppercase tracking-wider text-white shadow-xs hover:bg-graphite transition-colors cursor-pointer"
                           >
-                            <span>Enquire / Request Quote</span>
-                            <span className="transition-transform group-hover:translate-x-1">→</span>
-                          </button>
+                            <span>View on Zolex</span>
+                            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                          </a>
                         </div>
                       </div>
                     </article>
@@ -358,17 +444,17 @@ export function ZolexPage({ onNavigate }: ZolexPageProps) {
       <section className="py-20 bg-[#fafbfc] border-b border-border">
         <div className="mx-auto max-w-7xl px-5 sm:px-8 text-center">
           <h3 className="font-display text-2xl sm:text-3xl font-bold text-graphite">
-            Looking for Specific Zolex Part Numbers or Volume Pricing?
+            Need Zolex Terminals, Lugs or Cable Glands for Your Production Run?
           </h3>
           <p className="mt-3 text-sm text-muted-foreground max-w-xl mx-auto">
-            Qualitech Connectronics provides authorized Zolex supply with technical validation, sample kits, and timely delivery across India.
+            Contact Qualitech Connectronics for part numbers, volume pricing, engineering datasheets, and fast local dispatch.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
             <button
               onClick={() => onNavigate("#contact-page", true)}
               className="rounded-xl bg-graphite px-8 py-3.5 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-brand-blue transition-colors cursor-pointer"
             >
-              Enquire for Zolex Components →
+              Enquire for Zolex Parts →
             </button>
             <button
               onClick={() => onNavigate("#products", true)}
