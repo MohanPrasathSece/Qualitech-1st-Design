@@ -537,7 +537,13 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
                   >
                     {/* Image Container */}
                     <div
-                      onClick={() => setSelectedProduct(product)}
+                      onClick={() => {
+                        if (product.externalUrl) {
+                          window.open(product.externalUrl, "_blank", "noopener,noreferrer");
+                        } else {
+                          setSelectedProduct(product);
+                        }
+                      }}
                       className="relative h-44 sm:h-48 w-full overflow-hidden bg-steel-light/50 p-4 flex items-center justify-center cursor-pointer"
                     >
                       <img
@@ -565,6 +571,19 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
                           Featured
                         </span>
                       )}
+
+                      {/* Quick Specs popup trigger button */}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedProduct(product);
+                        }}
+                        className="absolute bottom-2 right-2 rounded-lg bg-white/90 backdrop-blur-xs px-2.5 py-1 text-[0.62rem] font-bold text-graphite opacity-0 group-hover:opacity-100 transition-opacity shadow-xs hover:bg-white cursor-pointer"
+                        title="View Specs & Details"
+                      >
+                        Quick Specs
+                      </button>
                     </div>
 
                     {/* Body */}
@@ -574,7 +593,13 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
                       </span>
 
                       <h3
-                        onClick={() => setSelectedProduct(product)}
+                        onClick={() => {
+                          if (product.externalUrl) {
+                            window.open(product.externalUrl, "_blank", "noopener,noreferrer");
+                          } else {
+                            setSelectedProduct(product);
+                          }
+                        }}
                         className="mt-1 font-display text-sm font-bold text-graphite group-hover:text-brand-blue transition-colors cursor-pointer line-clamp-2"
                         title={product.name}
                       >
