@@ -393,7 +393,8 @@ export function ZolexPage({ onNavigate }: ZolexPageProps) {
                   {sec.items.map((item) => (
                     <article
                       key={item.name}
-                      className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+                      onClick={() => window.open(item.url, "_blank", "noopener,noreferrer")}
+                      className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-brand-blue/40 hover:shadow-md cursor-pointer"
                     >
                       <div className="h-44 bg-steel-light/50 p-4 flex items-center justify-center overflow-hidden">
                         <img
@@ -406,7 +407,7 @@ export function ZolexPage({ onNavigate }: ZolexPageProps) {
                         <span className="text-[0.62rem] font-mono font-semibold text-brand-blue">
                           {item.series}
                         </span>
-                        <h4 className="mt-1 font-display text-sm font-bold text-graphite">
+                        <h4 className="mt-1 font-display text-sm font-bold text-graphite group-hover:text-brand-blue transition-colors">
                           {item.name}
                         </h4>
                         <p className="mt-2 text-xs text-muted-foreground leading-relaxed line-clamp-3">
@@ -422,6 +423,7 @@ export function ZolexPage({ onNavigate }: ZolexPageProps) {
                             href={item.url}
                             target="_blank"
                             rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
                             className="w-full inline-flex items-center justify-center gap-1.5 rounded-xl bg-brand-blue px-3.5 py-2 font-display text-xs font-bold uppercase tracking-wider text-white shadow-xs hover:bg-graphite transition-colors cursor-pointer"
                           >
                             <span>View on Zolex</span>

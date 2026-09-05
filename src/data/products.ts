@@ -44,6 +44,7 @@ export const SUBCATEGORIES: Record<string, string[]> = {
     "Amphenol — Antennas",
     "Amphenol — RF & Coaxial",
     "Amphenol — Fiber Optic",
+    "Amphenol — EV & Industrial Power",
     "Zolex — Copper Lugs & Links",
     "Zolex — Crimp Terminals",
     "Zolex — Aluminium & Bimetallic",
@@ -74,9 +75,9 @@ export const ALL_INDUSTRIES = [
 export const BRANDS = ["All Brands", "Amphenol", "Zolex", "Qualitech"] as const;
 
 export const PRODUCTS: Product[] = [
-  // ═══════════════════════════════════════════
-  // AMPHENOL — Connectors
-  // ═══════════════════════════════════════════
+  // ═════════════════════════════════════════════════════════════════
+  // AMPHENOL — CONNECTORS
+  // ═════════════════════════════════════════════════════════════════
   {
     id: "amp-circular-mil",
     sku: "AMPHENOL-CIRC-MIL",
@@ -84,16 +85,16 @@ export const PRODUCTS: Product[] = [
     category: "Electronics Components",
     subCategory: "Amphenol — Connectors",
     brand: "Amphenol",
-    description: "Amphenol circular MIL-spec connectors for defence, aerospace, and harsh environment applications. View full product range on Amphenol's official website.",
+    description: "Amphenol circular MIL-spec connectors (MIL-DTL-38999, MIL-DTL-26482, SheerPwr) for defence, aerospace, marine and harsh environment applications.",
     features: [
-      "MIL-DTL-38999 and MIL-DTL-26482 series",
-      "Harsh environment rated",
-      "Multiple shell sizes and contact arrangements",
+      "MIL-DTL-38999 Series I, II, III and MIL-DTL-26482 series",
+      "Harsh environment rated with EMI/RFI shielding",
+      "Multiple shell sizes, plating options, and contact arrangements",
     ],
     specs: {
       Brand: "Amphenol",
-      Type: "Circular MIL-Spec",
-      Application: "Defence, Aerospace",
+      Series: "MIL-DTL-38999 / 26482",
+      Application: "Defence, Aerospace, Marine",
     },
     industries: ["Defense", "Telecommunications", "Railways"],
     featured: true,
@@ -104,20 +105,20 @@ export const PRODUCTS: Product[] = [
   {
     id: "amp-industrial-circ",
     sku: "AMPHENOL-IND-CIRC",
-    name: "Industrial Circular Connectors",
+    name: "Industrial Circular Connectors (M12 / M8 / SPE)",
     category: "Electronics Components",
     subCategory: "Amphenol — Connectors",
     brand: "Amphenol",
-    description: "Amphenol industrial circular connectors — robust, reliable connectivity for factory automation, industrial control and power distribution.",
+    description: "Amphenol industrial circular connectors — robust, reliable connectivity for factory automation, robotics, sensor networks, and Single Pair Ethernet.",
     features: [
-      "IP67/IP68 rated options",
-      "Multiple pin configurations",
-      "Screw, bayonet and push-pull locking",
+      "IP67/IP68 submersible rated options",
+      "M12, M8, M23 and Single Pair Ethernet configurations",
+      "Screw, bayonet, and push-pull rapid locking mechanisms",
     ],
     specs: {
       Brand: "Amphenol",
-      Type: "Industrial Circular",
-      Application: "Industrial Automation, Power",
+      Series: "M12 / M8 / Single Pair Ethernet",
+      Application: "Factory Automation, Robotics",
     },
     industries: ["Industrial Automation", "Power & Energy", "EV Charging"],
     featured: true,
@@ -128,20 +129,20 @@ export const PRODUCTS: Product[] = [
   {
     id: "amp-dsub-connectors",
     sku: "AMPHENOL-DSUB",
-    name: "D-Sub Connectors",
+    name: "D-Subminiature Connectors",
     category: "Electronics Components",
     subCategory: "Amphenol — Connectors",
     brand: "Amphenol",
-    description: "Amphenol D-subminiature connectors for data, signal and mixed-layout applications. Available in standard, high-density and filtered configurations.",
+    description: "Amphenol D-subminiature connectors for data, signal and mixed-layout power applications. Available in standard, high-density, combo-D and filtered variants.",
     features: [
-      "Standard and high-density pin configurations",
-      "Solder cup, crimp and PCB mount options",
-      "EMI filtered variants available",
+      "Standard (9 to 50 pin) and high-density (15 to 78 pin) layouts",
+      "Solder cup, crimp, and PCB mount terminations",
+      "Integrated EMI/RFI filtered and IP67 waterproof options",
     ],
     specs: {
       Brand: "Amphenol",
-      Type: "D-Subminiature",
-      Application: "Data Communications, Instrumentation",
+      Series: "Standard / High-Density / Combo D-Sub",
+      Application: "Data Comms, Instrumentation",
     },
     industries: ["Telecommunications", "Industrial Automation", "Defense"],
     featured: false,
@@ -152,20 +153,20 @@ export const PRODUCTS: Product[] = [
   {
     id: "amp-pcb-connectors",
     sku: "AMPHENOL-PCB",
-    name: "PCB Connectors & Headers",
+    name: "High-Speed Backplane & Mezzanine PCB Connectors",
     category: "Electronics Components",
     subCategory: "Amphenol — Connectors",
     brand: "Amphenol",
-    description: "Amphenol board-to-board, wire-to-board and PCB header connectors for high-speed data, power and mixed-signal applications.",
+    description: "Amphenol industry-leading high-speed backplane (Paladin, ExaMAX, XCede) and board-to-board mezzanine connectors delivering speeds up to 112Gb/s PAM4.",
     features: [
-      "Board-to-board and wire-to-board",
-      "High-speed differential pairs",
-      "Multiple pitch options",
+      "High-speed differential pairs supporting 56Gb/s to 112Gb/s PAM4",
+      "Paladin, ExaMAX, and XCede backplane architectures",
+      "Zero-skew architecture and lowest crosstalk in class",
     ],
     specs: {
       Brand: "Amphenol",
-      Type: "PCB Connectors",
-      Application: "Electronics, High-Speed Data",
+      Series: "Paladin / ExaMAX / Mezzanine",
+      Speed: "Up to 112 Gb/s PAM4",
     },
     industries: ["Consumer Electronics", "Telecommunications", "Industrial Automation"],
     featured: false,
@@ -173,27 +174,75 @@ export const PRODUCTS: Product[] = [
     inStock: true,
     externalUrl: "https://www.amphenol-cs.com/product-series/paladin.html",
   },
-
-  // ═══════════════════════════════════════════
-  // AMPHENOL — Antennas
-  // ═══════════════════════════════════════════
   {
-    id: "amp-gnss-antenna",
-    sku: "AMPHENOL-GNSS-ANT",
-    name: "GNSS Antennas",
+    id: "amp-radsok-power",
+    sku: "AMPHENOL-RADSOK",
+    name: "Heavy Duty RADSOK Power Connectors",
     category: "Electronics Components",
-    subCategory: "Amphenol — Antennas",
+    subCategory: "Amphenol — Connectors",
     brand: "Amphenol",
-    description: "Amphenol high-precision GNSS antennas for GPS, GLONASS, Galileo and BeiDou navigation and timing applications.",
+    description: "Amphenol proprietary RADSOK contact technology delivering up to 50% higher ampacity in smaller footprints with lowest contact resistance for heavy industrial power.",
     features: [
-      "Multi-band GNSS support",
-      "High-gain integrated LNA",
-      "IP67 weatherproof options",
+      "Patented hyperbolic grid contact geometry",
+      "High current capacity from 35A up to 1000A continuous",
+      "Low insertion force and ultra-low millivolt drop",
     ],
     specs: {
       Brand: "Amphenol",
-      Type: "GNSS Antenna",
-      Application: "Navigation, Timing, Fleet Management",
+      Technology: "RADSOK High Current",
+      Current: "Up to 1000A Continuous",
+    },
+    industries: ["Power & Energy", "EV Charging", "Railways", "Defense"],
+    featured: true,
+    image: cardConnectors,
+    inStock: true,
+    externalUrl: "https://www.amphenol-industrial.com/radsok/",
+  },
+  {
+    id: "amp-rugged-usb-rj45",
+    sku: "AMPHENOL-RUG-MOD",
+    name: "Rugged Harsh-Environment USB & RJ45 Modular Jacks",
+    category: "Electronics Components",
+    subCategory: "Amphenol — Connectors",
+    brand: "Amphenol",
+    description: "Amphenol sealed USB, HDMI, and RJ45 modular jacks engineered with IP67/IP68 die-cast housings for field communication and extreme environment terminals.",
+    features: [
+      "IP67 / IP68 die-cast zinc and polymer sealed shells",
+      "Rugged USB Type-A, Type-C, and Cat6A RJ45 configurations",
+      "Positive locking latching and bayonet coupling",
+    ],
+    specs: {
+      Brand: "Amphenol",
+      Series: "MUSB / MUSBR Harsh Environment",
+      Rating: "IP67 / IP68 Submersible",
+    },
+    industries: ["Defense", "Telecommunications", "Industrial Automation"],
+    featured: false,
+    image: p4,
+    inStock: true,
+    externalUrl: "https://www.amphenol-cs.com/product-series/musb-musbr.html",
+  },
+
+  // ═════════════════════════════════════════════════════════════════
+  // AMPHENOL — ANTENNAS
+  // ═════════════════════════════════════════════════════════════════
+  {
+    id: "amp-gnss-antenna",
+    sku: "AMPHENOL-GNSS-ANT",
+    name: "High Precision GNSS Antennas",
+    category: "Electronics Components",
+    subCategory: "Amphenol — Antennas",
+    brand: "Amphenol",
+    description: "Amphenol active multi-band GNSS antennas supporting GPS, GLONASS, Galileo, and BeiDou for sub-meter navigation, asset tracking, and timing.",
+    features: [
+      "Multi-band GNSS (L1/L2/L5/E1/E5b) support",
+      "High-gain integrated low noise amplifier (LNA)",
+      "IP67 waterproof and UV-resistant radomes",
+    ],
+    specs: {
+      Brand: "Amphenol",
+      Type: "Active Multi-Band GNSS",
+      Constellations: "GPS, GLONASS, Galileo, BeiDou",
     },
     industries: ["Telecommunications", "Railways", "Automotive", "Defense"],
     featured: true,
@@ -204,20 +253,20 @@ export const PRODUCTS: Product[] = [
   {
     id: "amp-cellular-antenna",
     sku: "AMPHENOL-CELL-ANT",
-    name: "4G/5G Cellular Antennas",
+    name: "5G & 4G LTE Cellular Wideband Antennas",
     category: "Electronics Components",
     subCategory: "Amphenol — Antennas",
     brand: "Amphenol",
-    description: "Amphenol 4G LTE and 5G wideband cellular antennas for IoT gateways, routers, telematics and industrial communication systems.",
+    description: "Amphenol 4G LTE and 5G wideband cellular antennas for IoT gateways, smart meters, industrial routers, telematics kiosks, and base stations.",
     features: [
-      "Wideband 600 MHz to 6 GHz coverage",
-      "Low-profile puck and panel styles",
-      "Outdoor and indoor variants",
+      "Ultra-wideband 600 MHz to 6 GHz sub-6GHz coverage",
+      "Low-profile vandal-proof puck, blade, and panel styles",
+      "High efficiency and omnidirectional radiation pattern",
     ],
     specs: {
       Brand: "Amphenol",
-      Type: "Cellular Antenna",
-      Application: "IoT, Telematics, Industrial",
+      Bandwidth: "600 MHz - 6 GHz (5G Sub-6)",
+      Mounting: "Screw-Mount Puck / Magnetic / Adhesive",
     },
     industries: ["Telecommunications", "EV Charging", "Industrial Automation"],
     featured: true,
@@ -227,21 +276,21 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: "amp-wifi-antenna",
-    sku: "AMPHENOL-WIFI-ANT",
-    name: "Wi-Fi & Bluetooth Dipoles",
+    sku: "Amphenol-WIFI-6E",
+    name: "Wi-Fi 6E & Bluetooth Dual-Band Antennas",
     category: "Electronics Components",
     subCategory: "Amphenol — Antennas",
     brand: "Amphenol",
-    description: "Amphenol dual-band Wi-Fi and Bluetooth antennas — articulated rubber duck and terminal antennas for industrial gateways and wireless APs.",
+    description: "Amphenol high-performance Wi-Fi 6E (2.4GHz, 5GHz, 6GHz) and Bluetooth articulated rubber-duck dipole and terminal antennas for wireless routers and APs.",
     features: [
-      "2.4 GHz and 5.8 GHz dual-band",
-      "High gain articulated dipole",
-      "SMA / RP-SMA connector options",
+      "Tri-band Wi-Fi 6E support (2.4 GHz / 5 GHz / 6 GHz)",
+      "Articulated 90° tilt and 360° swivel knuckle",
+      "SMA and RP-SMA connector interfaces",
     ],
     specs: {
       Brand: "Amphenol",
-      Type: "Wi-Fi / Bluetooth Antenna",
-      Application: "Wireless APs, Routers, Industrial IoT",
+      Frequency: "2.4 GHz / 5 GHz / 6 GHz Wi-Fi 6E",
+      Gain: "3 dBi to 5 dBi",
     },
     industries: ["Consumer Electronics", "Industrial Automation", "Telecommunications"],
     featured: false,
@@ -252,20 +301,20 @@ export const PRODUCTS: Product[] = [
   {
     id: "amp-fpc-antenna",
     sku: "AMPHENOL-FPC-ANT",
-    name: "Internal Embedded FPC Antennas",
+    name: "Internal Embedded Flexible FPC Antennas",
     category: "Electronics Components",
     subCategory: "Amphenol — Antennas",
     brand: "Amphenol",
-    description: "Ultra-thin flexible peel-and-stick FPC antennas with IPEX micro coaxial leads for compact IoT, smart meters, and tracking devices.",
+    description: "Ultra-thin flexible peel-and-stick FPC antennas with IPEX micro coaxial leads for compact IoT devices, wearable medical equipment, and smart meters.",
     features: [
-      "NB-IoT / LoRa / LTE-M / Embedded frequencies",
-      "Peel-and-stick 3M adhesive backing",
-      "IPEX / U.FL micro-coaxial connectors",
+      "NB-IoT / LoRa / LTE-M / ISM 868/915 MHz frequency options",
+      "3M industrial peel-and-stick adhesive backing",
+      "Miniature IPEX MHF / U.FL micro-coaxial cable assemblies",
     ],
     specs: {
       Brand: "Amphenol",
-      Type: "Embedded FPC Antenna",
-      Application: "Wearables, Smart Meters, Compact IoT",
+      Type: "Flexible Peel & Stick FPC",
+      Connector: "IPEX MHF / U.FL Micro Coax",
     },
     industries: ["Consumer Electronics", "Industrial Automation", "Telecommunications"],
     featured: false,
@@ -273,27 +322,51 @@ export const PRODUCTS: Product[] = [
     inStock: true,
     externalUrl: "https://www.amphenol-cs.com/product-series/embedded-antenna.html",
   },
-
-  // ═══════════════════════════════════════════
-  // AMPHENOL — RF & Coaxial
-  // ═══════════════════════════════════════════
   {
-    id: "amp-rf-connectors",
-    sku: "AMPHENOL-RF-CONN",
-    name: "RF & Coaxial Connectors",
+    id: "amp-telematics-combo",
+    sku: "AMPHENOL-TEL-COMBO",
+    name: "Vehicle Telematics Multi-in-One Combo Antennas",
     category: "Electronics Components",
-    subCategory: "Amphenol — RF & Coaxial",
+    subCategory: "Amphenol — Antennas",
     brand: "Amphenol",
-    description: "Amphenol RF connectors — SMA, BNC, N-Type, TNC and specialty coaxial connectors for high-frequency signal integrity.",
+    description: "Amphenol rugged roof-mount multi-function shark-fin and dome combo antennas integrating 5G/LTE, Wi-Fi MIMO, and GNSS in a single aerodynamic housing.",
     features: [
-      "SMA, BNC, N-Type, TNC series",
-      "50Ω and 75Ω impedance options",
-      "High frequency performance",
+      "Integrated 5G/4G + Wi-Fi MIMO + GNSS in one package",
+      "IP69K high-pressure wash and vandal resistant",
+      "Color-coded low-loss RG58 and LMR195 cable tails",
     ],
     specs: {
       Brand: "Amphenol",
-      Type: "RF Coaxial Connectors",
-      Application: "RF Systems, Test & Measurement",
+      Integration: "3-in-1 / 5-in-1 / 7-in-1 Combo",
+      Protection: "IP69K Submersible & Washdown",
+    },
+    industries: ["Automotive", "Railways", "Defense", "Telecommunications"],
+    featured: false,
+    image: p5,
+    inStock: true,
+    externalUrl: "https://www.amphenol-cs.com/product-series/telematics.html",
+  },
+
+  // ═════════════════════════════════════════════════════════════════
+  // AMPHENOL — RF & COAXIAL
+  // ═════════════════════════════════════════════════════════════════
+  {
+    id: "amp-rf-connectors",
+    sku: "AMPHENOL-RF-CONN",
+    name: "Precision RF Coaxial Connectors (SMA / BNC / N / TNC)",
+    category: "Electronics Components",
+    subCategory: "Amphenol — RF & Coaxial",
+    brand: "Amphenol",
+    description: "Amphenol RF coaxial connectors — SMA, SMB, BNC, N-Type, TNC, and 7/16 DIN precision engineered for high-frequency signal integrity and test racks.",
+    features: [
+      "50Ω and 75Ω impedance matched options",
+      "DC to 18GHz / 26.5GHz / 40GHz operating range",
+      "Gold-plated beryllium copper contacts and PTFE dielectrics",
+    ],
+    specs: {
+      Brand: "Amphenol RF",
+      Interfaces: "SMA, BNC, N-Type, TNC, 7/16 DIN",
+      Frequency: "DC up to 40 GHz",
     },
     industries: ["Telecommunications", "Defense", "Automotive"],
     featured: true,
@@ -304,20 +377,20 @@ export const PRODUCTS: Product[] = [
   {
     id: "amp-rf-cables",
     sku: "AMPHENOL-RF-CABLE",
-    name: "RF Cable Assemblies",
+    name: "Tested Precision RF Coaxial Cable Assemblies",
     category: "Electronics Components",
     subCategory: "Amphenol — RF & Coaxial",
     brand: "Amphenol",
-    description: "Amphenol precision RF cable assemblies with tested VSWR performance for telecom infrastructure, test labs and defence systems.",
+    description: "Amphenol precision RF cable assemblies featuring low-loss micro-coax cables, 100% factory verified VSWR and phase-matching for telecom and test labs.",
     features: [
-      "Low-loss and ultra-flexible options",
-      "Custom lengths available",
-      "Factory tested to tight VSWR specs",
+      "Low-loss double shielded and ultra-flexible cable types",
+      "Phase-matched pairs and custom length builds",
+      "100% factory network analyzer tested for VSWR and insertion loss",
     ],
     specs: {
-      Brand: "Amphenol",
-      Type: "RF Cable Assembly",
-      Application: "Telecom, Defence, Test & Measurement",
+      Brand: "Amphenol RF",
+      Impedance: "50 Ohm",
+      Testing: "100% Return Loss & VSWR Tested",
     },
     industries: ["Telecommunications", "Defense"],
     featured: false,
@@ -325,27 +398,51 @@ export const PRODUCTS: Product[] = [
     inStock: true,
     externalUrl: "https://www.amphenol-cs.com/catalogsearch/result?query=coaxial",
   },
+  {
+    id: "amp-micro-rf",
+    sku: "AMPHENOL-MICRO-RF",
+    name: "Micro-Miniature RF Connectors (MCX / MMCX / AMC)",
+    category: "Electronics Components",
+    subCategory: "Amphenol — RF & Coaxial",
+    brand: "Amphenol",
+    description: "Amphenol ultra-miniature coaxial connectors (MCX, MMCX, AMC/IPEX) designed for high-density space-constrained mobile, GPS, and IoT circuitry.",
+    features: [
+      "Snap-on coupling for fast, secure mating",
+      "30% smaller footprint than traditional subminiature interfaces",
+      "Supports frequencies from DC to 6GHz",
+    ],
+    specs: {
+      Brand: "Amphenol RF",
+      Series: "MCX / MMCX / AMC Micro-Coax",
+      Frequency: "DC to 6 GHz",
+    },
+    industries: ["Consumer Electronics", "Telecommunications", "Automotive"],
+    featured: false,
+    image: p1,
+    inStock: true,
+    externalUrl: "https://www.amphenol-cs.com/product-series/micro-coaxial.html",
+  },
 
-  // ═══════════════════════════════════════════
-  // AMPHENOL — Fiber Optic
-  // ═══════════════════════════════════════════
+  // ═════════════════════════════════════════════════════════════════
+  // AMPHENOL — FIBER OPTIC
+  // ═════════════════════════════════════════════════════════════════
   {
     id: "amp-fiber-connectors",
     sku: "AMPHENOL-FO-CONN",
-    name: "Fiber Optic Connectors & Patch Cords",
+    name: "Fiber Optic Connectors & Optical Patch Cords",
     category: "Electronics Components",
     subCategory: "Amphenol — Fiber Optic",
     brand: "Amphenol",
-    description: "Amphenol fiber optic connectors, adapters and patch cords for high-bandwidth data center and telecom backhaul networks.",
+    description: "Amphenol LC, SC, ST, and MTP/MPO multi-fiber optical connectors, adapters, and duplex patch cords for data center and telecom infrastructure.",
     features: [
-      "LC, SC, ST, MTP/MPO connector types",
-      "Single-mode and multi-mode",
-      "Low insertion loss",
+      "LC, SC, ST, and high-density MTP/MPO 12/24 fiber formats",
+      "Single-mode (OS2) and multi-mode (OM3/OM4/OM5) assemblies",
+      "Ultra-low insertion loss (UPC and APC end-face finishes)",
     ],
     specs: {
       Brand: "Amphenol",
-      Type: "Fiber Optic",
-      Application: "Data Centers, Telecom",
+      Types: "LC / SC / MTP / MPO",
+      Fiber: "Single-Mode 9/125µm & Multi-Mode 50/125µm",
     },
     industries: ["Telecommunications", "Power & Energy"],
     featured: false,
@@ -353,10 +450,62 @@ export const PRODUCTS: Product[] = [
     inStock: true,
     externalUrl: "https://www.amphenol-cs.com/fiber-optics.html",
   },
+  {
+    id: "amp-tactical-fiber",
+    sku: "AMPHENOL-TAC-FO",
+    name: "Harsh-Environment Tactical Military Fiber Solutions",
+    category: "Electronics Components",
+    subCategory: "Amphenol — Fiber Optic",
+    brand: "Amphenol",
+    description: "Amphenol TFOCA-II, TACBeam, and expanded-beam optical connectors engineered for deployable field military communications, offshore and mining.",
+    features: [
+      "Hermaphroditic coupling allows daisy-chaining without adapters",
+      "Expanded beam lens technology resistant to dirt and dust contamination",
+      "Crush-resistant armored tactical breakout cables",
+    ],
+    specs: {
+      Brand: "Amphenol",
+      Series: "TFOCA-II / TACBeam Expanded Beam",
+      Application: "Military Field Comms, Offshore",
+    },
+    industries: ["Defense", "Power & Energy", "Telecommunications"],
+    featured: false,
+    image: indDefense,
+    inStock: true,
+    externalUrl: "https://www.amphenol-cs.com/fiber-optics.html",
+  },
 
-  // ═══════════════════════════════════════════
-  // ZOLEX — Copper Lugs & Links
-  // ═══════════════════════════════════════════
+  // ═════════════════════════════════════════════════════════════════
+  // AMPHENOL — EV & INDUSTRIAL POWER
+  // ═════════════════════════════════════════════════════════════════
+  {
+    id: "amp-ev-hvsl",
+    sku: "AMPHENOL-EV-HVSL",
+    name: "EV High-Voltage Interconnects (HVSL / Excel|Mate)",
+    category: "Electronics Components",
+    subCategory: "Amphenol — EV & Industrial Power",
+    brand: "Amphenol",
+    description: "Amphenol specialized high-voltage sealed power connectors (HVSL, Excel|Mate, SurLok Plus) engineered for electric vehicle powertrains, battery packs, and DC fast chargers.",
+    features: [
+      "Integrated High Voltage Interlock Loop (HVIL) safety circuit",
+      "Rated up to 1000V DC and 300A continuous per pin",
+      "IP67 / IP6K9K ingress protection in mated condition",
+    ],
+    specs: {
+      Brand: "Amphenol Industrial",
+      Series: "HVSL / Excel|Mate / SurLok Plus",
+      Rating: "1000V DC / 300A Continuous",
+    },
+    industries: ["EV Charging", "Automotive", "Power & Energy"],
+    featured: true,
+    image: cardFacilities,
+    inStock: true,
+    externalUrl: "https://www.amphenol-industrial.com/hvsl/",
+  },
+
+  // ═════════════════════════════════════════════════════════════════
+  // ZOLEX — COPPER LUGS & LINKS
+  // ═════════════════════════════════════════════════════════════════
   {
     id: "zolex-copper-lugs-1",
     sku: "ZOLEX-LUG-CU-01",
@@ -385,7 +534,7 @@ export const PRODUCTS: Product[] = [
   {
     id: "zolex-lugs-heavyduty",
     sku: "ZOLEX-LUG-CU-HD",
-    name: "Heavy Duty Copper Tube Lugs",
+    name: "Heavy Duty Long Barrel Copper Tube Lugs",
     category: "Electronics Components",
     subCategory: "Zolex — Copper Lugs & Links",
     brand: "Zolex",
@@ -410,7 +559,7 @@ export const PRODUCTS: Product[] = [
   {
     id: "zolex-lugs-two-hole",
     sku: "ZOLEX-LUG-CU-2H",
-    name: "Two-Hole & Multi-Stud Copper Lugs",
+    name: "Two-Hole & Multi-Stud Anti-Rotation Copper Lugs",
     category: "Electronics Components",
     subCategory: "Zolex — Copper Lugs & Links",
     brand: "Zolex",
@@ -433,9 +582,58 @@ export const PRODUCTS: Product[] = [
     externalUrl: "https://zolex.in/product/copper-tube-crimping-lugs-two-hole/",
   },
   {
+    id: "zolex-narrow-palm",
+    sku: "ZOLEX-LUG-NARROW",
+    name: "Narrow Palm Circuit Breaker Copper Lugs",
+    category: "Electronics Components",
+    subCategory: "Zolex — Copper Lugs & Links",
+    brand: "Zolex",
+    description: "Specially designed narrow-width palm copper lugs engineered to fit into compact molded case circuit breaker (MCCB) and switchgear terminal recesses.",
+    features: [
+      "Slim profile palm fits standard MCCB terminal spacing",
+      "Full barrel diameter maintained for full conductor cross-section",
+      "Electro-tinned ETP copper construction",
+    ],
+    specs: {
+      Brand: "Zolex",
+      Type: "Narrow Palm MCCB Lugs",
+      Application: "Molded Case Circuit Breakers",
+      Range: "25 mm² to 630 mm²",
+    },
+    industries: ["Power & Energy", "Industrial Automation"],
+    featured: false,
+    image: p2,
+    inStock: true,
+    externalUrl: "https://zolex.in/product/copper-tube-crimping-lugs-one-hole-standard-series-with-inspection-window/",
+  },
+  {
+    id: "zolex-angle-lugs",
+    sku: "ZOLEX-LUG-ANGLE",
+    name: "90° & 45° Angled Copper Tube Lugs",
+    category: "Electronics Components",
+    subCategory: "Zolex — Copper Lugs & Links",
+    brand: "Zolex",
+    description: "Factory pre-formed 90-degree and 45-degree angled palm copper lugs for tight switchgear enclosures and compact motor terminal boxes without cable bend stress.",
+    features: [
+      "Precision forged angle eliminates on-site bending stress",
+      "Seamless electrolytic copper tube",
+      "Standard stud hole sizes available",
+    ],
+    specs: {
+      Brand: "Zolex",
+      Angles: "90° Right Angle & 45° Offset",
+      Material: "ETP Copper 99.9%",
+    },
+    industries: ["Power & Energy", "Industrial Automation", "Railways"],
+    featured: false,
+    image: p3,
+    inStock: true,
+    externalUrl: "https://zolex.in/product/copper-tube-crimping-lugs-one-hole-standard-series-with-inspection-window/",
+  },
+  {
     id: "zolex-through-connectors",
     sku: "ZOLEX-LINK-CU-BUTT",
-    name: "Copper Through Connectors & Reducers",
+    name: "Copper Through Connectors & Butt Links",
     category: "Electronics Components",
     subCategory: "Zolex — Copper Lugs & Links",
     brand: "Zolex",
@@ -458,13 +656,13 @@ export const PRODUCTS: Product[] = [
     externalUrl: "https://zolex.in/product/copper-tube-crimping-through-connectors/",
   },
 
-  // ═══════════════════════════════════════════
-  // ZOLEX — Crimp Terminals
-  // ═══════════════════════════════════════════
+  // ═════════════════════════════════════════════════════════════════
+  // ZOLEX — CRIMP TERMINALS
+  // ═════════════════════════════════════════════════════════════════
   {
     id: "zolex-terminals-ring",
     sku: "ZOLEX-TERM-RING",
-    name: "Insulated Ring Tongue Terminals",
+    name: "Insulated Ring Tongue Crimp Terminals",
     category: "Electronics Components",
     subCategory: "Zolex — Crimp Terminals",
     brand: "Zolex",
@@ -483,6 +681,31 @@ export const PRODUCTS: Product[] = [
     industries: ["Industrial Automation", "Telecommunications", "Consumer Electronics"],
     featured: true,
     image: p2,
+    inStock: true,
+    externalUrl: "https://zolex.in/product/insulated-ring-type-terminals/",
+  },
+  {
+    id: "zolex-nonins-ring",
+    sku: "ZOLEX-NONINS-RING",
+    name: "Non-Insulated Heavy Duty Ring Terminals",
+    category: "Electronics Components",
+    subCategory: "Zolex — Crimp Terminals",
+    brand: "Zolex",
+    description: "High-temperature uninsulated electrolytic copper ring tongue terminals for heavy industrial machinery, ovens, and automotive grounding.",
+    features: [
+      "High temperature capability for extreme heat environments",
+      "Brazed seam barrel ensures 360-degree crimp integrity",
+      "Electro-tin plated for atmospheric protection",
+    ],
+    specs: {
+      Brand: "Zolex",
+      Type: "Non-Insulated Ring Terminals",
+      Material: "Pure Electrolytic Copper",
+      Range: "1.5 mm² to 150 mm²",
+    },
+    industries: ["Industrial Automation", "Power & Energy", "Automotive"],
+    featured: false,
+    image: p6,
     inStock: true,
     externalUrl: "https://zolex.in/product/insulated-ring-type-terminals/",
   },
@@ -543,9 +766,9 @@ export const PRODUCTS: Product[] = [
     category: "Electronics Components",
     subCategory: "Zolex — Crimp Terminals",
     brand: "Zolex",
-    description: "French and German DIN color-coded insulated single and twin-wire ferrules preventing wire splaying in spring-clamp and screw-cage terminal blocks.",
+    description: "French and German DIN color-coded insulated single wire ferrules preventing wire splaying in spring-clamp and screw-cage terminal blocks.",
     features: [
-      "Single wire and twin wire entry formats",
+      "Single wire entry formats in full DIN color code",
       "Halogen-free polypropylene insulation collar",
       "Tinned electrolytic copper sleeve",
     ],
@@ -561,10 +784,34 @@ export const PRODUCTS: Product[] = [
     inStock: true,
     externalUrl: "https://zolex.in/product/insulated-end-sleeve/",
   },
+  {
+    id: "zolex-twin-ferrules",
+    sku: "ZOLEX-TWIN-FERRULE",
+    name: "Twin-Wire Dual Entry Bootlace Ferrules",
+    category: "Electronics Components",
+    subCategory: "Zolex — Crimp Terminals",
+    brand: "Zolex",
+    description: "Specialized dual-entry insulated cord end sleeves designed to crimp two individual conductors together into a single terminal cage connection.",
+    features: [
+      "Funneled dual wire entry collar",
+      "Enables clean looping between terminal blocks",
+      "DIN 46228 Part 4 compliant",
+    ],
+    specs: {
+      Brand: "Zolex",
+      Type: "Twin Cord End Sleeves",
+      Capacity: "2x 0.5 mm² to 2x 16 mm²",
+    },
+    industries: ["Industrial Automation", "Power & Energy"],
+    featured: false,
+    image: p2,
+    inStock: true,
+    externalUrl: "https://zolex.in/product/insulated-end-sleeve/",
+  },
 
-  // ═══════════════════════════════════════════
-  // ZOLEX — Aluminium & Bimetallic
-  // ═══════════════════════════════════════════
+  // ═════════════════════════════════════════════════════════════════
+  // ZOLEX — ALUMINIUM & BIMETALLIC
+  // ═════════════════════════════════════════════════════════════════
   {
     id: "zolex-bimetallic-lugs",
     sku: "ZOLEX-LUG-BIMETAL",
@@ -618,7 +865,7 @@ export const PRODUCTS: Product[] = [
   {
     id: "zolex-bimetal-links",
     sku: "ZOLEX-LINK-BIMETAL",
-    name: "Bimetallic Reducing Links & Connectors",
+    name: "Bimetallic In-Line Reducing Splice Links",
     category: "Electronics Components",
     subCategory: "Zolex — Aluminium & Bimetallic",
     brand: "Zolex",
@@ -640,10 +887,34 @@ export const PRODUCTS: Product[] = [
     inStock: true,
     externalUrl: "https://zolex.in/product/bimetallic-crimping-reducing-links-al-cu/",
   },
+  {
+    id: "zolex-al-links",
+    sku: "ZOLEX-LINK-AL",
+    name: "Aluminium Through Connectors (In-Line Links)",
+    category: "Electronics Components",
+    subCategory: "Zolex — Aluminium & Bimetallic",
+    brand: "Zolex",
+    description: "Solid drawn EC-grade aluminium inline ferrules with internal wire stops for splicing overhead and underground aluminium power feeders.",
+    features: [
+      "99.5% electrolytic grade aluminium tube",
+      "Center wire stop for equal wire entry",
+      "Compatible with standard hexagonal crimp dies",
+    ],
+    specs: {
+      Brand: "Zolex",
+      Material: "EC Aluminium 99.5%",
+      Range: "16 mm² to 1000 mm²",
+    },
+    industries: ["Power & Energy", "Railways"],
+    featured: false,
+    image: p1,
+    inStock: true,
+    externalUrl: "https://zolex.in/product/aluminium-tube-crimping-lugs-one-hole/",
+  },
 
-  // ═══════════════════════════════════════════
-  // ZOLEX — SS Cable Ties
-  // ═══════════════════════════════════════════
+  // ═════════════════════════════════════════════════════════════════
+  // ZOLEX — STAINLESS STEEL CABLE TIES
+  // ═════════════════════════════════════════════════════════════════
   {
     id: "zolex-ss-cable-ties",
     sku: "ZOLEX-TIE-SS316",
@@ -672,7 +943,7 @@ export const PRODUCTS: Product[] = [
   {
     id: "zolex-ss-coated-ties",
     sku: "ZOLEX-TIE-SS-COAT",
-    name: "Polyester Coated SS Cable Ties",
+    name: "Polyester Coated Marine Grade SS Cable Ties",
     category: "Electronics Components",
     subCategory: "Zolex — SS Cable Ties",
     brand: "Zolex",
@@ -694,28 +965,101 @@ export const PRODUCTS: Product[] = [
     inStock: true,
     externalUrl: "https://zolex.in/product/roller-ball-lock-type-steel-cable-ties-coated-2/",
   },
-
-  // ═══════════════════════════════════════════
-  // ZOLEX — Cable Glands
-  // ═══════════════════════════════════════════
   {
-    id: "zolex-cable-glands",
-    sku: "ZOLEX-GLAND-FLAME",
-    name: "Double Compression Flameproof Cable Glands",
+    id: "zolex-ladder-ties",
+    sku: "ZOLEX-TIE-LADDER",
+    name: "Ladder Type Stainless Steel Cable Ties",
     category: "Electronics Components",
-    subCategory: "Zolex — Cable Glands",
+    subCategory: "Zolex — SS Cable Ties",
     brand: "Zolex",
-    description: "Zolex heavy-duty brass double compression flameproof (Ex d / Ex e) cable glands for armoured cables in hazardous industrial environments.",
+    description: "Multi-slot ladder type stainless steel cable ties offering high flexibility and positive buckle locking for heavy cable bundles and shipboard wiring.",
     features: [
-      "Ex d / Ex e Zone 1 & Zone 2 certified",
-      "IP66 / IP67 / IP68 submersible ingress sealing",
-      "Earth continuity and mechanical cable retention",
+      "Ladder rung design allows easy visual tensioning",
+      "High mechanical holding force",
+      "Coated and uncoated 316 stainless steel options",
     ],
     specs: {
       Brand: "Zolex",
-      Type: "Flameproof Cable Glands",
+      Style: "Ladder Type SS Ties",
+      Material: "AISI 316 Stainless Steel",
+      Widths: "7.0mm & 12.0mm",
+    },
+    industries: ["Defense", "Power & Energy", "Railways"],
+    featured: false,
+    image: cardCable,
+    inStock: true,
+    externalUrl: "https://zolex.in/product/ladder-type-steel-cable-ties/",
+  },
+  {
+    id: "zolex-marker-tags",
+    sku: "ZOLEX-TAG-MARKER",
+    name: "Stainless Steel Embossed Cable Marker Tags & Carrier Strips",
+    category: "Electronics Components",
+    subCategory: "Zolex — SS Cable Ties",
+    brand: "Zolex",
+    description: "Grade 316 stainless steel embossed asset marker plates and carrier strips for permanent, fireproof cable and conduit identification.",
+    features: [
+      "Acid, salt spray, and fire-resistant marking",
+      "Custom embossed alphanumeric characters",
+      "Secured via standard stainless steel cable ties",
+    ],
+    specs: {
+      Brand: "Zolex",
+      Material: "AISI 316 Stainless Steel",
+      Durability: "Permanent / Fireproof",
+    },
+    industries: ["Power & Energy", "Telecommunications", "Railways", "Defense"],
+    featured: false,
+    image: p4,
+    inStock: true,
+    externalUrl: "https://zolex.in/product/cable-marker-tags-carrier-strips/",
+  },
+  {
+    id: "zolex-tie-gun",
+    sku: "ZOLEX-TOOL-TIEGUN",
+    name: "Automatic SS Cable Tie Tensioning & Flush-Cut Gun",
+    category: "Electronics Components",
+    subCategory: "Zolex — SS Cable Ties",
+    brand: "Zolex",
+    description: "Heavy-duty ergonomic steel tie tensioning gun that automatically cuts ties flush to prevent sharp exposed edges with adjustable preset tension.",
+    features: [
+      "Adjustable calibrated tension dial",
+      "Automatic clean flush cut-off mechanism",
+      "Ergonomic rubberized grip reduces hand fatigue",
+    ],
+    specs: {
+      Brand: "Zolex",
+      Compatibility: "SS Ties up to 7.9mm Width",
+      Mechanism: "Auto Tension & Cut",
+    },
+    industries: ["Industrial Automation", "Power & Energy", "Telecommunications"],
+    featured: false,
+    image: p3,
+    inStock: true,
+    externalUrl: "https://zolex.in/product/cable-tie-tensioning-cutting-automatic-gun/",
+  },
+
+  // ═════════════════════════════════════════════════════════════════
+  // ZOLEX — CABLE GLANDS
+  // ═════════════════════════════════════════════════════════════════
+  {
+    id: "zolex-cable-glands",
+    sku: "ZOLEX-GLAND-FLAME",
+    name: "Double Compression Flameproof Cable Glands (Ex d / Ex e)",
+    category: "Electronics Components",
+    subCategory: "Zolex — Cable Glands",
+    brand: "Zolex",
+    description: "Zolex heavy-duty brass double compression flameproof (Ex d / Ex e) cable glands for armoured cables in hazardous industrial gas and dust environments.",
+    features: [
+      "Ex d / Ex e Zone 1 & Zone 2 ATEX / IECEx certified",
+      "IP66 / IP67 / IP68 submersible ingress sealing",
+      "Earth continuity and mechanical cable armour retention",
+    ],
+    specs: {
+      Brand: "Zolex",
+      Type: "Flameproof Double Compression",
       Material: "Brass / Nickel Plated Brass",
-      Threads: "Metric & NPT",
+      Threads: "Metric M16-M100 & NPT 1/2\"-4\"",
     },
     industries: ["Power & Energy", "Industrial Automation", "Defense"],
     featured: false,
@@ -726,7 +1070,7 @@ export const PRODUCTS: Product[] = [
   {
     id: "zolex-single-glands",
     sku: "ZOLEX-GLAND-BW",
-    name: "Single Compression Cable Glands (BW / CW)",
+    name: "Single Compression Industrial Brass Cable Glands (BW / CW)",
     category: "Electronics Components",
     subCategory: "Zolex — Cable Glands",
     brand: "Zolex",
@@ -751,7 +1095,7 @@ export const PRODUCTS: Product[] = [
   {
     id: "zolex-ip68-glands",
     sku: "ZOLEX-GLAND-IP68",
-    name: "IP68 Polyamide & Brass Glands",
+    name: "IP68 Polyamide Nylon & Nickel-Plated Brass Glands",
     category: "Electronics Components",
     subCategory: "Zolex — Cable Glands",
     brand: "Zolex",
@@ -773,22 +1117,46 @@ export const PRODUCTS: Product[] = [
     inStock: true,
     externalUrl: "https://zolex.in/product/ip68-cable-gland/",
   },
+  {
+    id: "zolex-gland-acc",
+    sku: "ZOLEX-GLAND-SHROUD",
+    name: "PVC Gland Shrouds, Earth Tags & Reducers",
+    category: "Electronics Components",
+    subCategory: "Zolex — Cable Glands",
+    brand: "Zolex",
+    description: "Complete cable gland installation accessories including dip-molded fire retardant PVC shrouds, nickel-plated earth continuity tags, locknuts, and thread converters.",
+    features: [
+      "Flame-retardant UV-resistant PVC dip-molded shrouds",
+      "High-conductivity brass earth tags for bonding",
+      "Metric to PG and NPT thread adapters and stop plugs",
+    ],
+    specs: {
+      Brand: "Zolex",
+      Set: "Shrouds, Earth Tags, Locknuts",
+      Material: "Self-Extinguishing PVC & Brass",
+    },
+    industries: ["Power & Energy", "Industrial Automation"],
+    featured: false,
+    image: p2,
+    inStock: true,
+    externalUrl: "https://zolex.in/product/pvc-shroud/",
+  },
 
-  // ═══════════════════════════════════════════
-  // ZOLEX — Earthing Accessories
-  // ═══════════════════════════════════════════
+  // ═════════════════════════════════════════════════════════════════
+  // ZOLEX — EARTHING ACCESSORIES
+  // ═════════════════════════════════════════════════════════════════
   {
     id: "zolex-earth-rods",
     sku: "ZOLEX-EARTH-ROD",
-    name: "Copper Bonded Earth Rods & Accessories",
+    name: "Copper Bonded Steel Earth Grounding Rods",
     category: "Electronics Components",
     subCategory: "Zolex — Earthing Accessories",
     brand: "Zolex",
     description: "Molecularly copper bonded steel core earth grounding rods and heavy-duty clamps for sub-station, power generation, and industrial lightning protection.",
     features: [
-      "99.9% electrolytic copper molecularly bonded to steel core",
+      "99.9% electrolytic copper molecularly bonded to high-tensile steel core",
       "UL 467 compliance with 254µm copper coating thickness",
-      "Corrosion-resistant heavy-duty rod-to-cable clamps",
+      "Threaded and unthreaded pointed end options for deep driving",
     ],
     specs: {
       Brand: "Zolex",
@@ -803,9 +1171,33 @@ export const PRODUCTS: Product[] = [
     externalUrl: "https://zolex.in/product/copper-bonded-earth-rod/",
   },
   {
+    id: "zolex-solid-copper-rod",
+    sku: "ZOLEX-SOLID-ROD",
+    name: "Solid Copper Earth Rods & Couplers",
+    category: "Electronics Components",
+    subCategory: "Zolex — Earthing Accessories",
+    brand: "Zolex",
+    description: "Pure solid high-conductivity electrolytic copper grounding rods and phosphor bronze internal couplers for corrosive chemical soils and sub-stations.",
+    features: [
+      "100% solid electrolytic copper rod",
+      "Internally threaded for deep extensible driving",
+      "Phosphor bronze high-strength coupling dowels",
+    ],
+    specs: {
+      Brand: "Zolex",
+      Material: "Pure Solid Electrolytic Copper",
+      Sizes: "14.2mm, 15mm, 20mm Diameter",
+    },
+    industries: ["Power & Energy", "Telecommunications"],
+    featured: false,
+    image: p3,
+    inStock: true,
+    externalUrl: "https://zolex.in/product/solid-copper-earth-rod/",
+  },
+  {
     id: "zolex-earth-clamps",
     sku: "ZOLEX-EARTH-CLAMP",
-    name: "Rod-to-Cable Clamps & Ground Connectors",
+    name: "Rod-to-Cable & Rod-to-Tape Earth Clamps",
     category: "Electronics Components",
     subCategory: "Zolex — Earthing Accessories",
     brand: "Zolex",
@@ -813,24 +1205,24 @@ export const PRODUCTS: Product[] = [
     features: [
       "High clamping torque without conductor damage",
       "Naval brass and high copper alloy casting",
-      "U-bolt and C-connector variations available",
+      "U-bolt, C-connector, and flat tape clamp variations available",
     ],
     specs: {
       Brand: "Zolex",
-      Type: "Earth Clamps",
+      Type: "Earth Clamps (Type G / Type A)",
       Material: "Naval Brass / Gunmetal",
-      Fit: "Rod 14.2mm - 20mm",
+      Fit: "Rod 14.2mm - 20mm / Tape 25x3mm",
     },
     industries: ["Power & Energy", "Telecommunications", "Railways"],
     featured: false,
-    image: p3,
+    image: p1,
     inStock: true,
     externalUrl: "https://zolex.in/product/rod-to-cable-clamp-type-g/",
   },
 
-  // ═══════════════════════════════════════════
-  // CABLE ASSEMBLIES — Qualitech Manufacturing
-  // ═══════════════════════════════════════════
+  // ═════════════════════════════════════════════════════════════════
+  // CABLE ASSEMBLIES — QUALITECH MANUFACTURING
+  // ═════════════════════════════════════════════════════════════════
   {
     id: "qt-harness-custom",
     sku: "QT-HARN-OEM-01",
