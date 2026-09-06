@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import {
   PRODUCTS,
   BRAND_CATALOGUE_TREE,
@@ -21,13 +21,24 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<"featured" | "name">("featured");
 
+  // Pagination states
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(30);
+
   // Dropdown menu toggle states
   const [categoryMenuOpen, setCategoryMenuOpen] = useState(false);
   const [brandMenuOpen, setBrandMenuOpen] = useState(false);
 
+  const gridTopRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
+
+  // Reset to page 1 whenever filters change
+  useEffect(() => {
+    setPage(1);
+  }, [selectedBrand, selectedCategory, selectedSubCategory, selectedIndustry, searchQuery, sortBy, pageSize]);
 
   // Filter & sort logic
   const filteredProducts = useMemo(() => {
@@ -70,6 +81,23 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
 
     return result;
   }, [selectedBrand, selectedCategory, selectedSubCategory, selectedIndustry, searchQuery, sortBy]);
+
+  // Paginated slice
+  const totalPages = Math.ceil(filteredProducts.length / pageSize) || 1;
+  const startIndex = (page - 1) * pageSize;
+  const paginatedProducts = useMemo(() => {
+    return filteredProducts.slice(startIndex, startIndex + pageSize);
+  }, [filteredProducts, startIndex, pageSize]);
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage < 1 || newPage > totalPages) return;
+    setPage(newPage);
+    if (gridTopRef.current) {
+      gridTopRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      window.scrollTo({ top: 380, behavior: "smooth" });
+    }
+  };
 
   const clearAllFilters = () => {
     setSelectedBrand("All Brands");
@@ -194,7 +222,11 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
       </div>
 
       {/* ─── TOP DROPDOWN & FILTER CONTROL BAR (Sticky Menu) ─── */}
-      <div className="sticky top-[72px] z-30 bg-white/95 backdrop-blur-md border-b border-border shadow-xs px-4 sm:px-8 py-3.5">
+      <div
+        id="products-grid-top"
+        ref={gridTopRef}
+        className="sticky top-[72px] z-30 bg-white/95 backdrop-blur-md border-b border-border shadow-xs px-4 sm:px-8 py-3.5"
+      >
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
           {/* Top Dropdowns Group */}
           <div className="flex flex-wrap items-center gap-2.5">
@@ -372,9 +404,9 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
             )}
           </div>
 
-          {/* Search Bar & Product Count */}
-          <div className="flex items-center gap-3 w-full md:w-auto">
-            <div className="relative flex-1 md:w-72">
+          {/* Search Bar & Per Page / Sort Controls */}
+          <div className="flex items-center gap-2.5 w-full md:w-auto">
+            <div className="relative flex-1 md:w-64">
               <svg
                 className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground"
                 fill="none"
@@ -401,6 +433,19 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
               )}
             </div>
 
+            {/* Per Page Selector */}
+            <select
+              value={pageSize}
+              onChange={(e) => setPageSize(Number(e.target.value))}
+              className="rounded-xl border border-border bg-white px-2.5 py-1.5 text-xs font-semibold text-graphite focus:outline-none cursor-pointer shrink-0"
+              title="Items per page"
+            >
+              <option value={30}>30 / page</option>
+              <option value={60}>60 / page</option>
+              <option value={100}>100 / page</option>
+              <option value={500}>All items</option>
+            </select>
+
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
@@ -419,36 +464,36 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
             {selectedBrand !== "All Brands" && (
               <span className="inline-flex items-center gap-1 rounded-md bg-graphite text-white px-2.5 py-0.5 text-[0.68rem] font-bold">
                 Brand: {selectedBrand}
-                <button onClick={() => setSelectedBrand("All Brands")} className="hover:text-red-300 ml-1">✕</button>
+                <button onClick={() => setSelectedBrand("All Brands")} className="hover:text-red-300 ml-1 cursor-pointer">✕</button>
               </span>
             )}
             {selectedCategory !== "All Categories" && (
               <span className="inline-flex items-center gap-1 rounded-md bg-brand-blue text-white px-2.5 py-0.5 text-[0.68rem] font-bold">
                 Category: {selectedCategory}
-                <button onClick={() => setSelectedCategory("All Categories")} className="hover:text-red-300 ml-1">✕</button>
+                <button onClick={() => setSelectedCategory("All Categories")} className="hover:text-red-300 ml-1 cursor-pointer">✕</button>
               </span>
             )}
             {selectedSubCategory && (
               <span className="inline-flex items-center gap-1 rounded-md bg-brand-blue/15 text-brand-blue border border-brand-blue/30 px-2.5 py-0.5 text-[0.68rem] font-bold">
                 Sub: {selectedSubCategory}
-                <button onClick={() => setSelectedSubCategory(null)} className="hover:text-red-600 ml-1">✕</button>
+                <button onClick={() => setSelectedSubCategory(null)} className="hover:text-red-600 ml-1 cursor-pointer">✕</button>
               </span>
             )}
             {selectedIndustry && (
               <span className="inline-flex items-center gap-1 rounded-md bg-steel-light text-graphite px-2.5 py-0.5 text-[0.68rem] font-bold">
                 Industry: {selectedIndustry}
-                <button onClick={() => setSelectedIndustry(null)} className="hover:text-red-600 ml-1">✕</button>
+                <button onClick={() => setSelectedIndustry(null)} className="hover:text-red-600 ml-1 cursor-pointer">✕</button>
               </span>
             )}
             <span className="text-muted-foreground text-[0.72rem] ml-auto">
-              Showing <strong>{filteredProducts.length}</strong> items
+              Showing <strong>{startIndex + 1}–{Math.min(startIndex + pageSize, filteredProducts.length)}</strong> of <strong>{filteredProducts.length}</strong> items
             </span>
           </div>
         )}
       </div>
 
       {/* ─── FULL-WIDTH PRODUCT DIRECTORY GRID ─── */}
-      <main className="flex-1 max-w-7xl mx-auto w-full p-4 sm:p-6 lg:p-8">
+      <main className="flex-1 max-w-7xl mx-auto w-full p-4 sm:p-6 lg:p-8 flex flex-col justify-between">
         {filteredProducts.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-border bg-white p-12 text-center my-12">
             <h3 className="font-display text-base font-bold text-graphite">No products found</h3>
@@ -463,98 +508,182 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6">
-            {filteredProducts.map((product) => {
-              const isAmphenol = product.brand === "Amphenol";
-              const isZolex = product.brand === "Zolex";
+          <div>
+            {/* Top result counter when no active filter tags bar */}
+            {selectedBrand === "All Brands" && selectedCategory === "All Categories" && !selectedSubCategory && !selectedIndustry && (
+              <div className="mb-4 flex items-center justify-between text-xs text-muted-foreground">
+                <span>
+                  Showing <strong>{startIndex + 1}–{Math.min(startIndex + pageSize, filteredProducts.length)}</strong> of <strong>{filteredProducts.length}</strong> products
+                </span>
+                <span>
+                  Page <strong>{page}</strong> of <strong>{totalPages}</strong>
+                </span>
+              </div>
+            )}
 
-              return (
-                <div
-                  key={product.id}
-                  onClick={() => handleProductClick(product)}
-                  className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-2xs transition-all duration-300 hover:-translate-y-1.5 hover:border-brand-blue/50 hover:shadow-lg cursor-pointer"
-                >
-                  {/* Product Image Box */}
-                  <div className="relative h-48 w-full overflow-hidden bg-steel-light/40 p-5 flex items-center justify-center border-b border-border/60">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      loading="lazy"
-                      className="h-full w-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
-                    />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6">
+              {paginatedProducts.map((product) => {
+                const isAmphenol = product.brand === "Amphenol";
+                const isZolex = product.brand === "Zolex";
 
-                    {/* Brand Pill */}
-                    <span
-                      className={`absolute left-3.5 top-3.5 rounded-full px-2.5 py-0.5 text-[0.62rem] font-extrabold uppercase tracking-wider shadow-2xs ${
-                        isAmphenol
-                          ? "bg-[#004f9e] text-white"
-                          : isZolex
-                          ? "bg-brand-blue text-white"
-                          : "bg-brand-yellow text-graphite"
-                      }`}
-                    >
-                      {product.brand}
-                    </span>
+                return (
+                  <div
+                    key={product.id}
+                    onClick={() => handleProductClick(product)}
+                    className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-2xs transition-all duration-300 hover:-translate-y-1.5 hover:border-brand-blue/50 hover:shadow-lg cursor-pointer"
+                  >
+                    {/* Product Image Box */}
+                    <div className="relative h-48 w-full overflow-hidden bg-steel-light/40 p-5 flex items-center justify-center border-b border-border/60">
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        loading="lazy"
+                        className="h-full w-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
+                      />
 
-                    {product.featured && (
-                      <span className="absolute right-3.5 top-3.5 rounded-full bg-graphite/85 text-white px-2 py-0.5 text-[0.6rem] font-bold uppercase tracking-wider">
-                        Featured
+                      {/* Brand Pill */}
+                      <span
+                        className={`absolute left-3.5 top-3.5 rounded-full px-2.5 py-0.5 text-[0.62rem] font-extrabold uppercase tracking-wider shadow-2xs ${
+                          isAmphenol
+                            ? "bg-[#004f9e] text-white"
+                            : isZolex
+                            ? "bg-brand-blue text-white"
+                            : "bg-brand-yellow text-graphite"
+                        }`}
+                      >
+                        {product.brand}
                       </span>
-                    )}
-                  </div>
 
-                  {/* Product Content */}
-                  <div className="flex flex-1 flex-col p-4 sm:p-5">
-                    {/* Category Label */}
-                    <div className="flex items-center gap-1.5 text-[0.68rem] font-semibold text-muted-foreground mb-1">
-                      <span className="text-brand-blue font-bold">{product.category}</span>
-                      {product.subCategory && (
-                        <>
-                          <span>·</span>
-                          <span className="truncate">{product.subCategory}</span>
-                        </>
+                      {product.featured && (
+                        <span className="absolute right-3.5 top-3.5 rounded-full bg-graphite/85 text-white px-2 py-0.5 text-[0.6rem] font-bold uppercase tracking-wider">
+                          Featured
+                        </span>
                       )}
                     </div>
 
-                    {/* Title */}
-                    <h3
-                      className="font-display text-sm font-bold text-graphite group-hover:text-brand-blue transition-colors line-clamp-2"
-                      title={product.name}
-                    >
-                      {product.name}
-                    </h3>
+                    {/* Product Content */}
+                    <div className="flex flex-1 flex-col p-4 sm:p-5">
+                      {/* Category Label */}
+                      <div className="flex items-center gap-1.5 text-[0.68rem] font-semibold text-muted-foreground mb-1">
+                        <span className="text-brand-blue font-bold truncate">{product.category}</span>
+                        {product.subCategory && (
+                          <>
+                            <span>·</span>
+                            <span className="truncate">{product.subCategory}</span>
+                          </>
+                        )}
+                      </div>
 
-                    {/* Short Description */}
-                    <p className="mt-2 text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-                      {product.description}
-                    </p>
+                      {/* Title */}
+                      <h3
+                        className="font-display text-sm font-bold text-graphite group-hover:text-brand-blue transition-colors line-clamp-2"
+                        title={product.name}
+                      >
+                        {product.name}
+                      </h3>
 
-                    {/* Direct External Action CTA Button */}
-                    <div className="mt-auto pt-4 border-t border-border/80">
-                      {product.externalUrl ? (
-                        <div
-                          className={`w-full inline-flex items-center justify-center gap-1.5 rounded-xl px-3.5 py-2.5 font-display text-[0.72rem] sm:text-xs font-bold uppercase tracking-wider text-white shadow-xs transition-all group-hover:bg-graphite ${
-                            isAmphenol ? "bg-[#004f9e]" : "bg-brand-blue"
-                          }`}
-                        >
-                          <span>View on {product.brand}</span>
-                          <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                        </div>
-                      ) : (
-                        <div
-                          className="w-full inline-flex items-center justify-center gap-1.5 rounded-xl bg-graphite px-3.5 py-2.5 font-display text-[0.72rem] sm:text-xs font-bold uppercase tracking-wider text-white shadow-xs transition-all group-hover:bg-brand-blue"
-                        >
-                          <span>Enquire with Qualitech</span>
-                          <span>→</span>
-                        </div>
-                      )}
+                      {/* Short Description */}
+                      <p className="mt-2 text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                        {product.description}
+                      </p>
+
+                      {/* Direct External Action CTA Button */}
+                      <div className="mt-auto pt-4 border-t border-border/80">
+                        {product.externalUrl ? (
+                          <div
+                            className={`w-full inline-flex items-center justify-center gap-1.5 rounded-xl px-3.5 py-2.5 font-display text-[0.72rem] sm:text-xs font-bold uppercase tracking-wider text-white shadow-xs transition-all group-hover:bg-graphite ${
+                              isAmphenol ? "bg-[#004f9e]" : "bg-brand-blue"
+                            }`}
+                          >
+                            <span>View on {product.brand}</span>
+                            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                          </div>
+                        ) : (
+                          <div
+                            className="w-full inline-flex items-center justify-center gap-1.5 rounded-xl bg-graphite px-3.5 py-2.5 font-display text-[0.72rem] sm:text-xs font-bold uppercase tracking-wider text-white shadow-xs transition-all group-hover:bg-brand-blue"
+                          >
+                            <span>Enquire with Qualitech</span>
+                            <span>→</span>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
+                );
+              })}
+            </div>
+
+            {/* ─── PAGINATION BAR ─── */}
+            {totalPages > 1 && (
+              <div className="mt-10 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="text-xs text-muted-foreground">
+                  Showing <strong>{startIndex + 1}</strong> to <strong>{Math.min(startIndex + pageSize, filteredProducts.length)}</strong> of <strong>{filteredProducts.length}</strong> products
                 </div>
-              );
-            })}
+
+                <div className="flex items-center gap-1.5">
+                  {/* Previous Page Button */}
+                  <button
+                    type="button"
+                    onClick={() => handlePageChange(page - 1)}
+                    disabled={page === 1}
+                    className="inline-flex items-center gap-1 rounded-xl border border-border bg-white px-3 py-2 text-xs font-bold text-graphite transition-all hover:bg-steel-light disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-2xs"
+                  >
+                    <span>←</span>
+                    <span className="hidden sm:inline">Previous</span>
+                  </button>
+
+                  {/* Page Numbers */}
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => {
+                      // Show first, last, and pages around current page
+                      if (
+                        pageNum === 1 ||
+                        pageNum === totalPages ||
+                        (pageNum >= page - 1 && pageNum <= page + 1)
+                      ) {
+                        const isActive = page === pageNum;
+                        return (
+                          <button
+                            key={pageNum}
+                            type="button"
+                            onClick={() => handlePageChange(pageNum)}
+                            className={`min-w-9 h-9 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                              isActive
+                                ? "bg-brand-blue text-white shadow-sm font-black"
+                                : "border border-border bg-white text-graphite hover:bg-steel-light"
+                            }`}
+                          >
+                            {pageNum}
+                          </button>
+                        );
+                      }
+                      // Render ellipsis
+                      if (pageNum === page - 2 || pageNum === page + 2) {
+                        return (
+                          <span key={pageNum} className="px-1 text-xs text-muted-foreground font-bold">
+                            ...
+                          </span>
+                        );
+                      }
+                      return null;
+                    })}
+                  </div>
+
+                  {/* Next Page Button */}
+                  <button
+                    type="button"
+                    onClick={() => handlePageChange(page + 1)}
+                    disabled={page === totalPages}
+                    className="inline-flex items-center gap-1 rounded-xl border border-border bg-white px-3 py-2 text-xs font-bold text-graphite transition-all hover:bg-steel-light disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-2xs"
+                  >
+                    <span className="hidden sm:inline">Next</span>
+                    <span>→</span>
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </main>
