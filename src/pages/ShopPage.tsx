@@ -18,31 +18,16 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
   const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(null);
   const [selectedIndustry, setSelectedIndustry] = useState<string | null>(null);
-  const [inStockOnly, setInStockOnly] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<"featured" | "name">("featured");
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-  // Accordion open state for brand categories in the tree sidebar
-  const [expandedBrands, setExpandedBrands] = useState<Record<string, boolean>>({
-    Amphenol: true,
-    Zolex: true,
-    Qualitech: true,
-  });
-
-  // Mobile filter drawer state
-  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  // Dropdown menu toggle states
+  const [categoryMenuOpen, setCategoryMenuOpen] = useState(false);
+  const [brandMenuOpen, setBrandMenuOpen] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
-
-  const toggleBrandAccordion = (brandName: string) => {
-    setExpandedBrands((prev) => ({
-      ...prev,
-      [brandName]: !prev[brandName],
-    }));
-  };
 
   // Filter & sort logic
   const filteredProducts = useMemo(() => {
@@ -61,10 +46,6 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
       }
       // Industry filter
       if (selectedIndustry && !p.industries.includes(selectedIndustry)) {
-        return false;
-      }
-      // In-stock filter
-      if (inStockOnly && !p.inStock) {
         return false;
       }
       // Search query
@@ -88,14 +69,13 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
     }
 
     return result;
-  }, [selectedBrand, selectedCategory, selectedSubCategory, selectedIndustry, inStockOnly, searchQuery, sortBy]);
+  }, [selectedBrand, selectedCategory, selectedSubCategory, selectedIndustry, searchQuery, sortBy]);
 
   const clearAllFilters = () => {
     setSelectedBrand("All Brands");
     setSelectedCategory("All Categories");
     setSelectedSubCategory(null);
     setSelectedIndustry(null);
-    setInStockOnly(false);
     setSearchQuery("");
   };
 
@@ -104,10 +84,9 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
     (selectedCategory !== "All Categories" ? 1 : 0) +
     (selectedSubCategory ? 1 : 0) +
     (selectedIndustry ? 1 : 0) +
-    (inStockOnly ? 1 : 0) +
     (searchQuery.trim() !== "" ? 1 : 0);
 
-  const handleProductAction = (product: Product) => {
+  const handleProductClick = (product: Product) => {
     if (product.externalUrl) {
       window.open(product.externalUrl, "_blank", "noopener,noreferrer");
     } else {
@@ -116,26 +95,33 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#fafbfc] text-foreground font-sans flex flex-col w-full overflow-x-hidden">
-      {/* ─── Exact Same Header Navigation as Home ─── */}
+    <div
+      className="min-h-screen bg-[#fafbfc] text-foreground font-sans flex flex-col w-full overflow-x-hidden"
+      onClick={() => {
+        // Close dropdowns when clicking outside
+        setCategoryMenuOpen(false);
+        setBrandMenuOpen(false);
+      }}
+    >
+      {/* ─── Header Navigation ─── */}
       <Header onNavigate={onNavigateHome} currentPage="products" />
 
       {/* ─── Page Banner ─── */}
-      <div className="bg-graphite-deep text-white px-4 sm:px-8 pt-28 sm:pt-36 pb-12 sm:pb-16 border-b border-border/20 relative z-10 overflow-hidden">
+      <div className="bg-graphite-deep text-white px-4 sm:px-8 pt-28 sm:pt-36 pb-10 sm:pb-12 border-b border-border/20 relative z-10 overflow-hidden">
         <div className="absolute inset-0 hairline-grid opacity-25 pointer-events-none" />
         <div className="relative max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
             <div className="flex items-center gap-2">
               <span className="h-1.5 w-1.5 rounded-full bg-brand-yellow" />
               <span className="font-display text-[0.68rem] font-bold uppercase tracking-[0.2em] text-steel">
-                Authorized Distribution &amp; Manufacturing Directory
+                Authorized Distribution &amp; Manufacturing
               </span>
             </div>
             <h1 className="mt-3 font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
               Product Catalogue
             </h1>
             <p className="mt-3 text-xs sm:text-sm text-steel max-w-2xl leading-relaxed">
-              Browse our comprehensive directory of Amphenol interconnects, Zolex crimping terminals &amp; earthing systems, and Qualitech custom cable assemblies. Click on any product to view full technical specifications directly on the official manufacturer portal.
+              Explore Amphenol connectors, cables, fiber optics, and antennas alongside Zolex lugs, crimp terminals, and earthing solutions. Click any product to navigate directly to the manufacturer's official portal.
             </p>
           </div>
 
@@ -171,7 +157,7 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
               }`}
             >
               <span className="h-2 w-2 rounded-full bg-[#009fe3]" />
-              Amphenol Products
+              Amphenol
             </button>
             <button
               onClick={() => {
@@ -186,7 +172,7 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
               }`}
             >
               <span className="h-2 w-2 rounded-full bg-brand-blue-soft" />
-              Zolex Products
+              Zolex
             </button>
             <button
               onClick={() => {
@@ -201,443 +187,196 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
               }`}
             >
               <span className="h-2 w-2 rounded-full bg-brand-yellow" />
-              Cable Assemblies
+              Qualitech Harnesses
             </button>
           </div>
         </div>
       </div>
 
-      {/* ─── MOBILE CATEGORY PILL STRIP ─── */}
-      <div className="lg:hidden w-full border-b border-border bg-white px-4 py-2.5 overflow-x-auto scrollbar-none flex items-center gap-2 sticky top-[72px] z-20 shadow-2xs">
-        <button
-          onClick={() => setMobileFilterOpen(true)}
-          className="inline-flex items-center gap-1.5 rounded-full border border-graphite/30 bg-graphite/5 px-3 py-1.5 text-xs font-semibold text-graphite shrink-0 cursor-pointer"
-        >
-          <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-          </svg>
-          <span>Filters</span>
-          {activeFiltersCount > 0 && (
-            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-brand-blue text-[0.6rem] font-bold text-white">
-              {activeFiltersCount}
-            </span>
-          )}
-        </button>
-
-        <button
-          onClick={() => {
-            setSelectedBrand("All Brands");
-            setSelectedCategory("All Categories");
-            setSelectedSubCategory(null);
-          }}
-          className={`rounded-full px-3.5 py-1.5 text-xs font-medium shrink-0 transition-colors cursor-pointer ${
-            selectedBrand === "All Brands" && selectedCategory === "All Categories"
-              ? "bg-brand-blue text-white font-semibold shadow-2xs"
-              : "border border-border bg-steel-light/50 text-muted-foreground hover:text-graphite"
-          }`}
-        >
-          All
-        </button>
-
-        {BRAND_CATALOGUE_TREE.map((brandTree) => (
-          <button
-            key={brandTree.brand}
-            onClick={() => {
-              setSelectedBrand(brandTree.brand);
-              setSelectedCategory("All Categories");
-              setSelectedSubCategory(null);
-            }}
-            className={`rounded-full px-3.5 py-1.5 text-xs font-medium shrink-0 transition-colors cursor-pointer ${
-              selectedBrand === brandTree.brand && selectedCategory === "All Categories"
-                ? "bg-graphite text-white font-semibold shadow-2xs"
-                : "border border-border bg-white text-muted-foreground hover:text-graphite"
-            }`}
-          >
-            {brandTree.brand}
-          </button>
-        ))}
-      </div>
-
-      {/* ─── FULL-SCREEN CATALOGUE LAYOUT ─── */}
-      <div className="flex-1 w-full flex flex-col lg:flex-row min-h-0">
-        {/* ─── TREE SIDEBAR (Desktop) ─── */}
-        <aside className="hidden lg:block w-76 xl:w-80 shrink-0 border-r border-border/80 bg-white lg:sticky lg:top-[74px] lg:h-[calc(100vh-74px)] lg:overflow-y-auto z-30 p-5 lg:p-6 space-y-6">
-          <div className="flex items-center justify-between pb-3 border-b border-border">
-            <h2 className="font-display text-xs font-bold uppercase tracking-[0.16em] text-graphite">
-              Catalogue Directory
-            </h2>
-            {activeFiltersCount > 0 && (
+      {/* ─── TOP DROPDOWN & FILTER CONTROL BAR (Sticky Menu) ─── */}
+      <div className="sticky top-[72px] z-30 bg-white/95 backdrop-blur-md border-b border-border shadow-xs px-4 sm:px-8 py-3.5">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+          {/* Top Dropdowns Group */}
+          <div className="flex flex-wrap items-center gap-2.5">
+            {/* 1. Category Menu Dropdown */}
+            <div className="relative" onClick={(e) => e.stopPropagation()}>
               <button
-                onClick={clearAllFilters}
-                className="text-[0.68rem] font-semibold text-brand-blue hover:underline cursor-pointer"
-              >
-                Reset All ({activeFiltersCount})
-              </button>
-            )}
-          </div>
-
-          {/* All Products Option */}
-          <div>
-            <button
-              onClick={() => {
-                setSelectedBrand("All Brands");
-                setSelectedCategory("All Categories");
-                setSelectedSubCategory(null);
-              }}
-              className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-xs font-bold transition-all cursor-pointer ${
-                selectedBrand === "All Brands" && selectedCategory === "All Categories"
-                  ? "bg-graphite text-white shadow-xs"
-                  : "text-graphite hover:bg-steel-light"
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-brand-blue" />
-                <span>ALL PRODUCTS</span>
-              </div>
-              <span
-                className={`text-[0.65rem] rounded-full px-2 py-0.5 ${
-                  selectedBrand === "All Brands" && selectedCategory === "All Categories"
-                    ? "bg-white/20 text-white font-mono"
-                    : "bg-steel-light text-muted-foreground font-mono"
+                type="button"
+                onClick={() => {
+                  setCategoryMenuOpen(!categoryMenuOpen);
+                  setBrandMenuOpen(false);
+                }}
+                className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-xs font-bold transition-all cursor-pointer ${
+                  selectedCategory !== "All Categories"
+                    ? "bg-brand-blue text-white border-brand-blue shadow-xs"
+                    : "border-border bg-white text-graphite hover:bg-steel-light/70"
                 }`}
               >
-                {PRODUCTS.length}
-              </span>
-            </button>
-          </div>
-
-          {/* BRAND TREE CATEGORY DIRECTORY */}
-          <div className="space-y-4">
-            {BRAND_CATALOGUE_TREE.map((bTree) => {
-              const isExpanded = expandedBrands[bTree.brand] ?? true;
-              const isBrandSelected = selectedBrand === bTree.brand;
-              const brandProductCount = PRODUCTS.filter((p) => p.brand === bTree.brand).length;
-
-              return (
-                <div
-                  key={bTree.brand}
-                  className="rounded-xl border border-border/80 bg-[#fafbfc] overflow-hidden"
-                >
-                  {/* Brand Level Header */}
-                  <div className="flex items-center justify-between bg-white px-3 py-2.5 border-b border-border/60">
-                    <button
-                      onClick={() => {
-                        setSelectedBrand(bTree.brand);
-                        setSelectedCategory("All Categories");
-                        setSelectedSubCategory(null);
-                      }}
-                      className="flex items-center gap-2 text-left text-xs font-extrabold tracking-wide uppercase cursor-pointer hover:text-brand-blue transition-colors flex-1"
-                    >
-                      <span
-                        className={`h-2.5 w-2.5 rounded-sm ${
-                          bTree.brand === "Amphenol"
-                            ? "bg-[#004f9e]"
-                            : bTree.brand === "Zolex"
-                            ? "bg-brand-blue"
-                            : "bg-brand-yellow"
-                        }`}
-                      />
-                      <span className={isBrandSelected && selectedCategory === "All Categories" ? "text-brand-blue font-black" : "text-graphite"}>
-                        {bTree.brand}
-                      </span>
-                      <span className="text-[0.65rem] font-normal text-muted-foreground font-mono">
-                        ({brandProductCount})
-                      </span>
-                    </button>
-
-                    <button
-                      onClick={() => toggleBrandAccordion(bTree.brand)}
-                      className="p-1 text-muted-foreground hover:text-graphite cursor-pointer rounded-md hover:bg-steel-light transition-colors"
-                      title={isExpanded ? "Collapse" : "Expand"}
-                    >
-                      <svg
-                        className={`h-3.5 w-3.5 transition-transform duration-200 ${
-                          isExpanded ? "rotate-180" : ""
-                        }`}
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                  </div>
-
-                  {/* Categories inside Brand */}
-                  {isExpanded && (
-                    <div className="p-2 space-y-1">
-                      {bTree.categories.map((cat) => {
-                        const isCatActive =
-                          selectedBrand === bTree.brand && selectedCategory === cat.name;
-                        const catProductCount = PRODUCTS.filter(
-                          (p) => p.brand === bTree.brand && p.category === cat.name
-                        ).length;
-
-                        return (
-                          <div key={cat.name} className="space-y-0.5">
-                            <button
-                              onClick={() => {
-                                setSelectedBrand(bTree.brand);
-                                setSelectedCategory(cat.name);
-                                setSelectedSubCategory(null);
-                              }}
-                              className={`flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-xs transition-colors cursor-pointer text-left ${
-                                isCatActive && !selectedSubCategory
-                                  ? "bg-brand-blue text-white font-bold"
-                                  : "text-graphite/80 hover:bg-white hover:text-graphite font-medium"
-                              }`}
-                            >
-                              <span className="truncate pr-1">├── {cat.name}</span>
-                              <span
-                                className={`text-[0.62rem] rounded-full px-1.5 py-0.2 font-mono ${
-                                  isCatActive && !selectedSubCategory
-                                    ? "bg-white/20 text-white"
-                                    : "bg-steel-light text-muted-foreground"
-                                }`}
-                              >
-                                {catProductCount}
-                              </span>
-                            </button>
-
-                            {/* Subcategories (if any) */}
-                            {cat.subCategories && cat.subCategories.length > 0 && isCatActive && (
-                              <div className="ml-4 border-l-2 border-brand-blue/30 pl-2 py-1 space-y-0.5">
-                                {cat.subCategories.map((sub) => {
-                                  const isSubActive = selectedSubCategory === sub;
-                                  return (
-                                    <button
-                                      key={sub}
-                                      onClick={() =>
-                                        setSelectedSubCategory(isSubActive ? null : sub)
-                                      }
-                                      className={`block w-full text-left rounded-md px-2 py-1 text-[0.7rem] transition-colors cursor-pointer truncate ${
-                                        isSubActive
-                                          ? "bg-brand-blue/15 font-bold text-brand-blue"
-                                          : "text-muted-foreground hover:text-graphite hover:bg-white"
-                                      }`}
-                                    >
-                                      • {sub}
-                                    </button>
-                                  );
-                                })}
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-
-          {/* In-Stock Filter */}
-          <div className="border-t border-border/80 pt-4">
-            <label className="flex items-center gap-2.5 cursor-pointer text-xs font-semibold text-graphite">
-              <input
-                type="checkbox"
-                checked={inStockOnly}
-                onChange={(e) => setInStockOnly(e.target.checked)}
-                className="h-4 w-4 rounded border-border text-brand-blue focus:ring-brand-blue cursor-pointer"
-              />
-              <span>In Stock Items Only</span>
-            </label>
-          </div>
-
-          {/* Industry Filter (Minimal Chips) */}
-          <div className="border-t border-border/80 pt-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
-              Industry Filter
-            </h3>
-            <div className="flex flex-wrap gap-1.5">
-              {ALL_INDUSTRIES.map((ind) => {
-                const active = selectedIndustry === ind;
-                return (
-                  <button
-                    key={ind}
-                    onClick={() => setSelectedIndustry(active ? null : ind)}
-                    className={`rounded-lg px-2.5 py-1 text-[0.68rem] font-semibold transition-all cursor-pointer ${
-                      active
-                        ? "bg-graphite text-white"
-                        : "border border-border bg-white text-muted-foreground hover:text-graphite hover:border-brand-blue/40"
-                    }`}
-                  >
-                    {ind}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </aside>
-
-        {/* ─── MOBILE FILTER MODAL DRAWER ─── */}
-        {mobileFilterOpen && (
-          <div className="fixed inset-0 z-50 flex lg:hidden bg-black/50 backdrop-blur-xs">
-            <div className="relative flex h-full w-4/5 max-w-sm flex-col bg-white p-5 overflow-y-auto shadow-2xl animate-in slide-in-from-left duration-300">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="font-display text-sm font-bold text-graphite">Directory Filter</h3>
-                <button
-                  onClick={() => setMobileFilterOpen(false)}
-                  className="rounded-lg p-1.5 text-muted-foreground hover:bg-steel-light cursor-pointer"
-                >
-                  ✕
-                </button>
-              </div>
-
-              {/* Mobile filter categories */}
-              <div className="py-4 space-y-4">
-                <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">
-                    Brand
-                  </h4>
-                  <div className="space-y-1">
-                    {BRANDS.map((brand) => (
-                      <button
-                        key={brand}
-                        onClick={() => {
-                          setSelectedBrand(brand);
-                          setSelectedCategory("All Categories");
-                          setSelectedSubCategory(null);
-                        }}
-                        className={`block w-full text-left rounded-lg px-3 py-1.5 text-xs font-semibold ${
-                          selectedBrand === brand ? "bg-graphite text-white font-bold" : "text-graphite hover:bg-steel-light"
-                        }`}
-                      >
-                        {brand}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="border-t border-border pt-4">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">
-                    Categories
-                  </h4>
-                  <div className="space-y-1 max-h-60 overflow-y-auto">
-                    <button
-                      onClick={() => {
-                        setSelectedCategory("All Categories");
-                        setSelectedSubCategory(null);
-                      }}
-                      className={`block w-full text-left rounded-lg px-3 py-1.5 text-xs ${
-                        selectedCategory === "All Categories" ? "bg-brand-blue text-white font-bold" : "text-graphite"
-                      }`}
-                    >
-                      All Categories
-                    </button>
-                    {BRAND_CATALOGUE_TREE.flatMap((b) =>
-                      b.categories.map((c) => ({ brand: b.brand, name: c.name }))
-                    ).map((c) => (
-                      <button
-                        key={`${c.brand}-${c.name}`}
-                        onClick={() => {
-                          setSelectedBrand(c.brand);
-                          setSelectedCategory(c.name);
-                          setSelectedSubCategory(null);
-                          setMobileFilterOpen(false);
-                        }}
-                        className={`block w-full text-left rounded-lg px-3 py-1.5 text-xs ${
-                          selectedCategory === c.name && selectedBrand === c.brand
-                            ? "bg-brand-blue text-white font-bold"
-                            : "text-graphite"
-                        }`}
-                      >
-                        <span className="text-[0.65rem] opacity-70 font-mono">[{c.brand}]</span> {c.name}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="border-t border-border pt-4">
-                  <label className="flex items-center gap-2.5 cursor-pointer text-xs font-semibold text-graphite">
-                    <input
-                      type="checkbox"
-                      checked={inStockOnly}
-                      onChange={(e) => setInStockOnly(e.target.checked)}
-                      className="h-4 w-4 rounded text-brand-blue"
-                    />
-                    <span>In Stock Only</span>
-                  </label>
-                </div>
-
-                <div className="border-t border-border pt-4">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">
-                    Industry
-                  </h4>
-                  <div className="flex flex-wrap gap-1.5">
-                    {ALL_INDUSTRIES.map((ind) => (
-                      <button
-                        key={ind}
-                        onClick={() => {
-                          setSelectedIndustry(selectedIndustry === ind ? null : ind);
-                          setMobileFilterOpen(false);
-                        }}
-                        className={`rounded-lg px-2.5 py-1 text-[0.68rem] font-medium ${
-                          selectedIndustry === ind
-                            ? "bg-graphite text-white"
-                            : "border border-border bg-white text-muted-foreground"
-                        }`}
-                      >
-                        {ind}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <button
-                onClick={() => {
-                  clearAllFilters();
-                  setMobileFilterOpen(false);
-                }}
-                className="mt-auto w-full rounded-xl border border-border py-2.5 text-xs font-bold text-graphite hover:bg-steel-light cursor-pointer"
-              >
-                Clear All Filters
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* ─── MAIN PRODUCT SHOWCASE ─── */}
-        <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 flex flex-col">
-          {/* Active Filter Chips & Breadcrumb */}
-          <div className="mb-4 flex flex-wrap items-center justify-between gap-2 text-xs">
-            <div className="flex flex-wrap items-center gap-1.5 text-muted-foreground">
-              <span className="font-semibold text-graphite">Browsing:</span>
-              <span className="rounded-md bg-white px-2 py-0.5 border border-border font-bold text-graphite">
-                {selectedBrand}
-              </span>
-              <span>›</span>
-              <span className="rounded-md bg-white px-2 py-0.5 border border-border font-bold text-brand-blue">
-                {selectedCategory}
-              </span>
-              {selectedSubCategory && (
-                <>
-                  <span>›</span>
-                  <span className="rounded-md bg-brand-blue/10 px-2 py-0.5 border border-brand-blue/30 font-bold text-brand-blue">
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h7" />
+                </svg>
+                <span>
+                  {selectedCategory === "All Categories"
+                    ? "Select Category ▾"
+                    : selectedCategory}
+                </span>
+                {selectedSubCategory && (
+                  <span className="rounded bg-white/20 px-1.5 py-0.2 text-[0.62rem]">
                     {selectedSubCategory}
                   </span>
-                </>
+                )}
+              </button>
+
+              {/* Mega / Multi-level Dropdown Content */}
+              {categoryMenuOpen && (
+                <div className="absolute left-0 mt-2 w-80 sm:w-[480px] max-h-[75vh] overflow-y-auto rounded-2xl border border-border bg-white p-4 shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                  <div className="flex items-center justify-between pb-2.5 border-b border-border">
+                    <span className="font-display text-xs font-bold uppercase tracking-wider text-graphite">
+                      Filter by Category
+                    </span>
+                    <button
+                      onClick={() => {
+                        setSelectedCategory("All Categories");
+                        setSelectedSubCategory(null);
+                        setCategoryMenuOpen(false);
+                      }}
+                      className="text-[0.68rem] font-bold text-brand-blue hover:underline cursor-pointer"
+                    >
+                      Show All Categories
+                    </button>
+                  </div>
+
+                  <div className="mt-3 space-y-4">
+                    {BRAND_CATALOGUE_TREE.map((bTree) => (
+                      <div key={bTree.brand} className="space-y-1.5">
+                        <div className="flex items-center gap-2 text-xs font-extrabold text-graphite uppercase tracking-wide">
+                          <span
+                            className={`h-2 w-2 rounded-full ${
+                              bTree.brand === "Amphenol"
+                                ? "bg-[#004f9e]"
+                                : bTree.brand === "Zolex"
+                                ? "bg-brand-blue"
+                                : "bg-brand-yellow"
+                            }`}
+                          />
+                          <span>{bTree.brand}</span>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pl-4">
+                          {bTree.categories.map((cat) => {
+                            const isCatActive =
+                              selectedCategory === cat.name && selectedBrand === bTree.brand;
+                            const count = PRODUCTS.filter(
+                              (p) => p.brand === bTree.brand && p.category === cat.name
+                            ).length;
+
+                            return (
+                              <button
+                                key={cat.name}
+                                onClick={() => {
+                                  setSelectedBrand(bTree.brand);
+                                  setSelectedCategory(cat.name);
+                                  setSelectedSubCategory(null);
+                                  setCategoryMenuOpen(false);
+                                }}
+                                className={`flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs text-left transition-colors cursor-pointer ${
+                                  isCatActive
+                                    ? "bg-brand-blue text-white font-bold"
+                                    : "text-graphite/80 hover:bg-steel-light hover:text-graphite"
+                                }`}
+                              >
+                                <span className="truncate">{cat.name}</span>
+                                <span
+                                  className={`text-[0.62rem] rounded-full px-1.5 py-0.2 ${
+                                    isCatActive
+                                      ? "bg-white/20 text-white"
+                                      : "bg-steel-light text-muted-foreground"
+                                  }`}
+                                >
+                                  {count}
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               )}
             </div>
 
+            {/* 2. Brand Dropdown Menu */}
+            <div className="relative" onClick={(e) => e.stopPropagation()}>
+              <button
+                type="button"
+                onClick={() => {
+                  setBrandMenuOpen(!brandMenuOpen);
+                  setCategoryMenuOpen(false);
+                }}
+                className={`inline-flex items-center gap-1.5 rounded-xl border px-3.5 py-2 text-xs font-bold transition-all cursor-pointer ${
+                  selectedBrand !== "All Brands"
+                    ? "bg-graphite text-white border-graphite shadow-xs"
+                    : "border-border bg-white text-graphite hover:bg-steel-light/70"
+                }`}
+              >
+                <span>Brand: {selectedBrand} ▾</span>
+              </button>
+
+              {brandMenuOpen && (
+                <div className="absolute left-0 mt-2 w-48 rounded-xl border border-border bg-white p-2 shadow-xl z-50 animate-in fade-in slide-in-from-top-2 duration-150 space-y-1">
+                  {BRANDS.map((b) => (
+                    <button
+                      key={b}
+                      onClick={() => {
+                        setSelectedBrand(b);
+                        setSelectedCategory("All Categories");
+                        setSelectedSubCategory(null);
+                        setBrandMenuOpen(false);
+                      }}
+                      className={`block w-full text-left rounded-lg px-3 py-1.5 text-xs font-semibold cursor-pointer ${
+                        selectedBrand === b
+                          ? "bg-graphite text-white"
+                          : "text-graphite hover:bg-steel-light"
+                      }`}
+                    >
+                      {b}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* 3. Industry Dropdown Selector */}
+            <select
+              value={selectedIndustry || ""}
+              onChange={(e) => setSelectedIndustry(e.target.value || null)}
+              className="rounded-xl border border-border bg-white px-3 py-2 text-xs font-semibold text-graphite focus:outline-none focus:ring-1 focus:ring-brand-blue cursor-pointer"
+            >
+              <option value="">All Industries</option>
+              {ALL_INDUSTRIES.map((ind) => (
+                <option key={ind} value={ind}>
+                  {ind}
+                </option>
+              ))}
+            </select>
+
+            {/* Clear Filters Button if active */}
             {activeFiltersCount > 0 && (
               <button
                 onClick={clearAllFilters}
-                className="text-xs font-bold text-red-600 hover:text-red-700 hover:underline cursor-pointer"
+                className="rounded-xl border border-red-200 bg-red-50 text-red-700 px-3 py-2 text-xs font-bold hover:bg-red-100 transition-colors cursor-pointer"
               >
-                Clear all filters ✕
+                Reset ({activeFiltersCount}) ✕
               </button>
             )}
           </div>
 
-          {/* Search & Sort Bar */}
-          <div className="bg-white rounded-2xl border border-border p-3.5 sm:p-4 shadow-2xs mb-6 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
-            <div className="relative w-full sm:max-w-md">
+          {/* Search Bar & Product Count */}
+          <div className="flex items-center gap-3 w-full md:w-auto">
+            <div className="relative flex-1 md:w-72">
               <svg
-                className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -649,288 +388,178 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search series, part number, lugs, cable glands..."
-                className="w-full rounded-xl border border-border bg-[#fafbfc] py-2 pl-10 pr-8 text-xs sm:text-sm text-graphite placeholder:text-muted-foreground/60 focus:border-brand-blue focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-blue/15"
+                placeholder="Search products or keywords..."
+                className="w-full rounded-xl border border-border bg-[#fafbfc] py-1.5 pl-8 pr-8 text-xs text-graphite placeholder:text-muted-foreground/60 focus:border-brand-blue focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-blue/15"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted-foreground hover:text-foreground cursor-pointer"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted-foreground hover:text-foreground cursor-pointer"
                 >
                   ✕
                 </button>
               )}
             </div>
 
-            <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-3 text-xs">
-              <span className="text-muted-foreground">
-                <strong className="text-graphite">{filteredProducts.length}</strong> products found
-              </span>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
-                className="rounded-lg border border-border bg-white px-2.5 py-1.5 text-xs font-semibold text-graphite focus:outline-none focus:ring-1 focus:ring-brand-blue cursor-pointer"
-              >
-                <option value="featured">Featured First</option>
-                <option value="name">Name (A-Z)</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Product Grid */}
-          {filteredProducts.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-border bg-white p-8 sm:p-12 text-center my-auto">
-              <h3 className="font-display text-base font-bold text-graphite">No matching products found</h3>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Try clearing your search terms or expanding category filters.
-              </p>
-              <button
-                onClick={clearAllFilters}
-                className="mt-4 rounded-xl bg-graphite px-5 py-2.5 text-xs font-bold text-white hover:bg-brand-blue cursor-pointer transition-colors"
-              >
-                View All Products
-              </button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-              {filteredProducts.map((product) => {
-                const isAmphenol = product.brand === "Amphenol";
-                const isZolex = product.brand === "Zolex";
-
-                return (
-                  <article
-                    key={product.id}
-                    className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-2xs transition-all duration-300 hover:-translate-y-1 hover:border-brand-blue/40 hover:shadow-md"
-                  >
-                    {/* Image Container */}
-                    <div
-                      onClick={() => handleProductAction(product)}
-                      className="relative h-44 sm:h-48 w-full overflow-hidden bg-steel-light/40 p-4 flex items-center justify-center cursor-pointer border-b border-border/50"
-                    >
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        loading="lazy"
-                        className="h-full w-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
-                      />
-
-                      {/* Brand Pill */}
-                      <span
-                        className={`absolute left-3 top-3 rounded-full px-2.5 py-0.5 text-[0.62rem] font-extrabold uppercase tracking-wider shadow-2xs ${
-                          isAmphenol
-                            ? "bg-[#004f9e] text-white"
-                            : isZolex
-                            ? "bg-brand-blue text-white"
-                            : "bg-brand-yellow text-graphite"
-                        }`}
-                      >
-                        {product.brand}
-                      </span>
-
-                      {product.featured && (
-                        <span className="absolute right-3 top-3 rounded-full bg-graphite/85 text-white px-2 py-0.5 text-[0.6rem] font-bold uppercase tracking-wider">
-                          Featured
-                        </span>
-                      )}
-
-                      {/* Quick Specs popup button */}
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedProduct(product);
-                        }}
-                        className="absolute bottom-2 right-2 rounded-lg bg-white/95 backdrop-blur-xs px-2.5 py-1 text-[0.62rem] font-bold text-graphite opacity-0 group-hover:opacity-100 transition-opacity shadow-xs hover:bg-steel-light cursor-pointer"
-                        title="View Specifications"
-                      >
-                        Quick Specs
-                      </button>
-                    </div>
-
-                    {/* Body */}
-                    <div className="flex flex-1 flex-col p-4 sm:p-5">
-                      {/* Category & Subcategory Indicator */}
-                      <div className="flex items-center gap-1.5 text-[0.68rem] font-semibold text-muted-foreground">
-                        <span className="text-brand-blue font-bold truncate">{product.category}</span>
-                        {product.subCategory && (
-                          <>
-                            <span>·</span>
-                            <span className="truncate">{product.subCategory}</span>
-                          </>
-                        )}
-                      </div>
-
-                      {/* Product Name */}
-                      <h3
-                        onClick={() => handleProductAction(product)}
-                        className="mt-1 font-display text-sm font-bold text-graphite group-hover:text-brand-blue transition-colors cursor-pointer line-clamp-2"
-                        title={product.name}
-                      >
-                        {product.name}
-                      </h3>
-
-                      {/* Description */}
-                      <p className="mt-2 text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-                        {product.description}
-                      </p>
-
-                      {/* Action CTA Bar */}
-                      <div className="mt-auto pt-4 border-t border-border/80">
-                        {product.externalUrl ? (
-                          <a
-                            href={product.externalUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={`w-full inline-flex items-center justify-center gap-1.5 rounded-xl px-3.5 py-2.5 font-display text-[0.72rem] sm:text-xs font-bold uppercase tracking-wider text-white shadow-xs transition-all hover:bg-graphite cursor-pointer ${
-                              isAmphenol ? "bg-[#004f9e]" : "bg-brand-blue"
-                            }`}
-                          >
-                            <span>View Product on {product.brand}</span>
-                            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                            </svg>
-                          </a>
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={() => handleProductAction(product)}
-                            className="w-full inline-flex items-center justify-center gap-1.5 rounded-xl bg-graphite px-3.5 py-2.5 font-display text-[0.72rem] sm:text-xs font-bold uppercase tracking-wider text-white shadow-xs transition-all hover:bg-brand-blue cursor-pointer"
-                          >
-                            <span>Enquire with Qualitech</span>
-                            <span>→</span>
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  </article>
-                );
-              })}
-            </div>
-          )}
-        </main>
-      </div>
-
-      {/* ─── Product Detail / Quick Specs Modal ─── */}
-      {selectedProduct && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
-          <div className="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white p-5 sm:p-8 shadow-2xl animate-in zoom-in-95 duration-200">
-            <button
-              onClick={() => setSelectedProduct(null)}
-              className="absolute right-4 top-4 rounded-full p-2 text-muted-foreground hover:bg-steel-light hover:text-foreground cursor-pointer"
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as any)}
+              className="rounded-xl border border-border bg-white px-2.5 py-1.5 text-xs font-semibold text-graphite focus:outline-none cursor-pointer shrink-0"
             >
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-
-            <div className="grid gap-6 sm:grid-cols-2 items-center">
-              <div className="h-48 sm:h-56 overflow-hidden rounded-xl border border-border bg-steel-light/50 p-4 flex items-center justify-center">
-                <img
-                  src={selectedProduct.image}
-                  alt={selectedProduct.name}
-                  className="h-full w-full object-contain mix-blend-multiply"
-                />
-              </div>
-
-              <div>
-                <div className="flex items-center gap-2">
-                  <span
-                    className={`rounded-full px-2.5 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider ${
-                      selectedProduct.brand === "Amphenol"
-                        ? "bg-[#004f9e] text-white"
-                        : selectedProduct.brand === "Zolex"
-                        ? "bg-brand-blue text-white"
-                        : "bg-brand-yellow text-graphite"
-                    }`}
-                  >
-                    {selectedProduct.brand}
-                  </span>
-                  <span className="text-xs font-mono font-semibold text-muted-foreground">
-                    {selectedProduct.sku}
-                  </span>
-                </div>
-
-                <h2 className="mt-2 font-display text-base sm:text-lg font-bold text-graphite">
-                  {selectedProduct.name}
-                </h2>
-
-                <p className="mt-2 text-xs text-muted-foreground">
-                  <strong>Category:</strong> {selectedProduct.category}{" "}
-                  {selectedProduct.subCategory && `(${selectedProduct.subCategory})`}
-                </p>
-
-                <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-                  {selectedProduct.description}
-                </p>
-
-                <div className="mt-5">
-                  {selectedProduct.externalUrl ? (
-                    <a
-                      href={selectedProduct.externalUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`w-full inline-flex items-center justify-center gap-2 rounded-xl py-3 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-graphite transition-colors shadow-sm ${
-                        selectedProduct.brand === "Amphenol" ? "bg-[#004f9e]" : "bg-brand-blue"
-                      }`}
-                    >
-                      <span>View Product on {selectedProduct.brand} Official Portal</span>
-                      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                      </svg>
-                    </a>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        setSelectedProduct(null);
-                        onNavigateHome("#contact-page", true);
-                      }}
-                      className="w-full rounded-xl bg-graphite py-3 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-brand-blue transition-colors cursor-pointer shadow-sm"
-                    >
-                      Enquire with Qualitech →
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Features */}
-            {selectedProduct.features && selectedProduct.features.length > 0 && (
-              <div className="mt-5 sm:mt-6 border-t border-border pt-4">
-                <h3 className="font-display text-xs font-bold uppercase tracking-wider text-graphite mb-2">
-                  Key Features &amp; Capabilities
-                </h3>
-                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                  {selectedProduct.features.map((feat, idx) => (
-                    <li key={idx} className="flex items-center gap-2 text-muted-foreground">
-                      <span className="h-1.5 w-1.5 rounded-full bg-brand-blue shrink-0" />
-                      <span>{feat}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {/* Specifications list */}
-            {selectedProduct.specs && Object.keys(selectedProduct.specs).length > 0 && (
-              <div className="mt-4 border-t border-border pt-4">
-                <h3 className="font-display text-xs font-bold uppercase tracking-wider text-graphite mb-2.5">
-                  Technical Specifications
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                  {Object.entries(selectedProduct.specs).map(([k, v]) => (
-                    <div key={k} className="flex justify-between rounded-lg bg-steel-light/60 px-3 py-1.5">
-                      <span className="capitalize text-muted-foreground">{k}:</span>
-                      <span className="font-semibold text-graphite">{v}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+              <option value="featured">Featured</option>
+              <option value="name">A–Z</option>
+            </select>
           </div>
         </div>
-      )}
 
-      {/* ─── FULL CORPORATE FOOTER ─── */}
+        {/* Active Filter Badges Bar */}
+        {(selectedBrand !== "All Brands" || selectedCategory !== "All Categories" || selectedSubCategory || selectedIndustry) && (
+          <div className="max-w-7xl mx-auto mt-2.5 pt-2 border-t border-border/60 flex flex-wrap items-center gap-2 text-xs">
+            <span className="text-muted-foreground text-[0.72rem] font-semibold">Filtered by:</span>
+            {selectedBrand !== "All Brands" && (
+              <span className="inline-flex items-center gap-1 rounded-md bg-graphite text-white px-2.5 py-0.5 text-[0.68rem] font-bold">
+                Brand: {selectedBrand}
+                <button onClick={() => setSelectedBrand("All Brands")} className="hover:text-red-300 ml-1">✕</button>
+              </span>
+            )}
+            {selectedCategory !== "All Categories" && (
+              <span className="inline-flex items-center gap-1 rounded-md bg-brand-blue text-white px-2.5 py-0.5 text-[0.68rem] font-bold">
+                Category: {selectedCategory}
+                <button onClick={() => setSelectedCategory("All Categories")} className="hover:text-red-300 ml-1">✕</button>
+              </span>
+            )}
+            {selectedSubCategory && (
+              <span className="inline-flex items-center gap-1 rounded-md bg-brand-blue/15 text-brand-blue border border-brand-blue/30 px-2.5 py-0.5 text-[0.68rem] font-bold">
+                Sub: {selectedSubCategory}
+                <button onClick={() => setSelectedSubCategory(null)} className="hover:text-red-600 ml-1">✕</button>
+              </span>
+            )}
+            {selectedIndustry && (
+              <span className="inline-flex items-center gap-1 rounded-md bg-steel-light text-graphite px-2.5 py-0.5 text-[0.68rem] font-bold">
+                Industry: {selectedIndustry}
+                <button onClick={() => setSelectedIndustry(null)} className="hover:text-red-600 ml-1">✕</button>
+              </span>
+            )}
+            <span className="text-muted-foreground text-[0.72rem] ml-auto">
+              Showing <strong>{filteredProducts.length}</strong> items
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* ─── FULL-WIDTH PRODUCT DIRECTORY GRID ─── */}
+      <main className="flex-1 max-w-7xl mx-auto w-full p-4 sm:p-6 lg:p-8">
+        {filteredProducts.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-border bg-white p-12 text-center my-12">
+            <h3 className="font-display text-base font-bold text-graphite">No products found</h3>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Try adjusting your search terms or clearing your category filters.
+            </p>
+            <button
+              onClick={clearAllFilters}
+              className="mt-4 rounded-xl bg-graphite px-5 py-2.5 text-xs font-bold text-white hover:bg-brand-blue cursor-pointer transition-colors"
+            >
+              Show All Products
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6">
+            {filteredProducts.map((product) => {
+              const isAmphenol = product.brand === "Amphenol";
+              const isZolex = product.brand === "Zolex";
+
+              return (
+                <div
+                  key={product.id}
+                  onClick={() => handleProductClick(product)}
+                  className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-2xs transition-all duration-300 hover:-translate-y-1.5 hover:border-brand-blue/50 hover:shadow-lg cursor-pointer"
+                >
+                  {/* Product Image Box */}
+                  <div className="relative h-48 w-full overflow-hidden bg-steel-light/40 p-5 flex items-center justify-center border-b border-border/60">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      loading="lazy"
+                      className="h-full w-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
+                    />
+
+                    {/* Brand Pill */}
+                    <span
+                      className={`absolute left-3.5 top-3.5 rounded-full px-2.5 py-0.5 text-[0.62rem] font-extrabold uppercase tracking-wider shadow-2xs ${
+                        isAmphenol
+                          ? "bg-[#004f9e] text-white"
+                          : isZolex
+                          ? "bg-brand-blue text-white"
+                          : "bg-brand-yellow text-graphite"
+                      }`}
+                    >
+                      {product.brand}
+                    </span>
+
+                    {product.featured && (
+                      <span className="absolute right-3.5 top-3.5 rounded-full bg-graphite/85 text-white px-2 py-0.5 text-[0.6rem] font-bold uppercase tracking-wider">
+                        Featured
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Product Content */}
+                  <div className="flex flex-1 flex-col p-4 sm:p-5">
+                    {/* Category Label */}
+                    <div className="flex items-center gap-1.5 text-[0.68rem] font-semibold text-muted-foreground mb-1">
+                      <span className="text-brand-blue font-bold">{product.category}</span>
+                      {product.subCategory && (
+                        <>
+                          <span>·</span>
+                          <span className="truncate">{product.subCategory}</span>
+                        </>
+                      )}
+                    </div>
+
+                    {/* Title */}
+                    <h3
+                      className="font-display text-sm font-bold text-graphite group-hover:text-brand-blue transition-colors line-clamp-2"
+                      title={product.name}
+                    >
+                      {product.name}
+                    </h3>
+
+                    {/* Short Description */}
+                    <p className="mt-2 text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                      {product.description}
+                    </p>
+
+                    {/* Direct External Action CTA Button */}
+                    <div className="mt-auto pt-4 border-t border-border/80">
+                      {product.externalUrl ? (
+                        <div
+                          className={`w-full inline-flex items-center justify-center gap-1.5 rounded-xl px-3.5 py-2.5 font-display text-[0.72rem] sm:text-xs font-bold uppercase tracking-wider text-white shadow-xs transition-all group-hover:bg-graphite ${
+                            isAmphenol ? "bg-[#004f9e]" : "bg-brand-blue"
+                          }`}
+                        >
+                          <span>View on {product.brand}</span>
+                          <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                        </div>
+                      ) : (
+                        <div
+                          className="w-full inline-flex items-center justify-center gap-1.5 rounded-xl bg-graphite px-3.5 py-2.5 font-display text-[0.72rem] sm:text-xs font-bold uppercase tracking-wider text-white shadow-xs transition-all group-hover:bg-brand-blue"
+                        >
+                          <span>Enquire with Qualitech</span>
+                          <span>→</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </main>
+
+      {/* ─── Footer ─── */}
       <Footer onNavigate={onNavigateHome} />
     </div>
   );
