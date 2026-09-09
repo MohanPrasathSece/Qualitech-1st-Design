@@ -359,10 +359,10 @@ export function AmphenolPage({ onNavigate }: AmphenolPageProps) {
               Request Amphenol Quote →
             </button>
             <a
-              href="tel:+914027140004"
+              href="tel:+919849001484"
               className="rounded-xl border border-border bg-white px-6 py-3.5 font-display text-xs font-bold uppercase tracking-wider text-graphite hover:bg-steel-light transition-colors cursor-pointer"
             >
-              Call +91 40 2714 0004
+              Call +91 98490 01484
             </a>
           </div>
         </div>
