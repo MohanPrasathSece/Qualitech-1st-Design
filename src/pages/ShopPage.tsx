@@ -1,11 +1,11 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import {
-  PRODUCTS,
   BRAND_CATALOGUE_TREE,
   ALL_INDUSTRIES,
   BRANDS,
   Product,
 } from "@/data/products";
+import { getStoredProducts } from "@/lib/productsStore";
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
 
@@ -14,6 +14,7 @@ interface ShopPageProps {
 }
 
 export function ShopPage({ onNavigateHome }: ShopPageProps) {
+  const [productsList, setProductsList] = useState<Product[]>([]);
   const [selectedBrand, setSelectedBrand] = useState<string>("All Brands");
   const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
   const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(null);
@@ -33,6 +34,7 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
+    setProductsList(getStoredProducts());
   }, []);
 
   // Reset to page 1 whenever filters change
@@ -42,7 +44,7 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
 
   // Filter & sort logic
   const filteredProducts = useMemo(() => {
-    let result = PRODUCTS.filter((p) => {
+    let result = productsList.filter((p) => {
       // Brand filter
       if (selectedBrand !== "All Brands" && p.brand !== selectedBrand) {
         return false;

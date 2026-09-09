@@ -20,6 +20,7 @@ import { ManufacturingPage } from "@/pages/ManufacturingPage";
 import { AmphenolPage } from "@/pages/AmphenolPage";
 import { ZolexPage } from "@/pages/ZolexPage";
 import { ContactPage } from "@/pages/ContactPage";
+import { AdminPage } from "@/pages/AdminPage";
 
 export default Home;
 
@@ -724,12 +725,13 @@ function FinalCTA() {
 
 /* ─── Root App Component & Multi-Page Router ─── */
 
-type PageType = "home" | "products" | "about" | "manufacturing" | "amphenol" | "zolex" | "contact";
+type PageType = "home" | "products" | "about" | "manufacturing" | "amphenol" | "zolex" | "contact" | "admin";
 
 function Home() {
   const getPageFromHash = (): PageType => {
     if (typeof window === "undefined") return "home";
     const hash = window.location.hash.toLowerCase();
+    if (hash === "#admin" || hash === "#/admin" || hash === "#admin-panel") return "admin";
     if (hash === "#products" || hash === "#shop") return "products";
     if (hash === "#about-page" || hash === "#about-us") return "about";
     if (hash === "#manufacturing" || hash === "#cable-assemblies") return "manufacturing";
@@ -755,6 +757,13 @@ function Home() {
 
   const handleNavigate = (target: string, isPage?: boolean) => {
     const cleanTarget = target.toLowerCase();
+
+    if (cleanTarget === "#admin" || cleanTarget === "#/admin" || cleanTarget === "#admin-panel") {
+      setCurrentPage("admin");
+      window.history.pushState(null, "", "#admin");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
 
     if (cleanTarget === "#products" || cleanTarget === "#shop") {
       setCurrentPage("products");
@@ -824,6 +833,10 @@ function Home() {
   };
 
   // Render individual page components
+  if (currentPage === "admin") {
+    return <AdminPage onNavigateHome={handleNavigate} />;
+  }
+
   if (currentPage === "products") {
     return <ShopPage onNavigateHome={handleNavigate} />;
   }
