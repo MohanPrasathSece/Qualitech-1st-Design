@@ -139,7 +139,7 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
         scrolled ? "shadow-sm" : "shadow-xs"
       }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8 py-3 sm:py-3.5">
+      <div className="mx-auto flex max-w-7xl items-center justify-between flex-nowrap gap-3 px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3">
         {/* Left: Logo */}
         <button
           onClick={() => onNavigate("#top")}
@@ -155,26 +155,26 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
         </button>
 
         {/* Center: Desktop Navigation */}
-        <nav className="hidden items-center gap-3.5 xl:gap-5 lg:flex shrink-0">
+        <nav className="hidden lg:flex items-center flex-nowrap gap-2.5 xl:gap-5 shrink-0">
           {NAV.map((item) => {
             if (item.dropdown) {
               return (
                 <div
                   key={item.label}
-                  className="relative"
+                  className="relative inline-flex items-center"
                   ref={dropdownRef}
                   onMouseEnter={handleMouseEnterContainer}
                   onMouseLeave={handleMouseLeaveContainer}
                 >
                   <button
                     onClick={() => setProductsDropdown((v) => !v)}
-                    className={`font-display text-[0.72rem] xl:text-[0.76rem] font-semibold uppercase tracking-[0.12em] transition-colors duration-300 hover:text-foreground cursor-pointer inline-flex items-center gap-1 whitespace-nowrap ${
+                    className={`h-9 px-2 inline-flex items-center gap-1 font-display text-[0.72rem] xl:text-[0.76rem] uppercase tracking-[0.12em] transition-colors duration-200 hover:text-foreground cursor-pointer whitespace-nowrap relative ${
                       isProductsActive
-                        ? "text-brand-blue font-bold border-b-2 border-brand-blue pb-0.5"
-                        : "text-muted-foreground"
+                        ? "text-brand-blue font-bold after:absolute after:bottom-0 after:left-2 after:right-2 after:h-[2px] after:bg-brand-blue"
+                        : "text-muted-foreground font-semibold after:absolute after:bottom-0 after:left-2 after:right-2 after:h-[2px] after:bg-transparent hover:after:bg-brand-blue/30"
                     }`}
                   >
-                    {item.label}
+                    <span>{item.label}</span>
                     <svg
                       className={`h-3 w-3 transition-transform duration-200 ${
                         productsDropdown ? "rotate-180" : ""
@@ -190,7 +190,7 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
 
                   {/* Desktop Dropdown */}
                   {productsDropdown && (
-                    <div className="absolute left-1/2 top-full mt-3 -translate-x-1/2 w-[540px] overflow-hidden rounded-2xl border border-border bg-background shadow-[var(--shadow-panel)] animate-in fade-in slide-in-from-top-2 duration-200 z-50">
+                    <div className="absolute left-1/2 top-full mt-2 -translate-x-1/2 w-[540px] overflow-hidden rounded-2xl border border-border bg-background shadow-[var(--shadow-panel)] animate-in fade-in slide-in-from-top-2 duration-200 z-50">
                       <div className="grid grid-cols-[220px_1fr] divide-x divide-border">
                         {/* Left Column */}
                         <div className="p-3 bg-steel-light/30 flex flex-col gap-2">
@@ -326,10 +326,10 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
               <button
                 key={item.label}
                 onClick={() => onNavigate(item.href, item.isPage)}
-                className={`font-display text-[0.72rem] xl:text-[0.76rem] font-semibold uppercase tracking-[0.12em] transition-colors duration-300 hover:text-foreground cursor-pointer whitespace-nowrap ${
+                className={`h-9 px-2 inline-flex items-center font-display text-[0.72rem] xl:text-[0.76rem] uppercase tracking-[0.12em] transition-colors duration-200 hover:text-foreground cursor-pointer whitespace-nowrap relative ${
                   isActive
-                    ? "text-brand-blue font-bold border-b-2 border-brand-blue pb-0.5"
-                    : "text-muted-foreground"
+                    ? "text-brand-blue font-bold after:absolute after:bottom-0 after:left-2 after:right-2 after:h-[2px] after:bg-brand-blue"
+                    : "text-muted-foreground font-semibold after:absolute after:bottom-0 after:left-2 after:right-2 after:h-[2px] after:bg-transparent hover:after:bg-brand-blue/30"
                 }`}
               >
                 {item.label}
@@ -339,11 +339,11 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
         </nav>
 
         {/* Right: Actions (Cart, Orders, Admin) */}
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center flex-nowrap gap-2 shrink-0">
           {/* Cart Button */}
           <button
             onClick={openCart}
-            className="relative flex items-center gap-1.5 rounded-xl bg-brand-blue px-3 py-1.5 font-display text-[0.7rem] font-bold uppercase tracking-wider text-white shadow-xs hover:bg-graphite transition-all cursor-pointer shrink-0"
+            className="h-8.5 inline-flex items-center justify-center gap-1.5 rounded-xl bg-brand-blue px-3 font-display text-[0.7rem] font-bold uppercase tracking-wider text-white shadow-xs hover:bg-graphite transition-all cursor-pointer shrink-0"
             title="Shopping Cart"
             aria-label="Shopping Cart"
           >
@@ -366,19 +366,19 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
           {/* Track Orders Button */}
           <button
             onClick={openOrders}
-            className="hidden lg:flex h-8.5 items-center gap-1 rounded-xl border border-border px-2.5 text-[0.7rem] font-bold text-graphite hover:border-brand-blue hover:text-brand-blue hover:bg-steel-light/30 transition-all cursor-pointer whitespace-nowrap"
+            className="h-8.5 inline-flex items-center justify-center gap-1 rounded-xl border border-border px-2.5 text-[0.7rem] font-bold text-graphite hover:border-brand-blue hover:text-brand-blue hover:bg-steel-light/30 transition-all cursor-pointer whitespace-nowrap shrink-0"
             title="Track Orders"
           >
             <svg className="h-3.5 w-3.5 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
-            <span className="hidden xl:inline">Orders</span>
+            <span className="hidden sm:inline">Orders</span>
           </button>
 
           {/* Admin Button */}
           <button
             onClick={() => onNavigate("#admin", true)}
-            className={`flex h-8.5 items-center gap-1 rounded-xl border px-2.5 text-[0.7rem] font-bold transition-all cursor-pointer whitespace-nowrap ${
+            className={`h-8.5 inline-flex items-center justify-center gap-1 rounded-xl border px-2.5 text-[0.7rem] font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
               currentPage === "admin"
                 ? "border-brand-blue bg-brand-blue text-white shadow-xs"
                 : "border-border/80 bg-steel-light/40 text-graphite hover:border-graphite hover:bg-steel-light"
