@@ -59,10 +59,11 @@ export function Footer({ onNavigate }: FooterProps) {
               <p>Hyderabad, Medchal-Malkajgiri,</p>
               <p>Telangana – 500051</p>
               <p className="mt-3">
-                <a href="tel:+919849001484" className="transition-colors hover:text-background font-medium">
-                  +91 98490 01484
+                <a href="tel:+914027140004" className="transition-colors hover:text-background font-medium">
+                  +91-40-27140004
                 </a>
               </p>
+              {/* TODO: Add Gopi Sir's contact number once provided by client */}
               <p className="mt-1.5">
                 <a href="mailto:info@qualitechindia.in" className="transition-colors hover:text-background">
                   info@qualitechindia.in

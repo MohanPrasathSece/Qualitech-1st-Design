@@ -21,8 +21,27 @@ import { AmphenolPage } from "@/pages/AmphenolPage";
 import { ZolexPage } from "@/pages/ZolexPage";
 import { ContactPage } from "@/pages/ContactPage";
 import { AdminPage } from "@/pages/AdminPage";
+import { ECommerceProvider } from "@/context/ECommerceContext";
+import { CartDrawer } from "@/components/ecommerce/CartDrawer";
+import { ProductDetailModal } from "@/components/ecommerce/ProductDetailModal";
+import { CheckoutModal } from "@/components/ecommerce/CheckoutModal";
+import { OrderSuccessModal } from "@/components/ecommerce/OrderSuccessModal";
+import { OrdersModal } from "@/components/ecommerce/OrdersModal";
 
-export default Home;
+export default function App() {
+  return (
+    <ECommerceProvider>
+      <HomeContent />
+      <CartDrawer onNavigateToShop={() => {
+        window.location.hash = "#products";
+      }} />
+      <ProductDetailModal />
+      <CheckoutModal />
+      <OrderSuccessModal />
+      <OrdersModal />
+    </ECommerceProvider>
+  );
+}
 
 /* ─── Hero ─── */
 
@@ -213,8 +232,8 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                       className="group/card flex items-center gap-3 rounded-xl border border-border bg-steel-light/30 p-3.5 transition-all duration-300 hover:border-[#004f9e]/60 hover:bg-white hover:shadow-sm cursor-pointer text-left"
                     >
                       <svg className="h-7 w-7 text-[#004f9e] shrink-0" viewBox="0 0 32 32" fill="currentColor">
-                        <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" strokeWidth="2"/>
-                        <path d="M8 16c2-6 6-6 8 0s6 6 8 0" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+                        <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" strokeWidth="2" />
+                        <path d="M8 16c2-6 6-6 8 0s6 6 8 0" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
                       </svg>
                       <div className="min-w-0 flex-1">
                         <span className="font-display text-sm font-extrabold text-[#004f9e]">Amphenol</span>
@@ -684,7 +703,7 @@ function FinalCTA() {
               <span className="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
             </a>
             <a
-              href="tel:+919849001484"
+              href="tel:+914027140004"
               className="group inline-flex items-center justify-center gap-3 rounded-xl border border-graphite/20 px-7 py-4 font-display text-[0.72rem] font-bold uppercase tracking-[0.2em] text-graphite transition-all duration-300 hover:border-graphite hover:bg-graphite/5"
             >
               Contact Us
@@ -697,10 +716,10 @@ function FinalCTA() {
           <div className="border-t border-border pt-8 lg:border-l lg:border-t-0 lg:pl-12 lg:pt-0">
             <p className="label-eyebrow">Direct Line</p>
             <a
-              href="tel:+919849001484"
+              href="tel:+914027140004"
               className="mt-2 block font-display text-2xl font-bold text-graphite transition-colors duration-300 hover:text-brand-blue sm:text-3xl"
             >
-              +91 98490 01484
+              +91-40-27140004
             </a>
             <p className="label-eyebrow mt-6">Email</p>
             <a
@@ -727,7 +746,7 @@ function FinalCTA() {
 
 type PageType = "home" | "products" | "about" | "manufacturing" | "amphenol" | "zolex" | "contact" | "admin";
 
-function Home() {
+function HomeContent() {
   const getPageFromHash = (): PageType => {
     if (typeof window === "undefined") return "home";
     const hash = window.location.hash.toLowerCase();

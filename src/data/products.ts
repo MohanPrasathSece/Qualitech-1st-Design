@@ -14,6 +14,12 @@ import indPower from "@/assets/ind-power.jpg";
 import indRailways from "@/assets/ind-railways.jpg";
 import aboutFactory from "@/assets/about-factory.jpg";
 
+export interface TieredPrice {
+  minQty: number;
+  price: number;
+  discountLabel?: string;
+}
+
 export interface Product {
   id: string;
   sku: string;
@@ -30,6 +36,17 @@ export interface Product {
   inStock: boolean;
   externalUrl?: string;
   isEnquiry?: boolean;
+  price?: number;
+  salePrice?: number;
+  stockCount?: number;
+  lowStockThreshold?: number;
+  minOrderQty?: number;
+  unit?: string;
+  rating?: number;
+  reviewCount?: number;
+  leadTime?: string;
+  tieredPricing?: TieredPrice[];
+  datasheetUrl?: string;
 }
 
 export interface BrandCategoryTree {

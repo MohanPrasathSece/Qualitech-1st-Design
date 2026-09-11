@@ -5,7 +5,8 @@ import {
   BRANDS,
   Product,
 } from "@/data/products";
-import { getStoredProducts } from "@/lib/productsStore";
+import { useECommerce } from "@/context/ECommerceContext";
+import { formatINR, getProductDefaultPrice } from "@/lib/ecommerceStore";
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
 
@@ -14,37 +15,48 @@ interface ShopPageProps {
 }
 
 export function ShopPage({ onNavigateHome }: ShopPageProps) {
-  const [productsList, setProductsList] = useState<Product[]>([]);
+  const {
+    products,
+    addToCart,
+    openQuickView,
+    cartCount,
+    cartTotal,
+    openCart,
+  } = useECommerce();
+
   const [selectedBrand, setSelectedBrand] = useState<string>("All Brands");
   const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
   const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(null);
   const [selectedIndustry, setSelectedIndustry] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState<"featured" | "name">("featured");
+  const [inStockOnly, setInStockOnly] = useState(false);
+  const [maxPrice, setMaxPrice] = useState<number>(30000);
+  const [sortBy, setSortBy] = useState<"featured" | "price-asc" | "price-desc" | "sku" | "name">("featured");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   // Pagination states
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(30);
+  const [pageSize, setPageSize] = useState(24);
 
   // Dropdown menu toggle states
   const [categoryMenuOpen, setCategoryMenuOpen] = useState(false);
   const [brandMenuOpen, setBrandMenuOpen] = useState(false);
+  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
   const gridTopRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    setProductsList(getStoredProducts());
   }, []);
 
   // Reset to page 1 whenever filters change
   useEffect(() => {
     setPage(1);
-  }, [selectedBrand, selectedCategory, selectedSubCategory, selectedIndustry, searchQuery, sortBy, pageSize]);
+  }, [selectedBrand, selectedCategory, selectedSubCategory, selectedIndustry, searchQuery, inStockOnly, maxPrice, sortBy, pageSize]);
 
   // Filter & sort logic
   const filteredProducts = useMemo(() => {
-    let result = productsList.filter((p) => {
+    let result = products.filter((p) => {
       // Brand filter
       if (selectedBrand !== "All Brands" && p.brand !== selectedBrand) {
         return false;
@@ -59,6 +71,15 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
       }
       // Industry filter
       if (selectedIndustry && !p.industries.includes(selectedIndustry)) {
+        return false;
+      }
+      // Stock filter
+      if (inStockOnly && !p.inStock) {
+        return false;
+      }
+      // Max price filter
+      const price = getProductDefaultPrice(p);
+      if (price > maxPrice) {
         return false;
       }
       // Search query
@@ -77,12 +98,18 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
 
     if (sortBy === "name") {
       result = [...result].sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sortBy === "price-asc") {
+      result = [...result].sort((a, b) => getProductDefaultPrice(a) - getProductDefaultPrice(b));
+    } else if (sortBy === "price-desc") {
+      result = [...result].sort((a, b) => getProductDefaultPrice(b) - getProductDefaultPrice(a));
+    } else if (sortBy === "sku") {
+      result = [...result].sort((a, b) => a.sku.localeCompare(b.sku));
     } else {
       result = [...result].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
     }
 
     return result;
-  }, [selectedBrand, selectedCategory, selectedSubCategory, selectedIndustry, searchQuery, sortBy]);
+  }, [products, selectedBrand, selectedCategory, selectedSubCategory, selectedIndustry, inStockOnly, maxPrice, searchQuery, sortBy]);
 
   // Paginated slice
   const totalPages = Math.ceil(filteredProducts.length / pageSize) || 1;
@@ -107,6 +134,8 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
     setSelectedSubCategory(null);
     setSelectedIndustry(null);
     setSearchQuery("");
+    setInStockOnly(false);
+    setMaxPrice(30000);
   };
 
   const activeFiltersCount =
@@ -114,303 +143,80 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
     (selectedCategory !== "All Categories" ? 1 : 0) +
     (selectedSubCategory ? 1 : 0) +
     (selectedIndustry ? 1 : 0) +
+    (inStockOnly ? 1 : 0) +
+    (maxPrice < 30000 ? 1 : 0) +
     (searchQuery.trim() !== "" ? 1 : 0);
 
-  const handleProductClick = (product: Product) => {
-    if (product.externalUrl) {
-      window.open(product.externalUrl, "_blank", "noopener,noreferrer");
-    } else {
-      onNavigateHome("#contact-page", true);
+  // Available categories based on selected brand
+  const availableCategories = useMemo(() => {
+    if (selectedBrand === "All Brands") {
+      const cats = new Set<string>();
+      BRAND_CATALOGUE_TREE.forEach((b) => b.categories.forEach((c) => cats.add(c.name)));
+      return Array.from(cats);
     }
-  };
+    const brandTree = BRAND_CATALOGUE_TREE.find((b) => b.brand === selectedBrand);
+    return brandTree ? brandTree.categories.map((c) => c.name) : [];
+  }, [selectedBrand]);
 
   return (
-    <div
-      className="min-h-screen bg-[#fafbfc] text-foreground font-sans flex flex-col w-full overflow-x-hidden"
-      onClick={() => {
-        // Close dropdowns when clicking outside
-        setCategoryMenuOpen(false);
-        setBrandMenuOpen(false);
-      }}
-    >
-      {/* ─── Header Navigation ─── */}
+    <div className="min-h-screen bg-background text-foreground">
       <Header onNavigate={onNavigateHome} currentPage="products" />
 
-      {/* ─── Page Banner ─── */}
-      <div className="bg-graphite-deep text-white px-4 sm:px-8 pt-28 sm:pt-36 pb-10 sm:pb-12 border-b border-border/20 relative z-10 overflow-hidden">
-        <div className="absolute inset-0 hairline-grid opacity-25 pointer-events-none" />
-        <div className="relative max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-brand-yellow" />
-              <span className="font-display text-[0.68rem] font-bold uppercase tracking-[0.2em] text-steel">
-                Authorized Distribution &amp; Manufacturing
-              </span>
-            </div>
-            <h1 className="mt-3 font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
-              Product Catalogue
-            </h1>
-            <p className="mt-3 text-xs sm:text-sm text-steel max-w-2xl leading-relaxed">
-              Explore Amphenol connectors, cables, fiber optics, and antennas alongside Zolex lugs, crimp terminals, and earthing solutions. Click any product to navigate directly to the manufacturer's official portal.
-            </p>
-          </div>
-
-          {/* Quick Brand Switcher Buttons */}
-          <div className="flex flex-wrap gap-2 text-xs">
-            <button
-              onClick={() => {
-                setSelectedBrand("All Brands");
-                setSelectedCategory("All Categories");
-                setSelectedSubCategory(null);
-              }}
-              className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-semibold transition-all cursor-pointer ${
-                selectedBrand === "All Brands" && selectedCategory === "All Categories"
-                  ? "bg-white text-graphite font-bold shadow-md"
-                  : "border border-white/20 bg-white/10 text-white hover:bg-white/20"
-              }`}
-            >
-              <span>All Products</span>
-              <span className="rounded-full bg-black/20 px-1.5 py-0.2 text-[0.65rem]">
-                {PRODUCTS.length}
-              </span>
-            </button>
-            <button
-              onClick={() => {
-                setSelectedBrand("Amphenol");
-                setSelectedCategory("All Categories");
-                setSelectedSubCategory(null);
-              }}
-              className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-semibold transition-all cursor-pointer ${
-                selectedBrand === "Amphenol"
-                  ? "bg-[#004f9e] text-white shadow-md ring-2 ring-white/30 font-bold"
-                  : "border border-white/20 bg-white/10 text-white hover:bg-white/20"
-              }`}
-            >
-              <span className="h-2 w-2 rounded-full bg-[#009fe3]" />
-              Amphenol
-            </button>
-            <button
-              onClick={() => {
-                setSelectedBrand("Zolex");
-                setSelectedCategory("All Categories");
-                setSelectedSubCategory(null);
-              }}
-              className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-semibold transition-all cursor-pointer ${
-                selectedBrand === "Zolex"
-                  ? "bg-brand-blue text-white shadow-md ring-2 ring-white/30 font-bold"
-                  : "border border-white/20 bg-white/10 text-white hover:bg-white/20"
-              }`}
-            >
-              <span className="h-2 w-2 rounded-full bg-brand-blue-soft" />
-              Zolex
-            </button>
-            <button
-              onClick={() => {
-                setSelectedBrand("Qualitech");
-                setSelectedCategory("All Categories");
-                setSelectedSubCategory(null);
-              }}
-              className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-semibold transition-all cursor-pointer ${
-                selectedBrand === "Qualitech"
-                  ? "bg-brand-yellow text-graphite font-bold shadow-md"
-                  : "border border-white/20 bg-white/10 text-white hover:bg-white/20"
-              }`}
-            >
-              <span className="h-2 w-2 rounded-full bg-brand-yellow" />
-              Qualitech Harnesses
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* ─── TOP DROPDOWN & FILTER CONTROL BAR (Sticky Menu) ─── */}
-      <div
-        id="products-grid-top"
-        ref={gridTopRef}
-        className="sticky top-[72px] z-30 bg-white/95 backdrop-blur-md border-b border-border shadow-xs px-4 sm:px-8 py-3.5"
-      >
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
-          {/* Top Dropdowns Group */}
-          <div className="flex flex-wrap items-center gap-2.5">
-            {/* 1. Category Menu Dropdown */}
-            <div className="relative" onClick={(e) => e.stopPropagation()}>
-              <button
-                type="button"
-                onClick={() => {
-                  setCategoryMenuOpen(!categoryMenuOpen);
-                  setBrandMenuOpen(false);
-                }}
-                className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-xs font-bold transition-all cursor-pointer ${
-                  selectedCategory !== "All Categories"
-                    ? "bg-brand-blue text-white border-brand-blue shadow-xs"
-                    : "border-border bg-white text-graphite hover:bg-steel-light/70"
-                }`}
-              >
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h7" />
-                </svg>
-                <span>
-                  {selectedCategory === "All Categories"
-                    ? "Select Category ▾"
-                    : selectedCategory}
+      {/* Hero Header */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-steel-light/60 via-background to-background pt-28 pb-10 sm:pt-32 sm:pb-12 border-b border-border/80">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="h-px w-8 bg-brand-yellow" />
+                <span className="text-[0.68rem] font-bold uppercase tracking-[0.2em] text-brand-blue">
+                  Online B2B Store &amp; Catalogue
                 </span>
-                {selectedSubCategory && (
-                  <span className="rounded bg-white/20 px-1.5 py-0.2 text-[0.62rem]">
-                    {selectedSubCategory}
-                  </span>
-                )}
-              </button>
-
-              {/* Mega / Multi-level Dropdown Content */}
-              {categoryMenuOpen && (
-                <div className="absolute left-0 mt-2 w-80 sm:w-[480px] max-h-[75vh] overflow-y-auto rounded-2xl border border-border bg-white p-4 shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-                  <div className="flex items-center justify-between pb-2.5 border-b border-border">
-                    <span className="font-display text-xs font-bold uppercase tracking-wider text-graphite">
-                      Filter by Category
-                    </span>
-                    <button
-                      onClick={() => {
-                        setSelectedCategory("All Categories");
-                        setSelectedSubCategory(null);
-                        setCategoryMenuOpen(false);
-                      }}
-                      className="text-[0.68rem] font-bold text-brand-blue hover:underline cursor-pointer"
-                    >
-                      Show All Categories
-                    </button>
-                  </div>
-
-                  <div className="mt-3 space-y-4">
-                    {BRAND_CATALOGUE_TREE.map((bTree) => (
-                      <div key={bTree.brand} className="space-y-1.5">
-                        <div className="flex items-center gap-2 text-xs font-extrabold text-graphite uppercase tracking-wide">
-                          <span
-                            className={`h-2 w-2 rounded-full ${
-                              bTree.brand === "Amphenol"
-                                ? "bg-[#004f9e]"
-                                : bTree.brand === "Zolex"
-                                ? "bg-brand-blue"
-                                : "bg-brand-yellow"
-                            }`}
-                          />
-                          <span>{bTree.brand}</span>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pl-4">
-                          {bTree.categories.map((cat) => {
-                            const isCatActive =
-                              selectedCategory === cat.name && selectedBrand === bTree.brand;
-                            const count = PRODUCTS.filter(
-                              (p) => p.brand === bTree.brand && p.category === cat.name
-                            ).length;
-
-                            return (
-                              <button
-                                key={cat.name}
-                                onClick={() => {
-                                  setSelectedBrand(bTree.brand);
-                                  setSelectedCategory(cat.name);
-                                  setSelectedSubCategory(null);
-                                  setCategoryMenuOpen(false);
-                                }}
-                                className={`flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs text-left transition-colors cursor-pointer ${
-                                  isCatActive
-                                    ? "bg-brand-blue text-white font-bold"
-                                    : "text-graphite/80 hover:bg-steel-light hover:text-graphite"
-                                }`}
-                              >
-                                <span className="truncate">{cat.name}</span>
-                                <span
-                                  className={`text-[0.62rem] rounded-full px-1.5 py-0.2 ${
-                                    isCatActive
-                                      ? "bg-white/20 text-white"
-                                      : "bg-steel-light text-muted-foreground"
-                                  }`}
-                                >
-                                  {count}
-                                </span>
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+              </div>
+              <h1 className="mt-3 font-display text-3xl sm:text-4xl font-extrabold text-graphite tracking-tight">
+                Industrial Components &amp; Assemblies
+              </h1>
+              <p className="mt-2 text-sm text-muted-foreground max-w-2xl">
+                Authorized lines for Amphenol connectors &amp; antennas, Zolex copper lugs &amp; cable ties, plus Qualitech custom military &amp; OEM wire harnesses.
+              </p>
             </div>
 
-            {/* 2. Brand Dropdown Menu */}
-            <div className="relative" onClick={(e) => e.stopPropagation()}>
-              <button
-                type="button"
-                onClick={() => {
-                  setBrandMenuOpen(!brandMenuOpen);
-                  setCategoryMenuOpen(false);
-                }}
-                className={`inline-flex items-center gap-1.5 rounded-xl border px-3.5 py-2 text-xs font-bold transition-all cursor-pointer ${
-                  selectedBrand !== "All Brands"
-                    ? "bg-graphite text-white border-graphite shadow-xs"
-                    : "border-border bg-white text-graphite hover:bg-steel-light/70"
-                }`}
-              >
-                <span>Brand: {selectedBrand} ▾</span>
-              </button>
-
-              {brandMenuOpen && (
-                <div className="absolute left-0 mt-2 w-48 rounded-xl border border-border bg-white p-2 shadow-xl z-50 animate-in fade-in slide-in-from-top-2 duration-150 space-y-1">
-                  {BRANDS.map((b) => (
-                    <button
-                      key={b}
-                      onClick={() => {
-                        setSelectedBrand(b);
-                        setSelectedCategory("All Categories");
-                        setSelectedSubCategory(null);
-                        setBrandMenuOpen(false);
-                      }}
-                      className={`block w-full text-left rounded-lg px-3 py-1.5 text-xs font-semibold cursor-pointer ${
-                        selectedBrand === b
-                          ? "bg-graphite text-white"
-                          : "text-graphite hover:bg-steel-light"
-                      }`}
-                    >
-                      {b}
-                    </button>
-                  ))}
-                </div>
-              )}
+            {/* Live Store Stats Card */}
+            <div className="flex items-center gap-4 rounded-2xl border border-border bg-white p-3.5 shadow-xs">
+              <div className="text-center px-2">
+                <span className="block font-display text-lg font-bold text-brand-blue">
+                  {products.length}+
+                </span>
+                <span className="text-[0.62rem] font-bold uppercase text-muted-foreground">Products</span>
+              </div>
+              <div className="h-8 w-px bg-border" />
+              <div className="text-center px-2">
+                <span className="block font-display text-lg font-bold text-emerald-600">
+                  {products.filter((p) => p.inStock).length}
+                </span>
+                <span className="text-[0.62rem] font-bold uppercase text-muted-foreground">In Stock</span>
+              </div>
+              <div className="h-8 w-px bg-border" />
+              <div className="text-center px-2">
+                <span className="block font-display text-lg font-bold text-graphite">100%</span>
+                <span className="text-[0.62rem] font-bold uppercase text-muted-foreground">QC Verified</span>
+              </div>
             </div>
-
-            {/* 3. Industry Dropdown Selector */}
-            <select
-              value={selectedIndustry || ""}
-              onChange={(e) => setSelectedIndustry(e.target.value || null)}
-              className="rounded-xl border border-border bg-white px-3 py-2 text-xs font-semibold text-graphite focus:outline-none focus:ring-1 focus:ring-brand-blue cursor-pointer"
-            >
-              <option value="">All Industries</option>
-              {ALL_INDUSTRIES.map((ind) => (
-                <option key={ind} value={ind}>
-                  {ind}
-                </option>
-              ))}
-            </select>
-
-            {/* Clear Filters Button if active */}
-            {activeFiltersCount > 0 && (
-              <button
-                onClick={clearAllFilters}
-                className="rounded-xl border border-red-200 bg-red-50 text-red-700 px-3 py-2 text-xs font-bold hover:bg-red-100 transition-colors cursor-pointer"
-              >
-                Reset ({activeFiltersCount}) ✕
-              </button>
-            )}
           </div>
 
-          {/* Search Bar & Per Page / Sort Controls */}
-          <div className="flex items-center gap-2.5 w-full md:w-auto">
-            <div className="relative flex-1 md:w-64">
+          {/* Search & Brand Fast Bar */}
+          <div className="mt-8 flex flex-col sm:flex-row gap-3 items-center justify-between">
+            {/* Search Input */}
+            <div className="relative w-full sm:max-w-md">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search SKU, connector, harness, lug, pin..."
+                className="w-full rounded-xl border border-border bg-white py-2.5 pl-10 pr-4 text-xs text-graphite shadow-2xs placeholder:text-muted-foreground focus:border-brand-blue focus:outline-hidden"
+              />
               <svg
-                className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground"
+                className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -418,279 +224,471 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
               >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search products or keywords..."
-                className="w-full rounded-xl border border-border bg-[#fafbfc] py-1.5 pl-8 pr-8 text-xs text-graphite placeholder:text-muted-foreground/60 focus:border-brand-blue focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-blue/15"
-              />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery("")}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted-foreground hover:text-foreground cursor-pointer"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground text-xs"
                 >
                   ✕
                 </button>
               )}
             </div>
 
-            {/* Per Page Selector */}
-            <select
-              value={pageSize}
-              onChange={(e) => setPageSize(Number(e.target.value))}
-              className="rounded-xl border border-border bg-white px-2.5 py-1.5 text-xs font-semibold text-graphite focus:outline-none cursor-pointer shrink-0"
-              title="Items per page"
-            >
-              <option value={30}>30 / page</option>
-              <option value={60}>60 / page</option>
-              <option value={100}>100 / page</option>
-              <option value={500}>All items</option>
-            </select>
-
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
-              className="rounded-xl border border-border bg-white px-2.5 py-1.5 text-xs font-semibold text-graphite focus:outline-none cursor-pointer shrink-0"
-            >
-              <option value="featured">Featured</option>
-              <option value="name">A–Z</option>
-            </select>
+            {/* Brand Pills */}
+            <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+              {BRANDS.map((brand) => (
+                <button
+                  key={brand}
+                  onClick={() => {
+                    setSelectedBrand(brand);
+                    setSelectedCategory("All Categories");
+                    setSelectedSubCategory(null);
+                  }}
+                  className={`rounded-xl px-4 py-2 font-display text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                    selectedBrand === brand
+                      ? "bg-brand-blue text-white shadow-xs"
+                      : "border border-border bg-white text-muted-foreground hover:border-brand-blue hover:text-graphite"
+                  }`}
+                >
+                  {brand}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
+      </section>
 
-        {/* Active Filter Badges Bar */}
-        {(selectedBrand !== "All Brands" || selectedCategory !== "All Categories" || selectedSubCategory || selectedIndustry) && (
-          <div className="max-w-7xl mx-auto mt-2.5 pt-2 border-t border-border/60 flex flex-wrap items-center gap-2 text-xs">
-            <span className="text-muted-foreground text-[0.72rem] font-semibold">Filtered by:</span>
-            {selectedBrand !== "All Brands" && (
-              <span className="inline-flex items-center gap-1 rounded-md bg-graphite text-white px-2.5 py-0.5 text-[0.68rem] font-bold">
-                Brand: {selectedBrand}
-                <button onClick={() => setSelectedBrand("All Brands")} className="hover:text-red-300 ml-1 cursor-pointer">✕</button>
-              </span>
-            )}
-            {selectedCategory !== "All Categories" && (
-              <span className="inline-flex items-center gap-1 rounded-md bg-brand-blue text-white px-2.5 py-0.5 text-[0.68rem] font-bold">
-                Category: {selectedCategory}
-                <button onClick={() => setSelectedCategory("All Categories")} className="hover:text-red-300 ml-1 cursor-pointer">✕</button>
-              </span>
-            )}
-            {selectedSubCategory && (
-              <span className="inline-flex items-center gap-1 rounded-md bg-brand-blue/15 text-brand-blue border border-brand-blue/30 px-2.5 py-0.5 text-[0.68rem] font-bold">
-                Sub: {selectedSubCategory}
-                <button onClick={() => setSelectedSubCategory(null)} className="hover:text-red-600 ml-1 cursor-pointer">✕</button>
-              </span>
-            )}
-            {selectedIndustry && (
-              <span className="inline-flex items-center gap-1 rounded-md bg-steel-light text-graphite px-2.5 py-0.5 text-[0.68rem] font-bold">
-                Industry: {selectedIndustry}
-                <button onClick={() => setSelectedIndustry(null)} className="hover:text-red-600 ml-1 cursor-pointer">✕</button>
-              </span>
-            )}
-            <span className="text-muted-foreground text-[0.72rem] ml-auto">
-              Showing <strong>{startIndex + 1}–{Math.min(startIndex + pageSize, filteredProducts.length)}</strong> of <strong>{filteredProducts.length}</strong> items
-            </span>
-          </div>
-        )}
-      </div>
-
-      {/* ─── FULL-WIDTH PRODUCT DIRECTORY GRID ─── */}
-      <main className="flex-1 max-w-7xl mx-auto w-full p-4 sm:p-6 lg:p-8 flex flex-col justify-between">
-        {filteredProducts.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-border bg-white p-12 text-center my-12">
-            <h3 className="font-display text-base font-bold text-graphite">No products found</h3>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Try adjusting your search terms or clearing your category filters.
-            </p>
-            <button
-              onClick={clearAllFilters}
-              className="mt-4 rounded-xl bg-graphite px-5 py-2.5 text-xs font-bold text-white hover:bg-brand-blue cursor-pointer transition-colors"
-            >
-              Show All Products
-            </button>
-          </div>
-        ) : (
-          <div>
-            {/* Top result counter when no active filter tags bar */}
-            {selectedBrand === "All Brands" && selectedCategory === "All Categories" && !selectedSubCategory && !selectedIndustry && (
-              <div className="mb-4 flex items-center justify-between text-xs text-muted-foreground">
-                <span>
-                  Showing <strong>{startIndex + 1}–{Math.min(startIndex + pageSize, filteredProducts.length)}</strong> of <strong>{filteredProducts.length}</strong> products
-                </span>
-                <span>
-                  Page <strong>{page}</strong> of <strong>{totalPages}</strong>
-                </span>
-              </div>
-            )}
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6">
-              {paginatedProducts.map((product) => {
-                const isAmphenol = product.brand === "Amphenol";
-                const isZolex = product.brand === "Zolex";
-
-                return (
-                  <div
-                    key={product.id}
-                    onClick={() => handleProductClick(product)}
-                    className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-2xs transition-all duration-300 hover:-translate-y-1.5 hover:border-brand-blue/50 hover:shadow-lg cursor-pointer"
-                  >
-                    {/* Product Image Box */}
-                    <div className="relative h-48 w-full overflow-hidden bg-steel-light/40 p-5 flex items-center justify-center border-b border-border/60">
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        loading="lazy"
-                        className="h-full w-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
-                      />
-
-                      {/* Brand Pill */}
-                      <span
-                        className={`absolute left-3.5 top-3.5 rounded-full px-2.5 py-0.5 text-[0.62rem] font-extrabold uppercase tracking-wider shadow-2xs ${
-                          isAmphenol
-                            ? "bg-[#004f9e] text-white"
-                            : isZolex
-                            ? "bg-brand-blue text-white"
-                            : "bg-brand-yellow text-graphite"
-                        }`}
-                      >
-                        {product.brand}
-                      </span>
-
-                      {product.featured && (
-                        <span className="absolute right-3.5 top-3.5 rounded-full bg-graphite/85 text-white px-2 py-0.5 text-[0.6rem] font-bold uppercase tracking-wider">
-                          Featured
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Product Content */}
-                    <div className="flex flex-1 flex-col p-4 sm:p-5">
-                      {/* Category Label */}
-                      <div className="flex items-center gap-1.5 text-[0.68rem] font-semibold text-muted-foreground mb-1">
-                        <span className="text-brand-blue font-bold truncate">{product.category}</span>
-                        {product.subCategory && (
-                          <>
-                            <span>·</span>
-                            <span className="truncate">{product.subCategory}</span>
-                          </>
-                        )}
-                      </div>
-
-                      {/* Title */}
-                      <h3
-                        className="font-display text-sm font-bold text-graphite group-hover:text-brand-blue transition-colors line-clamp-2"
-                        title={product.name}
-                      >
-                        {product.name}
-                      </h3>
-
-                      {/* Short Description */}
-                      <p className="mt-2 text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-                        {product.description}
-                      </p>
-
-                      {/* Direct External Action CTA Button */}
-                      <div className="mt-auto pt-4 border-t border-border/80">
-                        {product.externalUrl ? (
-                          <div
-                            className={`w-full inline-flex items-center justify-center gap-1.5 rounded-xl px-3.5 py-2.5 font-display text-[0.72rem] sm:text-xs font-bold uppercase tracking-wider text-white shadow-xs transition-all group-hover:bg-graphite ${
-                              isAmphenol ? "bg-[#004f9e]" : "bg-brand-blue"
-                            }`}
-                          >
-                            <span>View on {product.brand}</span>
-                            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                            </svg>
-                          </div>
-                        ) : (
-                          <div
-                            className="w-full inline-flex items-center justify-center gap-1.5 rounded-xl bg-graphite px-3.5 py-2.5 font-display text-[0.72rem] sm:text-xs font-bold uppercase tracking-wider text-white shadow-xs transition-all group-hover:bg-brand-blue"
-                          >
-                            <span>Enquire with Qualitech</span>
-                            <span>→</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+      {/* Main Catalog Section */}
+      <section className="mx-auto max-w-7xl px-5 sm:px-8 py-8" ref={gridTopRef}>
+        <div className="grid gap-8 lg:grid-cols-[260px_1fr]">
+          {/* Left Sidebar Filters (Desktop) */}
+          <div className="hidden lg:block space-y-6">
+            <div className="flex items-center justify-between border-b border-border pb-3">
+              <h3 className="font-display text-xs font-bold uppercase tracking-wider text-graphite">
+                Filters &amp; Refinements {activeFiltersCount > 0 && `(${activeFiltersCount})`}
+              </h3>
+              {activeFiltersCount > 0 && (
+                <button
+                  onClick={clearAllFilters}
+                  className="text-[0.68rem] font-bold text-brand-blue hover:underline cursor-pointer"
+                >
+                  Reset All
+                </button>
+              )}
             </div>
 
-            {/* ─── PAGINATION BAR ─── */}
-            {totalPages > 1 && (
-              <div className="mt-10 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="text-xs text-muted-foreground">
-                  Showing <strong>{startIndex + 1}</strong> to <strong>{Math.min(startIndex + pageSize, filteredProducts.length)}</strong> of <strong>{filteredProducts.length}</strong> products
+            {/* Categories */}
+            <div>
+              <p className="text-[0.65rem] font-bold uppercase tracking-wider text-muted-foreground mb-2">
+                Categories
+              </p>
+              <div className="space-y-1">
+                <button
+                  onClick={() => {
+                    setSelectedCategory("All Categories");
+                    setSelectedSubCategory(null);
+                  }}
+                  className={`flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-xs text-left transition-colors cursor-pointer ${
+                    selectedCategory === "All Categories"
+                      ? "bg-brand-blue/10 font-bold text-brand-blue"
+                      : "text-muted-foreground hover:bg-steel-light/40 hover:text-foreground"
+                  }`}
+                >
+                  <span>All Categories</span>
+                  <span>{products.length}</span>
+                </button>
+                {availableCategories.map((cat) => {
+                  const count = products.filter(
+                    (p) => (selectedBrand === "All Brands" || p.brand === selectedBrand) && p.category === cat
+                  ).length;
+                  return (
+                    <button
+                      key={cat}
+                      onClick={() => {
+                        setSelectedCategory(cat);
+                        setSelectedSubCategory(null);
+                      }}
+                      className={`flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-xs text-left transition-colors cursor-pointer ${
+                        selectedCategory === cat
+                          ? "bg-brand-blue/10 font-bold text-brand-blue"
+                          : "text-muted-foreground hover:bg-steel-light/40 hover:text-foreground"
+                      }`}
+                    >
+                      <span className="line-clamp-1">{cat}</span>
+                      <span className="text-[0.65rem] opacity-70">({count})</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Price Range Slider */}
+            <div className="border-t border-border pt-4">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-[0.65rem] font-bold uppercase tracking-wider text-muted-foreground">
+                  Price Limit (Max)
+                </p>
+                <span className="font-mono text-xs font-bold text-brand-blue">
+                  {formatINR(maxPrice)}
+                </span>
+              </div>
+              <input
+                type="range"
+                min="500"
+                max="30000"
+                step="500"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(parseInt(e.target.value, 10))}
+                className="w-full accent-brand-blue cursor-pointer"
+              />
+              <div className="flex justify-between text-[0.65rem] text-muted-foreground mt-1">
+                <span>₹500</span>
+                <span>₹30,000+</span>
+              </div>
+            </div>
+
+            {/* Stock Availability Toggle */}
+            <div className="border-t border-border pt-4">
+              <label className="flex items-center gap-2 text-xs font-semibold text-graphite cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={inStockOnly}
+                  onChange={(e) => setInStockOnly(e.target.checked)}
+                  className="rounded text-brand-blue focus:ring-brand-blue h-4 w-4"
+                />
+                <span>In-Stock Items Only</span>
+              </label>
+            </div>
+
+            {/* Target Industry Filter */}
+            <div className="border-t border-border pt-4">
+              <p className="text-[0.65rem] font-bold uppercase tracking-wider text-muted-foreground mb-2">
+                Industry Applications
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {ALL_INDUSTRIES.map((ind) => (
+                  <button
+                    key={ind}
+                    onClick={() => setSelectedIndustry(selectedIndustry === ind ? null : ind)}
+                    className={`rounded-lg px-2 py-1 text-[0.68rem] font-semibold transition-colors cursor-pointer border ${
+                      selectedIndustry === ind
+                        ? "border-brand-blue bg-brand-blue text-white"
+                        : "border-border bg-white text-muted-foreground hover:border-brand-blue"
+                    }`}
+                  >
+                    {ind}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Product Grid */}
+          <div>
+            {/* Top Bar with Sort & View Toggle */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-border pb-4 mb-6">
+              <div className="flex items-center gap-2">
+                <p className="text-xs text-muted-foreground">
+                  Showing <strong className="text-graphite">{filteredProducts.length}</strong> components
+                </p>
+                {selectedIndustry && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-[0.65rem] font-bold text-brand-blue">
+                    Industry: {selectedIndustry}
+                    <button onClick={() => setSelectedIndustry(null)}>✕</button>
+                  </span>
+                )}
+              </div>
+
+              <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+                {/* Sort Dropdown */}
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <span>Sort by:</span>
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value as any)}
+                    className="rounded-lg border border-border bg-white px-2.5 py-1.5 text-xs font-semibold text-graphite focus:border-brand-blue focus:outline-hidden"
+                  >
+                    <option value="featured">Featured First</option>
+                    <option value="price-asc">Price: Low to High</option>
+                    <option value="price-desc">Price: High to Low</option>
+                    <option value="sku">SKU / Part Number</option>
+                    <option value="name">Name: A to Z</option>
+                  </select>
                 </div>
 
-                <div className="flex items-center gap-1.5">
-                  {/* Previous Page Button */}
+                {/* View Mode Toggle */}
+                <div className="flex items-center rounded-lg border border-border bg-white p-0.5">
                   <button
-                    type="button"
-                    onClick={() => handlePageChange(page - 1)}
-                    disabled={page === 1}
-                    className="inline-flex items-center gap-1 rounded-xl border border-border bg-white px-3 py-2 text-xs font-bold text-graphite transition-all hover:bg-steel-light disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-2xs"
+                    onClick={() => setViewMode("grid")}
+                    className={`rounded p-1.5 transition-colors cursor-pointer ${
+                      viewMode === "grid" ? "bg-brand-blue text-white" : "text-muted-foreground hover:text-foreground"
+                    }`}
+                    title="Grid View"
                   >
-                    <span>←</span>
-                    <span className="hidden sm:inline">Previous</span>
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    </svg>
                   </button>
-
-                  {/* Page Numbers */}
-                  <div className="flex items-center gap-1">
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => {
-                      // Show first, last, and pages around current page
-                      if (
-                        pageNum === 1 ||
-                        pageNum === totalPages ||
-                        (pageNum >= page - 1 && pageNum <= page + 1)
-                      ) {
-                        const isActive = page === pageNum;
-                        return (
-                          <button
-                            key={pageNum}
-                            type="button"
-                            onClick={() => handlePageChange(pageNum)}
-                            className={`min-w-9 h-9 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                              isActive
-                                ? "bg-brand-blue text-white shadow-sm font-black"
-                                : "border border-border bg-white text-graphite hover:bg-steel-light"
-                            }`}
-                          >
-                            {pageNum}
-                          </button>
-                        );
-                      }
-                      // Render ellipsis
-                      if (pageNum === page - 2 || pageNum === page + 2) {
-                        return (
-                          <span key={pageNum} className="px-1 text-xs text-muted-foreground font-bold">
-                            ...
-                          </span>
-                        );
-                      }
-                      return null;
-                    })}
-                  </div>
-
-                  {/* Next Page Button */}
                   <button
-                    type="button"
-                    onClick={() => handlePageChange(page + 1)}
-                    disabled={page === totalPages}
-                    className="inline-flex items-center gap-1 rounded-xl border border-border bg-white px-3 py-2 text-xs font-bold text-graphite transition-all hover:bg-steel-light disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-2xs"
+                    onClick={() => setViewMode("list")}
+                    className={`rounded p-1.5 transition-colors cursor-pointer ${
+                      viewMode === "list" ? "bg-brand-blue text-white" : "text-muted-foreground hover:text-foreground"
+                    }`}
+                    title="List View"
                   >
-                    <span className="hidden sm:inline">Next</span>
-                    <span>→</span>
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
                   </button>
                 </div>
               </div>
+            </div>
+
+            {/* Product Listing */}
+            {paginatedProducts.length === 0 ? (
+              <div className="flex flex-col items-center justify-center text-center py-20 rounded-2xl border border-dashed border-border bg-steel-light/10">
+                <div className="h-16 w-16 flex items-center justify-center rounded-full bg-steel-light text-muted-foreground mb-3">
+                  🔍
+                </div>
+                <h3 className="font-display text-base font-bold text-graphite">No Matching Products Found</h3>
+                <p className="mt-1 text-xs text-muted-foreground max-w-sm">
+                  Try adjusting your keywords, price filter, or clear brand and industry tags to see all items.
+                </p>
+                <button
+                  onClick={clearAllFilters}
+                  className="mt-4 rounded-xl bg-brand-blue px-5 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-graphite transition-all cursor-pointer"
+                >
+                  Clear All Filters
+                </button>
+              </div>
+            ) : viewMode === "grid" ? (
+              /* GRID VIEW */
+              <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                {paginatedProducts.map((product) => {
+                  const price = getProductDefaultPrice(product);
+
+                  return (
+                    <div
+                      key={product.id}
+                      className="group relative flex flex-col justify-between rounded-2xl border border-border bg-white p-4 transition-all duration-300 hover:border-brand-blue/50 hover:shadow-md"
+                    >
+                      {/* Top Badges */}
+                      <div>
+                        <div className="relative aspect-4/3 overflow-hidden rounded-xl border border-border/60 bg-steel-light/20 p-2">
+                          <img
+                            src={product.image || "/logo.png"}
+                            alt={product.name}
+                            className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
+                          />
+                          {/* Brand badge */}
+                          <span
+                            className={`absolute top-2.5 left-2.5 rounded-full px-2 py-0.5 text-[0.6rem] font-extrabold uppercase tracking-wider shadow-2xs ${
+                              product.brand === "Amphenol"
+                                ? "bg-blue-600 text-white"
+                                : product.brand === "Zolex"
+                                ? "bg-emerald-600 text-white"
+                                : "bg-brand-yellow text-graphite"
+                            }`}
+                          >
+                            {product.brand}
+                          </span>
+
+                          {/* Stock Status Pill */}
+                          <span
+                            className={`absolute bottom-2 left-2 rounded-md px-1.5 py-0.5 text-[0.58rem] font-bold ${
+                              product.inStock
+                                ? "bg-emerald-100 text-emerald-800"
+                                : "bg-rose-100 text-rose-800"
+                            }`}
+                          >
+                            {product.inStock ? "● In Stock" : "○ Out of Stock"}
+                          </span>
+                        </div>
+
+                        {/* Title & SKU */}
+                        <div className="mt-3">
+                          <p className="font-mono text-[0.68rem] text-muted-foreground">
+                            {product.sku}
+                          </p>
+                          <h3
+                            onClick={() => openQuickView(product)}
+                            className="mt-0.5 font-display text-sm font-bold text-graphite line-clamp-2 hover:text-brand-blue transition-colors cursor-pointer leading-snug"
+                          >
+                            {product.name}
+                          </h3>
+                        </div>
+
+                        {/* Category & Lead Time */}
+                        <div className="mt-2 flex items-center justify-between text-[0.68rem] text-muted-foreground">
+                          <span className="line-clamp-1">{product.category}</span>
+                          <span className="text-emerald-700 font-medium">{product.leadTime || "24-48h dispatch"}</span>
+                        </div>
+                      </div>
+
+                      {/* Bottom Pricing & Actions */}
+                      <div className="mt-4 border-t border-border/70 pt-3">
+                        <div className="flex items-baseline justify-between mb-3">
+                          <div>
+                            <span className="text-[0.6rem] font-bold uppercase text-muted-foreground">
+                              Unit Price
+                            </span>
+                            <p className="font-display text-base font-extrabold text-brand-blue">
+                              {formatINR(price)}
+                            </p>
+                          </div>
+                          <span className="text-[0.65rem] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md font-bold">
+                            Volume Tier Avail.
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-2">
+                          <button
+                            onClick={() => openQuickView(product)}
+                            className="rounded-xl border border-border py-2 text-center text-xs font-bold text-graphite hover:border-brand-blue hover:text-brand-blue transition-colors cursor-pointer"
+                          >
+                            Quick View
+                          </button>
+                          <button
+                            onClick={() => addToCart(product, 1)}
+                            className="flex items-center justify-center gap-1.5 rounded-xl bg-graphite py-2 text-center text-xs font-bold uppercase tracking-wider text-white hover:bg-brand-blue transition-colors cursor-pointer shadow-2xs"
+                          >
+                            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                            </svg>
+                            <span>Add</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              /* LIST VIEW */
+              <div className="space-y-3">
+                {paginatedProducts.map((product) => {
+                  const price = getProductDefaultPrice(product);
+
+                  return (
+                    <div
+                      key={product.id}
+                      className="flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl border border-border bg-white p-4 transition-all hover:border-brand-blue/50 hover:shadow-xs"
+                    >
+                      <div
+                        className="flex items-center gap-4 cursor-pointer flex-1 w-full"
+                        onClick={() => openQuickView(product)}
+                      >
+                        <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl border border-border/80 bg-steel-light/20 p-1.5">
+                          <img
+                            src={product.image || "/logo.png"}
+                            alt={product.name}
+                            className="h-full w-full object-contain"
+                          />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="rounded-md bg-steel-light px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider text-graphite">
+                              {product.brand}
+                            </span>
+                            <span className="font-mono text-xs text-muted-foreground">{product.sku}</span>
+                          </div>
+                          <h3 className="font-display text-sm font-bold text-graphite hover:text-brand-blue transition-colors mt-0.5">
+                            {product.name}
+                          </h3>
+                          <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">
+                            {product.description}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto border-t sm:border-t-0 border-border/60 pt-3 sm:pt-0">
+                        <div className="text-right">
+                          <span className="text-[0.62rem] font-bold uppercase text-muted-foreground">
+                            Unit Price
+                          </span>
+                          <p className="font-display text-base font-extrabold text-brand-blue">
+                            {formatINR(price)}
+                          </p>
+                          <span className="text-[0.65rem] text-muted-foreground">Excl. 18% GST</span>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => openQuickView(product)}
+                            className="rounded-xl border border-border px-3.5 py-2 text-xs font-bold text-graphite hover:bg-steel-light transition-colors cursor-pointer"
+                          >
+                            Details
+                          </button>
+                          <button
+                            onClick={() => addToCart(product, 1)}
+                            className="rounded-xl bg-brand-blue px-4 py-2 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-graphite transition-all cursor-pointer shadow-xs"
+                          >
+                            + Cart
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="mt-10 flex items-center justify-between border-t border-border pt-6">
+                <button
+                  disabled={page === 1}
+                  onClick={() => handlePageChange(page - 1)}
+                  className="rounded-xl border border-border px-4 py-2 text-xs font-bold text-graphite disabled:opacity-30 hover:bg-steel-light transition-colors cursor-pointer"
+                >
+                  ← Previous
+                </button>
+
+                <div className="flex items-center gap-1.5 text-xs font-bold text-graphite">
+                  <span>Page</span>
+                  <span className="rounded-lg bg-brand-blue px-2.5 py-1 text-white">{page}</span>
+                  <span>of {totalPages}</span>
+                </div>
+
+                <button
+                  disabled={page === totalPages}
+                  onClick={() => handlePageChange(page + 1)}
+                  className="rounded-xl border border-border px-4 py-2 text-xs font-bold text-graphite disabled:opacity-30 hover:bg-steel-light transition-colors cursor-pointer"
+                >
+                  Next →
+                </button>
+              </div>
             )}
           </div>
-        )}
-      </main>
+        </div>
+      </section>
 
-      {/* ─── Footer ─── */}
+      {/* Floating Cart Indicator */}
+      {cartCount > 0 && (
+        <aside
+          aria-label="Floating cart summary"
+          className="fixed bottom-6 right-6 z-40 animate-in fade-in slide-in-from-bottom-4 duration-300"
+        >
+          <button
+            onClick={openCart}
+            className="flex items-center gap-3 rounded-2xl bg-graphite-deep px-5 py-3.5 text-white shadow-2xl hover:bg-brand-blue transition-all cursor-pointer ring-2 ring-white"
+          >
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-brand-yellow text-graphite font-bold text-xs">
+              {cartCount}
+            </div>
+            <div className="text-left">
+              <span className="block text-[0.65rem] font-bold uppercase tracking-wider text-white/80">
+                Procurement Cart
+              </span>
+              <span className="block font-mono text-sm font-bold text-white">
+                {formatINR(cartTotal)}
+              </span>
+            </div>
+            <span className="text-xs">→</span>
+          </button>
+        </aside>
+      )}
+
       <Footer onNavigate={onNavigateHome} />
     </div>
   );

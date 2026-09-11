@@ -433,11 +433,10 @@ export function ZolexPage({ onNavigate }: ZolexPageProps) {
                   <button
                     key={sec.id}
                     onClick={() => setOpenSection(sec.id)}
-                    className={`rounded-xl px-4 py-2 text-xs font-semibold transition-all cursor-pointer ${
-                      openSection === sec.id
+                    className={`rounded-xl px-4 py-2 text-xs font-semibold transition-all cursor-pointer ${openSection === sec.id
                         ? "bg-brand-blue text-white shadow-xs font-bold"
                         : "border border-border bg-steel-light/60 text-graphite hover:bg-white"
-                    }`}
+                      }`}
                   >
                     {sec.name}
                   </button>
@@ -534,10 +533,10 @@ export function ZolexPage({ onNavigate }: ZolexPageProps) {
               Request Zolex Quote →
             </button>
             <a
-              href="tel:+919849001484"
+              href="tel:+914027140004"
               className="rounded-xl border border-border bg-white px-6 py-3.5 font-display text-xs font-bold uppercase tracking-wider text-graphite hover:bg-steel-light transition-colors cursor-pointer"
             >
-              Call +91 98490 01484
+              Call +91 40 2714 0004
             </a>
           </div>
         </div>

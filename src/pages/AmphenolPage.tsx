@@ -212,8 +212,8 @@ export function AmphenolPage({ onNavigate }: AmphenolPageProps) {
             <div className="mt-5 flex items-center gap-4">
               <div className="rounded-2xl bg-white p-3 shadow-md inline-block">
                 <svg className="h-10 w-10 text-[#004f9e]" viewBox="0 0 32 32" fill="currentColor">
-                  <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" strokeWidth="2"/>
-                  <path d="M8 16c2-6 6-6 8 0s6 6 8 0" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+                  <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" strokeWidth="2" />
+                  <path d="M8 16c2-6 6-6 8 0s6 6 8 0" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
                 </svg>
               </div>
               <h1 className="font-display text-3xl font-extrabold text-white sm:text-4xl lg:text-5xl">
@@ -262,11 +262,10 @@ export function AmphenolPage({ onNavigate }: AmphenolPageProps) {
                   <button
                     key={sec.id}
                     onClick={() => setOpenSection(sec.id)}
-                    className={`rounded-xl px-4 py-2 text-xs font-semibold transition-all cursor-pointer ${
-                      openSection === sec.id
+                    className={`rounded-xl px-4 py-2 text-xs font-semibold transition-all cursor-pointer ${openSection === sec.id
                         ? "bg-[#004f9e] text-white shadow-xs font-bold"
                         : "border border-border bg-steel-light/60 text-graphite hover:bg-white"
-                    }`}
+                      }`}
                   >
                     {sec.name}
                   </button>
@@ -359,10 +358,10 @@ export function AmphenolPage({ onNavigate }: AmphenolPageProps) {
               Request Amphenol Quote →
             </button>
             <a
-              href="tel:+919849001484"
+              href="tel:+914027140004"
               className="rounded-xl border border-border bg-white px-6 py-3.5 font-display text-xs font-bold uppercase tracking-wider text-graphite hover:bg-steel-light transition-colors cursor-pointer"
             >
-              Call +91 98490 01484
+              Call +91 40 2714 0004
             </a>
           </div>
         </div>
