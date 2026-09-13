@@ -164,7 +164,7 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
 
       {/* Hero Header */}
       <section className="relative overflow-hidden bg-gradient-to-b from-steel-light/60 via-background to-background pt-32 pb-10 sm:pt-36 sm:pb-12 border-b border-border/80">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
               <div className="flex items-center gap-2">
@@ -281,8 +281,8 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
       </section>
 
       {/* Main Catalog Section */}
-      <section className="mx-auto max-w-7xl px-5 sm:px-8 py-8" ref={gridTopRef}>
-        <div className="grid gap-8 lg:grid-cols-[260px_1fr]">
+      <section className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 py-8" ref={gridTopRef}>
+        <div className="grid gap-8 lg:grid-cols-[280px_1fr]">
           {/* Left Sidebar Filters (Desktop) */}
           <div className="hidden lg:block space-y-6">
             <div className="flex items-center justify-between border-b border-border pb-3">
@@ -494,7 +494,7 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
               </div>
             ) : viewMode === "grid" ? (
               /* GRID VIEW */
-              <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="grid gap-5 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
                 {paginatedProducts.map((product) => {
                   const price = getProductDefaultPrice(product);
 

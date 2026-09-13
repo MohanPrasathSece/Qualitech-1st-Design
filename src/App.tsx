@@ -701,7 +701,7 @@ function FinalCTA() {
               <span className="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
             </a>
             <a
-              href="tel:+914027140004"
+              href="tel:+919849001484"
               className="group inline-flex items-center justify-center gap-3 rounded-xl border border-graphite/20 px-7 py-4 font-display text-[0.72rem] font-bold uppercase tracking-[0.2em] text-graphite transition-all duration-300 hover:border-graphite hover:bg-graphite/5"
             >
               Contact Us
@@ -714,10 +714,10 @@ function FinalCTA() {
           <div className="border-t border-border pt-8 lg:border-l lg:border-t-0 lg:pl-12 lg:pt-0">
             <p className="label-eyebrow">Direct Line</p>
             <a
-              href="tel:+914027140004"
+              href="tel:+919849001484"
               className="mt-2 block font-display text-2xl font-bold text-graphite transition-colors duration-300 hover:text-brand-blue sm:text-3xl"
             >
-              +91-40-27140004
+              +91 98490 01484
             </a>
             <p className="label-eyebrow mt-6">Email</p>
             <a

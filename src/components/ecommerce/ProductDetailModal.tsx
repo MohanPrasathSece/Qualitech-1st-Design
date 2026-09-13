@@ -98,7 +98,7 @@ QUALITY & CERTIFICATION:
 
 Qualitech Connectronics Pvt Ltd
 Plot No. 37/B, Phase-V, IDA, Cherlapally, Hyderabad - 500051
-Email: info@qualitechindia.in | Tel: +91-40-27140004
+Email: info@qualitechindia.in | Tel: +91 98490 01484
 ==================================================`;
 
     const blob = new Blob([content], { type: "text/plain;charset=utf-8" });

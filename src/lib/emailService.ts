@@ -205,7 +205,7 @@ export async function sendOrderConfirmationEmail(order: Order): Promise<boolean>
         <div style="background-color: #f8fafc; padding: 20px 32px; border-top: 1px solid #e2e8f0; text-align: center; font-size: 12px; color: #64748b;">
           <p style="margin: 0;">Qualitech Connectronics Private Limited • Est. 1995</p>
           <p style="margin: 4px 0 0 0;">Cherlapally Industrial Area, Hyderabad, Telangana - 500051</p>
-          <p style="margin: 4px 0 0 0;">Direct Support: <a href="mailto:info@qualitechconnectronics.com" style="color: #004f9e;">info@qualitechconnectronics.com</a> | +91 40 2726 0142</p>
+          <p style="margin: 4px 0 0 0;">Direct Support: <a href="mailto:zyradigitalsofficial@gmail.com" style="color: #004f9e;">zyradigitalsofficial@gmail.com</a> | +91 98490 01484</p>
         </div>
       </div>
     </body>
@@ -445,7 +445,7 @@ export async function sendOrderStatusEmail(
         <!-- Footer -->
         <div style="background-color: #f8fafc; padding: 20px 32px; border-top: 1px solid #e2e8f0; text-align: center; font-size: 12px; color: #64748b;">
           <p style="margin: 0;">Qualitech Connectronics Pvt. Ltd. • IDA Cherlapally, Hyderabad - 500051</p>
-          <p style="margin: 4px 0 0 0;">Helpline: <a href="mailto:zyradigitalsofficial@gmail.com" style="color: #004f9e;">zyradigitalsofficial@gmail.com</a> | +91 40 2714 0004</p>
+          <p style="margin: 4px 0 0 0;">Helpline: <a href="mailto:zyradigitalsofficial@gmail.com" style="color: #004f9e;">zyradigitalsofficial@gmail.com</a> | +91 98490 01484</p>
         </div>
       </div>
     </body>

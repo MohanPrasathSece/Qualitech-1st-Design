@@ -263,10 +263,10 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                         Direct Phone
                       </p>
                       <a
-                        href="tel:+917680043345"
+                        href="tel:+919849001484"
                         className="mt-1 block font-display text-lg font-bold text-graphite hover:text-brand-blue transition-colors"
                       >
-                        +91 76800 43345
+                        +91 98490 01484
                       </a>
                     </div>
 
