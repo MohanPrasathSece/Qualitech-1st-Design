@@ -195,10 +195,10 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                         onChange={(e) => setFormData({ ...formData, interest: e.target.value })}
                         className="w-full rounded-xl border border-border bg-white px-3.5 py-2.5 text-xs sm:text-sm text-graphite focus:border-brand-blue focus:outline-none"
                       >
-                        <option value="Custom Cable Assemblies">Manufacturing — Custom Cable Assemblies</option>
-                        <option value="Wire Harnesses">Manufacturing — Wire Harnesses</option>
-                        <option value="Amphenol Distribution">Distribution — Amphenol Components</option>
-                        <option value="Zolex Distribution">Distribution — Zolex Components</option>
+                        <option value="Custom Cable Assemblies">Manufacturing - Custom Cable Assemblies</option>
+                        <option value="Wire Harnesses">Manufacturing - Wire Harnesses</option>
+                        <option value="Amphenol Distribution">Distribution - Amphenol Components</option>
+                        <option value="Zolex Distribution">Distribution - Zolex Components</option>
                         <option value="OEM Turnkey Solution">Turnkey OEM Project Enquiry</option>
                         <option value="General Enquiry">General / Other Enquiries</option>
                       </select>
@@ -254,7 +254,7 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                     <p className="font-semibold text-graphite">Manufacturing Unit:</p>
                     <p>Plot No. 37/B, Phase-V, IDA, Cherlapally,</p>
                     <p>Hyderabad, Medchal-Malkajgiri,</p>
-                    <p>Telangana – 500051, India</p>
+                    <p>Telangana - 500051, India</p>
                   </div>
 
                   <div className="mt-6 border-t border-border pt-6 space-y-4">

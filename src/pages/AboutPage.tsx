@@ -36,7 +36,7 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
               Precision Engineering &amp; Component Distribution Since 1995
             </h1>
             <p className="mt-5 max-w-2xl text-[0.95rem] leading-relaxed text-steel">
-              For three decades, Qualitech Connectronics Private Limited has been a trusted partner to OEMs across India — delivering high-precision custom cable assemblies and authorized distribution of world-class electronics components.
+              For three decades, Qualitech Connectronics Private Limited has been a trusted partner to OEMs across India - delivering high-precision custom cable assemblies and authorized distribution of world-class electronics components.
             </p>
           </Reveal>
         </div>

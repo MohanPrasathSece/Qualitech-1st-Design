@@ -344,7 +344,7 @@ export function ZolexPage({ onNavigate }: ZolexPageProps) {
               </div>
             </div>
             <p className="mt-5 max-w-2xl text-[0.95rem] leading-relaxed text-steel">
-              Qualitech Connectronics is an authorized distribution partner for Zolex (Zeeta Electrical Engineering Pvt. Ltd.) in India. Explore Zolex's comprehensive range of electrical lugs, terminals, cable glands, and ties below — clicking any product takes you directly to the official Zolex product page.
+              Qualitech Connectronics is an authorized distribution partner for Zolex (Zeeta Electrical Engineering Pvt. Ltd.) in India. Explore Zolex's comprehensive range of electrical lugs, terminals, cable glands, and ties below - clicking any product takes you directly to the official Zolex product page.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
@@ -456,7 +456,7 @@ export function ZolexPage({ onNavigate }: ZolexPageProps) {
                     Zolex Series
                   </span>
                   <h3 className="mt-1 font-display text-2xl font-bold text-graphite">
-                    {sec.name} — {sec.tagline}
+                    {sec.name} - {sec.tagline}
                   </h3>
                   <p className="mt-2 text-xs sm:text-sm text-muted-foreground leading-relaxed max-w-3xl">
                     {sec.desc}

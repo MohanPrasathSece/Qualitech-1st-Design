@@ -220,7 +220,7 @@ export const BRANDS = ["All Brands", "Amphenol", "Zolex", "Qualitech"] as const;
 
 export const PRODUCTS: Product[] = [
   // ═════════════════════════════════════════════════════════════════
-  // 1. AMPHENOL — CONNECTORS
+  // 1. AMPHENOL - CONNECTORS
   // ═════════════════════════════════════════════════════════════════
   // Board to Board
   {
@@ -1005,12 +1005,12 @@ export const PRODUCTS: Product[] = [
   },
 
   // ═════════════════════════════════════════════════════════════════
-  // 2. AMPHENOL — CABLES
+  // 2. AMPHENOL - CABLES
   // ═════════════════════════════════════════════════════════════════
   {
     id: "amp-cab-aoc",
     sku: "AMP-CAB-AOC",
-    name: "Active Optical Cables (AOC) — 100G / 200G / 400G",
+    name: "Active Optical Cables (AOC) - 100G / 200G / 400G",
     brand: "Amphenol",
     category: "Cables",
     subCategory: "Active Optical Cables (AOC)",
@@ -1234,7 +1234,7 @@ export const PRODUCTS: Product[] = [
   {
     id: "amp-cab-dac",
     sku: "AMP-CAB-DAC",
-    name: "Direct Attach Copper Cables (DAC) — 25G / 100G / 400G",
+    name: "Direct Attach Copper Cables (DAC) - 25G / 100G / 400G",
     brand: "Amphenol",
     category: "Cables",
     subCategory: "Direct Attach Copper Cables (DAC)",
@@ -1281,7 +1281,7 @@ export const PRODUCTS: Product[] = [
   },
 
   // ═════════════════════════════════════════════════════════════════
-  // 3. AMPHENOL — FIBER OPTICS
+  // 3. AMPHENOL - FIBER OPTICS
   // ═════════════════════════════════════════════════════════════════
   {
     id: "amp-fo-qsfp28-transceiver",
@@ -1397,7 +1397,7 @@ export const PRODUCTS: Product[] = [
   },
 
   // ═════════════════════════════════════════════════════════════════
-  // 4. AMPHENOL — ANTENNAS
+  // 4. AMPHENOL - ANTENNAS
   // ═════════════════════════════════════════════════════════════════
   {
     id: "amp-ant-combo-multi",
@@ -1545,7 +1545,7 @@ export const PRODUCTS: Product[] = [
   },
 
   // ═════════════════════════════════════════════════════════════════
-  // 5. ZOLEX — CRIMP TERMINALS
+  // 5. ZOLEX - CRIMP TERMINALS
   // ═════════════════════════════════════════════════════════════════
   {
     id: "zol-term-nonins-ring",
@@ -1757,7 +1757,7 @@ export const PRODUCTS: Product[] = [
   },
 
   // ═════════════════════════════════════════════════════════════════
-  // 6. ZOLEX — COPPER CRIMPING TUBE LUGS & CONNECTORS
+  // 6. ZOLEX - COPPER CRIMPING TUBE LUGS & CONNECTORS
   // ═════════════════════════════════════════════════════════════════
   {
     id: "zol-lug-cu-1h-window",
@@ -2081,7 +2081,7 @@ export const PRODUCTS: Product[] = [
   },
 
   // ═════════════════════════════════════════════════════════════════
-  // 7. ZOLEX — ALUMINIUM LUGS & CONNECTORS
+  // 7. ZOLEX - ALUMINIUM LUGS & CONNECTORS
   // ═════════════════════════════════════════════════════════════════
   {
     id: "zol-lug-al-1h",
@@ -2181,7 +2181,7 @@ export const PRODUCTS: Product[] = [
   },
 
   // ═════════════════════════════════════════════════════════════════
-  // 8. ZOLEX — BIMETALLIC LUGS & CONNECTORS
+  // 8. ZOLEX - BIMETALLIC LUGS & CONNECTORS
   // ═════════════════════════════════════════════════════════════════
   {
     id: "zol-lug-bimetal-std",
@@ -2249,7 +2249,7 @@ export const PRODUCTS: Product[] = [
   },
 
   // ═════════════════════════════════════════════════════════════════
-  // 9. ZOLEX — SS CABLE TIES
+  // 9. ZOLEX - SS CABLE TIES
   // ═════════════════════════════════════════════════════════════════
   {
     id: "zol-tie-roller-coated",
@@ -2365,7 +2365,7 @@ export const PRODUCTS: Product[] = [
   },
 
   // ═════════════════════════════════════════════════════════════════
-  // 10. ZOLEX — CABLE GLANDS & ACCESSORIES
+  // 10. ZOLEX - CABLE GLANDS & ACCESSORIES
   // ═════════════════════════════════════════════════════════════════
   {
     id: "zol-gland-a2",
@@ -2609,7 +2609,7 @@ export const PRODUCTS: Product[] = [
   },
 
   // ═════════════════════════════════════════════════════════════════
-  // 11. ZOLEX — EARTHING ACCESSORIES
+  // 11. ZOLEX - EARTHING ACCESSORIES
   // ═════════════════════════════════════════════════════════════════
   {
     id: "zol-earth-rod-bonded-threaded",
@@ -2630,7 +2630,7 @@ export const PRODUCTS: Product[] = [
   {
     id: "zol-earth-rod-bonded-unthreaded",
     sku: "ZOL-EARTH-ROD-UNTHREAD",
-    name: "Copper Bonded Earth Rod – Unthreaded",
+    name: "Copper Bonded Earth Rod - Unthreaded",
     brand: "Zolex",
     category: "Earthing Accessories",
     subCategory: "Copper Bonded & Pure Copper Earth Rods",
@@ -2646,7 +2646,7 @@ export const PRODUCTS: Product[] = [
   {
     id: "zol-earth-rod-pure-copper",
     sku: "ZOL-EARTH-PURE-CU",
-    name: "Pure Copper Earth Rod – Internally Threaded",
+    name: "Pure Copper Earth Rod - Internally Threaded",
     brand: "Zolex",
     category: "Earthing Accessories",
     subCategory: "Copper Bonded & Pure Copper Earth Rods",
@@ -2710,7 +2710,7 @@ export const PRODUCTS: Product[] = [
   {
     id: "zol-earth-clamp-type-g",
     sku: "ZOL-EARTH-CLAMP-G",
-    name: "Rod To Cable Clamp – Type G & Type G With Extra Grip",
+    name: "Rod To Cable Clamp - Type G & Type G With Extra Grip",
     brand: "Zolex",
     category: "Earthing Accessories",
     subCategory: "Earth Clamps (Type A, Type G, Type C, Split Type B, U-Bolt)",
@@ -2726,7 +2726,7 @@ export const PRODUCTS: Product[] = [
   {
     id: "zol-earth-clamp-type-c-split-b",
     sku: "ZOL-EARTH-CLAMP-C-B",
-    name: "Rod To Cable Clamp – Type C & Split Connector Clamp Type B",
+    name: "Rod To Cable Clamp - Type C & Split Connector Clamp Type B",
     brand: "Zolex",
     category: "Earthing Accessories",
     subCategory: "Earth Clamps (Type A, Type G, Type C, Split Type B, U-Bolt)",
@@ -2742,7 +2742,7 @@ export const PRODUCTS: Product[] = [
   {
     id: "zol-earth-ubolt-clamps",
     sku: "ZOL-EARTH-UBOLT",
-    name: "U-Bolt Rod Clamps (Type E – Single Plate & Double Plate)",
+    name: "U-Bolt Rod Clamps (Type E - Single Plate & Double Plate)",
     brand: "Zolex",
     category: "Earthing Accessories",
     subCategory: "Earth Clamps (Type A, Type G, Type C, Split Type B, U-Bolt)",
@@ -2821,7 +2821,7 @@ export const PRODUCTS: Product[] = [
   },
 
   // ═════════════════════════════════════════════════════════════════
-  // 12. ZOLEX — TOOLS
+  // 12. ZOLEX - TOOLS
   // ═════════════════════════════════════════════════════════════════
   {
     id: "zol-tool-tiegun-auto",
@@ -2857,7 +2857,7 @@ export const PRODUCTS: Product[] = [
   },
 
   // ═════════════════════════════════════════════════════════════════
-  // 13. QUALITECH — CUSTOM CABLE ASSEMBLIES
+  // 13. QUALITECH - CUSTOM CABLE ASSEMBLIES
   // ═════════════════════════════════════════════════════════════════
   {
     id: "qt-harn-oem-custom",

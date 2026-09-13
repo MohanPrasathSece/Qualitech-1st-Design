@@ -169,7 +169,7 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
             Two Focused Business Areas
           </h2>
           <p className="mt-4 max-w-2xl text-[0.95rem] leading-relaxed text-muted-foreground">
-            Qualitech Connectronics operates in two core verticals — delivering both world-class electronics components and custom-engineered cable assembly solutions.
+            Qualitech Connectronics operates in two core verticals - delivering both world-class electronics components and custom-engineered cable assembly solutions.
           </p>
         </Reveal>
 
@@ -300,7 +300,7 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                   </div>
 
                   <p className="mt-5 text-[0.95rem] leading-relaxed text-muted-foreground">
-                    Custom wire and cable harness solutions — designed, manufactured and 100% tested to your exact OEM specifications.
+                    Custom wire and cable harness solutions - designed, manufactured and 100% tested to your exact OEM specifications.
                   </p>
 
                   <ul className="mt-5 space-y-2">
@@ -586,7 +586,7 @@ function ProductsOverview({ onNavigate }: ProductsOverviewProps) {
                 Solutions You Can Trust
               </h2>
               <p className="mt-3 max-w-2xl text-[0.95rem] leading-relaxed text-muted-foreground">
-                From globally trusted electronics component brands to custom-engineered cable assemblies — explore our complete product and service offerings.
+                From globally trusted electronics component brands to custom-engineered cable assemblies - explore our complete product and service offerings.
               </p>
             </div>
             <button
@@ -690,7 +690,7 @@ function FinalCTA() {
             Ready to Discuss Your Requirements?
           </h2>
           <p className="mt-4 max-w-lg text-[0.95rem] leading-relaxed text-muted-foreground">
-            Whether you need electronics components or a custom cable assembly solution — our team is here to help.
+            Whether you need electronics components or a custom cable assembly solution - our team is here to help.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
@@ -731,7 +731,7 @@ function FinalCTA() {
               <p className="font-semibold text-graphite">Qualitech Connectronics Private Limited</p>
               <p>Plot No. 37/B, Phase-V, IDA, Cherlapally,</p>
               <p>Hyderabad, Medchal-Malkajgiri,</p>
-              <p>Telangana – 500051</p>
+              <p>Telangana - 500051</p>
             </div>
           </div>
         </Reveal>

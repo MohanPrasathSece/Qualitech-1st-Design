@@ -215,7 +215,7 @@ export async function sendOrderConfirmationEmail(order: Order): Promise<boolean>
   // 1. Send confirmation to Customer
   const customerResult = await dispatchEmail({
     to: order.customer.email,
-    subject: `Order Confirmation #${order.orderNumber} — Qualitech Connectronics`,
+    subject: `Order Confirmation #${order.orderNumber} - Qualitech Connectronics`,
     html: customerHtml,
   });
 
@@ -275,7 +275,7 @@ export async function sendContactFormEmail(formData: ContactFormData): Promise<b
   // Acknowledge User
   const res = await dispatchEmail({
     to: formData.email,
-    subject: `We have received your inquiry: ${formData.subject} — Qualitech`,
+    subject: `We have received your inquiry: ${formData.subject} - Qualitech`,
     html: userAckHtml,
   });
 
@@ -320,7 +320,7 @@ export async function sendRFQQuoteEmail(rfq: RFQFormData): Promise<boolean> {
 
   const res = await dispatchEmail({
     to: rfq.email,
-    subject: `RFQ Received #${rfq.rfqNumber} — Qualitech Connectronics`,
+    subject: `RFQ Received #${rfq.rfqNumber} - Qualitech Connectronics`,
     html: userAckHtml,
   });
 
@@ -455,7 +455,7 @@ export async function sendOrderStatusEmail(
   // 1. Send status update to customer
   const customerResult = await dispatchEmail({
     to: order.customer.email,
-    subject: `[${status.toUpperCase()}] Order #${order.orderNumber} — Qualitech Connectronics`,
+    subject: `[${status.toUpperCase()}] Order #${order.orderNumber} - Qualitech Connectronics`,
     html: emailHtml,
   });
 

@@ -22,7 +22,7 @@ async function testSMTP() {
     const info = await transporter.sendMail({
       from: '"Qualitech Connectronics" <zyradigitalsofficial@gmail.com>',
       to: "zyradigitalsofficial@gmail.com",
-      subject: "Qualitech Connectronics — SMTP Mail Server Setup Verification",
+      subject: "Qualitech Connectronics - SMTP Mail Server Setup Verification",
       html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; color: #1e293b; background-color: #f8fafc; border-radius: 8px;">
           <h2 style="color: #004f9e; margin-top: 0;">SMTP Setup Successfully Configured</h2>

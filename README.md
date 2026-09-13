@@ -2,7 +2,7 @@
 
 Create ONLY the HOME PAGE for QUALITECH CONNECTRONICS PRIVATE LIMITED using the uploaded Qualitech logo.
 
-Design it as a premium industrial/electronics engineering website — modern, minimal, sophisticated and highly professional.
+Design it as a premium industrial/electronics engineering website - modern, minimal, sophisticated and highly professional.
 
 THEME:
 - Metallic grey + white as the dominant colors
@@ -41,10 +41,10 @@ Add subtle animated technical/circuit lines around the product image.
 HOMEPAGE SECTIONS:
 
 1. EXPERIENCE / STATS
-- 1995 — Established
-- 30+ — Years of Experience
-- OEM — Focused Solutions
-- 4 — Key Industries
+- 1995 - Established
+- 30+ - Years of Experience
+- OEM - Focused Solutions
+- 4 - Key Industries
 
 Use elegant animated counters.
 
@@ -142,7 +142,7 @@ Continue developing this project in the [Lovable editor](https://lovable.dev/pro
 
 ## Development
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+Prefer working locally? You need Node.js and npm - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
 
 ```sh
 git clone <this-repository-url>

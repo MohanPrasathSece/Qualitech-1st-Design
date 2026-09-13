@@ -221,7 +221,7 @@ export function AmphenolPage({ onNavigate }: AmphenolPageProps) {
               </h1>
             </div>
             <p className="mt-5 max-w-2xl text-[0.95rem] leading-relaxed text-steel">
-              Qualitech Connectronics is a trusted distribution partner for Amphenol electronics components in India. Explore Amphenol's world-renowned product series below — clicking any product takes you directly to official specifications on Amphenol's portal.
+              Qualitech Connectronics is a trusted distribution partner for Amphenol electronics components in India. Explore Amphenol's world-renowned product series below - clicking any product takes you directly to official specifications on Amphenol's portal.
             </p>
 
             <div className="mt-8">
@@ -285,7 +285,7 @@ export function AmphenolPage({ onNavigate }: AmphenolPageProps) {
                     Amphenol Series
                   </span>
                   <h3 className="mt-1 font-display text-2xl font-bold text-graphite">
-                    {sec.name} — {sec.tagline}
+                    {sec.name} - {sec.tagline}
                   </h3>
                   <p className="mt-2 text-xs sm:text-sm text-muted-foreground leading-relaxed max-w-3xl">
                     {sec.desc}

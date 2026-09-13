@@ -74,7 +74,7 @@ export function Footer({ onNavigate }: FooterProps) {
                       </svg>
                     </p>
                     <p className="text-steel/90 mt-0.5 text-xs leading-relaxed">
-                      Plot No. 37/B, Phase-V, IDA, Cherlapally, Hyderabad, Medchal-Malkajgiri, Telangana – 500051
+                      Plot No. 37/B, Phase-V, IDA, Cherlapally, Hyderabad, Medchal-Malkajgiri, Telangana - 500051
                     </p>
                     <span className="mt-2 inline-flex items-center gap-1 text-[0.7rem] font-bold uppercase tracking-wider text-brand-blue-soft group-hover:underline">
                       Get Directions / Open Google Maps →

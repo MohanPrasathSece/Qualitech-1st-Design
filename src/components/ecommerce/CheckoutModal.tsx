@@ -155,7 +155,7 @@ export const CheckoutModal: React.FC = () => {
             </div>
             <div>
               <h2 className="font-display text-base font-bold text-graphite">
-                Secure Checkout — Razorpay
+                Secure Checkout - Razorpay
               </h2>
               <p className="text-xs text-muted-foreground">Qualitech Connectronics Authorized Payment</p>
             </div>
