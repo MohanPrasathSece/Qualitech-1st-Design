@@ -26,7 +26,6 @@ import { CartDrawer } from "@/components/ecommerce/CartDrawer";
 import { ProductDetailModal } from "@/components/ecommerce/ProductDetailModal";
 import { CheckoutModal } from "@/components/ecommerce/CheckoutModal";
 import { OrderSuccessModal } from "@/components/ecommerce/OrderSuccessModal";
-import { OrdersModal } from "@/components/ecommerce/OrdersModal";
 
 export default function App() {
   return (
@@ -38,7 +37,6 @@ export default function App() {
       <ProductDetailModal />
       <CheckoutModal />
       <OrderSuccessModal />
-      <OrdersModal />
     </ECommerceProvider>
   );
 }
@@ -47,7 +45,7 @@ export default function App() {
 
 function Hero() {
   return (
-    <section id="top" className="relative overflow-hidden bg-background pt-28 lg:pt-36">
+    <section id="top" className="relative overflow-hidden bg-background pt-32 sm:pt-36 lg:pt-40">
       <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-5 pb-16 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16 lg:pb-24">
         <div>
           <Reveal>
@@ -774,8 +772,8 @@ function HomeContent() {
     };
   }, []);
 
-  const handleNavigate = (target: string, isPage?: boolean) => {
-    const cleanTarget = target.toLowerCase();
+  const handleNavigate = (target: string = "", isPage?: boolean | undefined) => {
+    const cleanTarget = (target || "").toLowerCase();
 
     if (cleanTarget === "#admin" || cleanTarget === "#/admin" || cleanTarget === "#admin-panel") {
       setCurrentPage("admin");

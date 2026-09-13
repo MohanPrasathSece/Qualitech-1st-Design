@@ -17,43 +17,43 @@ import aboutFactory from "@/assets/about-factory.jpg";
 export interface TieredPrice {
   minQty: number;
   price: number;
-  discountLabel?: string;
+  discountLabel?: string | undefined;
 }
 
 export interface Product {
-  id: string;
+  id?: string | undefined;
   sku: string;
   name: string;
   brand: "Amphenol" | "Zolex" | "Qualitech";
   category: string;
-  subCategory?: string;
+  subCategory?: string | undefined;
   description: string;
   features: string[];
   specs: Record<string, string>;
   industries: string[];
-  featured?: boolean;
+  featured?: boolean | undefined;
   image: string;
   inStock: boolean;
-  externalUrl?: string;
-  isEnquiry?: boolean;
-  price?: number;
-  salePrice?: number;
-  stockCount?: number;
-  lowStockThreshold?: number;
-  minOrderQty?: number;
-  unit?: string;
-  rating?: number;
-  reviewCount?: number;
-  leadTime?: string;
-  tieredPricing?: TieredPrice[];
-  datasheetUrl?: string;
+  externalUrl?: string | undefined;
+  isEnquiry?: boolean | undefined;
+  price?: number | undefined;
+  salePrice?: number | undefined;
+  stockCount?: number | undefined;
+  lowStockThreshold?: number | undefined;
+  minOrderQty?: number | undefined;
+  unit?: string | undefined;
+  rating?: number | undefined;
+  reviewCount?: number | undefined;
+  leadTime?: string | undefined;
+  tieredPricing?: TieredPrice[] | undefined;
+  datasheetUrl?: string | undefined;
 }
 
 export interface BrandCategoryTree {
   brand: "Amphenol" | "Zolex" | "Qualitech";
   categories: {
     name: string;
-    subCategories?: string[];
+    subCategories?: string[] | undefined;
   }[];
 }
 

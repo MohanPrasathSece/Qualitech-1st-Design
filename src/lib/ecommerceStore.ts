@@ -5,7 +5,7 @@ export interface CartItem {
   product: Product;
   quantity: number;
   unitPrice: number;
-  customNote?: string;
+  customNote?: string | undefined;
 }
 
 export interface Coupon {
@@ -13,34 +13,36 @@ export interface Coupon {
   description: string;
   discountType: "percent" | "fixed" | "free_shipping";
   discountValue: number;
-  minSpend?: number;
-  maxDiscount?: number;
+  minSpend?: number | undefined;
+  maxDiscount?: number | undefined;
 }
 
 export interface CustomerInfo {
   fullName: string;
   email: string;
   phone: string;
-  companyName?: string;
-  gstin?: string;
+  companyName?: string | undefined;
+  gstin?: string | undefined;
   address: string;
   city: string;
   state: string;
   pincode: string;
-  country?: string;
-  orderNotes?: string;
+  country?: string | undefined;
+  orderNotes?: string | undefined;
 }
 
 export type OrderStatus =
   | "Confirmed"
   | "Processing"
   | "Quality Check"
+  | "Shipped"
   | "Dispatched"
   | "Delivered"
   | "Cancelled";
 
 export type PaymentMethod =
   | "UPI / Razorpay (Instant)"
+  | "Cash on Delivery"
   | "Corporate Purchase Order (Net-30)"
   | "Bank Transfer (NEFT/RTGS)"
   | "Proforma Invoice / COD";
@@ -61,15 +63,16 @@ export interface Order {
   customer: CustomerInfo;
   shippingMethod: ShippingOption;
   paymentMethod: PaymentMethod;
-  paymentStatus: "Paid" | "Pending Approval" | "Awaiting Wire" | "Verified";
+  paymentStatus: "Paid" | "Pending Approval" | "Awaiting Wire" | "Verified" | "Cash on Delivery";
   orderStatus: OrderStatus;
   subtotal: number;
   discount: number;
-  couponCode?: string;
+  couponCode?: string | undefined;
   tax: number; // 18% GST
   shippingCost: number;
   total: number;
   trackingNumber: string;
+  trackingLink?: string | undefined;
   estimatedDelivery: string;
 }
 
@@ -251,13 +254,15 @@ export function saveStoredCart(items: CartItem[]): void {
   }
 }
 
-export function addToStoredCart(product: Product, quantity: number = 1, customNote?: string): CartItem[] {
+export function addToStoredCart(product: Product, quantity: number = 1, customNote?: string | undefined): CartItem[] {
   const current = getStoredCart();
-  const existingIndex = current.findIndex((item) => item.product.id === product.id);
+  const prodId = product.id || product.sku;
+  const existingIndex = current.findIndex((item) => (item.product.id || item.product.sku) === prodId);
 
   let updated: CartItem[];
-  if (existingIndex > -1) {
-    const newQty = current[existingIndex].quantity + quantity;
+  if (existingIndex > -1 && current[existingIndex]) {
+    const existing = current[existingIndex]!;
+    const newQty = existing.quantity + quantity;
     const unitPrice = getEffectiveUnitPrice(product, newQty);
     updated = current.map((item, idx) =>
       idx === existingIndex
@@ -267,7 +272,7 @@ export function addToStoredCart(product: Product, quantity: number = 1, customNo
   } else {
     const unitPrice = getEffectiveUnitPrice(product, quantity);
     const newItem: CartItem = {
-      id: product.id,
+      id: prodId,
       product,
       quantity,
       unitPrice,
@@ -411,20 +416,133 @@ export function createStoredOrder(orderData: Omit<Order, "id" | "orderNumber" | 
   return newOrder;
 }
 
-export function updateStoredOrderStatus(orderId: string, status: OrderStatus, paymentStatus?: Order["paymentStatus"]): Order[] {
+export function updateStoredOrder(orderId: string, updates: Partial<Order>): Order[] {
   const current = getStoredOrders();
   const updated = current.map((ord) => {
-    if (ord.id === orderId) {
+    if (ord.id === orderId || ord.orderNumber === orderId) {
       return {
         ...ord,
-        orderStatus: status,
-        paymentStatus: paymentStatus || ord.paymentStatus,
+        ...updates,
       };
     }
     return ord;
   });
   saveStoredOrders(updated);
   return updated;
+}
+
+export function updateStoredOrderStatus(orderId: string, status: OrderStatus, paymentStatus?: Order["paymentStatus"]): Order[] {
+  return updateStoredOrder(orderId, {
+    orderStatus: status,
+    ...(paymentStatus ? { paymentStatus } : {}),
+  });
+}
+
+export function deleteStoredOrders(orderIds: string[]): Order[] {
+  const current = getStoredOrders();
+  const idSet = new Set(orderIds);
+  const updated = current.filter((ord) => !idSet.has(ord.id) && !idSet.has(ord.orderNumber));
+  saveStoredOrders(updated);
+  return updated;
+}
+
+/**
+ * Export orders array to CSV formatted string (Excel compatible)
+ */
+export function exportOrdersToCsv(orders: Order[]): string {
+  const headers = [
+    "Order ID",
+    "Date & Time",
+    "Customer Name",
+    "Customer Email",
+    "Customer Phone",
+    "Company Name",
+    "GSTIN",
+    "Address",
+    "City",
+    "State",
+    "Pincode",
+    "Line Items",
+    "Subtotal (INR)",
+    "Discount (INR)",
+    "Coupon Code",
+    "Tax 18% GST (INR)",
+    "Shipping Freight (INR)",
+    "Total Paid (INR)",
+    "Payment Method",
+    "Payment Status",
+    "Order Status",
+    "Tracking Number",
+    "Tracking Link",
+  ];
+
+  const rows = orders.map((ord) => {
+    const itemsSummary = ord.items
+      .map((i) => `${i.product.name} [SKU:${i.product.sku}] x${i.quantity}`)
+      .join(" | ");
+
+    return [
+      `"${ord.orderNumber}"`,
+      `"${new Date(ord.createdAt).toLocaleString("en-IN")}"`,
+      `"${(ord.customer.fullName || "").replace(/"/g, '""')}"`,
+      `"${(ord.customer.email || "").replace(/"/g, '""')}"`,
+      `"${(ord.customer.phone || "").replace(/"/g, '""')}"`,
+      `"${(ord.customer.companyName || "").replace(/"/g, '""')}"`,
+      `"${(ord.customer.gstin || "").replace(/"/g, '""')}"`,
+      `"${(ord.customer.address || "").replace(/"/g, '""')}"`,
+      `"${(ord.customer.city || "").replace(/"/g, '""')}"`,
+      `"${(ord.customer.state || "").replace(/"/g, '""')}"`,
+      `"${(ord.customer.pincode || "").replace(/"/g, '""')}"`,
+      `"${itemsSummary.replace(/"/g, '""')}"`,
+      ord.subtotal,
+      ord.discount,
+      `"${ord.couponCode || ""}"`,
+      ord.tax,
+      ord.shippingCost,
+      ord.total,
+      `"${ord.paymentMethod}"`,
+      `"${ord.paymentStatus}"`,
+      `"${ord.orderStatus}"`,
+      `"${ord.trackingNumber || ""}"`,
+      `"${ord.trackingLink || ""}"`,
+    ].join(",");
+  });
+
+  return [headers.join(","), ...rows].join("\r\n");
+}
+
+/**
+ * Identify and clean up orders older than X days (default 30 days)
+ */
+export function cleanupOrdersOlderThanDays(days: number = 30): {
+  archivedOrders: Order[];
+  remainingOrders: Order[];
+  csvContent: string;
+} {
+  const current = getStoredOrders();
+  const cutoffTime = Date.now() - days * 24 * 60 * 60 * 1000;
+
+  const archivedOrders = current.filter((ord) => {
+    const orderTime = new Date(ord.createdAt).getTime();
+    return !isNaN(orderTime) && orderTime < cutoffTime;
+  });
+
+  const remainingOrders = current.filter((ord) => {
+    const orderTime = new Date(ord.createdAt).getTime();
+    return isNaN(orderTime) || orderTime >= cutoffTime;
+  });
+
+  if (archivedOrders.length > 0) {
+    saveStoredOrders(remainingOrders);
+  }
+
+  const csvContent = exportOrdersToCsv(archivedOrders.length > 0 ? archivedOrders : current);
+
+  return {
+    archivedOrders,
+    remainingOrders,
+    csvContent,
+  };
 }
 
 // Format Currency
@@ -435,3 +553,58 @@ export function formatINR(amount: number): string {
     maximumFractionDigits: 0,
   }).format(amount);
 }
+
+export interface ExternalLinkInfo {
+  url: string;
+  label: string;
+  isExternal: boolean;
+  brandColor: string;
+  badgeText: string;
+}
+
+/**
+ * Returns the official manufacturer catalog link (Amphenol, Zolex, or Qualitech)
+ * for a product with rich labeling and badge metadata.
+ */
+export function getProductExternalLink(product: Product): ExternalLinkInfo {
+  if (product.externalUrl && product.externalUrl.trim() !== "") {
+    return {
+      url: product.externalUrl,
+      label: `View on ${product.brand}`,
+      isExternal: true,
+      brandColor: product.brand === "Amphenol" ? "text-blue-600 border-blue-200 bg-blue-50/70" : "text-emerald-700 border-emerald-200 bg-emerald-50/70",
+      badgeText: `Official ${product.brand} Catalog ↗`,
+    };
+  }
+
+  if (product.brand === "Amphenol") {
+    const query = encodeURIComponent(product.sku || product.name);
+    return {
+      url: `https://www.amphenol-icc.com/search?q=${query}`,
+      label: "View on Amphenol",
+      isExternal: true,
+      brandColor: "text-brand-blue border-brand-blue/30 bg-blue-50/80 hover:bg-brand-blue hover:text-white",
+      badgeText: "Amphenol ICC ↗",
+    };
+  }
+
+  if (product.brand === "Zolex") {
+    const query = encodeURIComponent(product.sku || product.name);
+    return {
+      url: `https://zolex.in/?s=${query}`,
+      label: "View on Zolex",
+      isExternal: true,
+      brandColor: "text-emerald-700 border-emerald-300 bg-emerald-50/80 hover:bg-emerald-600 hover:text-white",
+      badgeText: "Zolex Official ↗",
+    };
+  }
+
+  return {
+    url: "#manufacturing",
+    label: "View Qualitech Specs",
+    isExternal: false,
+    brandColor: "text-amber-700 border-amber-300 bg-amber-50/80 hover:bg-amber-600 hover:text-white",
+    badgeText: "Qualitech In-House ↗",
+  };
+}
+

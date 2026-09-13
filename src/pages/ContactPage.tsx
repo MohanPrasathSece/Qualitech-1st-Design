@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Reveal } from "@/components/site/reveal";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
+import { sendContactFormEmail } from "@/lib/emailService";
+import { submitQuoteRequestToSupabase } from "@/lib/supabaseService";
 
 interface ContactPageProps {
   onNavigate: (href: string, isPage?: boolean) => void;
@@ -9,6 +11,7 @@ interface ContactPageProps {
 
 export function ContactPage({ onNavigate }: ContactPageProps) {
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -22,20 +25,48 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setFormSubmitted(true);
-    setTimeout(() => {
-      setFormSubmitted(false);
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        company: "",
-        interest: "Custom Cable Assemblies",
-        message: "",
+    setIsSubmitting(true);
+
+    try {
+      // 1. Save to Supabase RFQ / Contact database table
+      await submitQuoteRequestToSupabase({
+        fullName: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        companyName: formData.company,
+        productCategory: formData.interest,
+        technicalSpecs: formData.message,
+        estimatedQty: 100,
       });
-    }, 4500);
+
+      // 2. Dispatch email notification to admin sales
+      await sendContactFormEmail({
+        fullName: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        companyName: formData.company,
+        subject: formData.interest,
+        message: formData.message,
+      });
+    } catch (err) {
+      console.warn("Contact form notification send note:", err);
+    } finally {
+      setIsSubmitting(false);
+      setFormSubmitted(true);
+      setTimeout(() => {
+        setFormSubmitted(false);
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          company: "",
+          interest: "Custom Cable Assemblies",
+          message: "",
+        });
+      }, 5000);
+    }
   };
 
   return (
@@ -82,8 +113,10 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
 
                 {formSubmitted ? (
                   <div className="mt-8 rounded-2xl border border-green-200 bg-green-50 p-8 text-center animate-in fade-in zoom-in-95 duration-300">
-                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-500 text-white font-bold text-xl">
-                      ✓
+                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-500 text-white shadow-md">
+                      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
                     </div>
                     <h3 className="mt-4 font-display text-lg font-bold text-green-900">
                       Enquiry Received!
@@ -187,9 +220,20 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
 
                     <button
                       type="submit"
-                      className="w-full rounded-xl bg-graphite py-3.5 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-brand-blue transition-colors shadow-sm cursor-pointer"
+                      disabled={isSubmitting}
+                      className="w-full rounded-xl bg-graphite py-3.5 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-brand-blue transition-colors shadow-sm cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2"
                     >
-                      Submit Requirement →
+                      {isSubmitting ? (
+                        <>
+                          <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                          </svg>
+                          <span>Sending Notification...</span>
+                        </>
+                      ) : (
+                        <span>Submit Requirement →</span>
+                      )}
                     </button>
                   </form>
                 )}

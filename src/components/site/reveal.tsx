@@ -32,9 +32,9 @@ export function Reveal({
   as: Tag = "div",
 }: {
   children: ReactNode;
-  delay?: number;
-  className?: string;
-  as?: "div" | "section" | "li" | "span" | "article";
+  delay?: number | undefined;
+  className?: string | undefined;
+  as?: "div" | "section" | "li" | "span" | "article" | undefined;
 }) {
   const { ref, visible } = useInView<HTMLDivElement>();
   return (
@@ -56,9 +56,9 @@ export function Counter({
   duration = 1600,
 }: {
   value: number;
-  suffix?: string;
-  prefix?: string;
-  duration?: number;
+  suffix?: string | undefined;
+  prefix?: string | undefined;
+  duration?: number | undefined;
 }) {
   const { ref, visible } = useInView<HTMLSpanElement>(0.4);
   const [display, setDisplay] = useState(0);

@@ -200,16 +200,19 @@ export function parseCsvContent(csvText: string): Record<string, string>[] {
     }
   }
 
-  if (rows.length < 2) return [];
+  if (rows.length < 2 || !rows[0]) return [];
 
-  const headers = rows[0].map((h) => h.trim().replace(/^"|"$/g, ""));
+  const firstRow = rows[0];
+  const headers = firstRow.map((h) => h.trim().replace(/^"|"$/g, ""));
   const records: Record<string, string>[] = [];
 
   for (let r = 1; r < rows.length; r++) {
     const row = rows[r];
+    if (!row) continue;
     const record: Record<string, string> = {};
     headers.forEach((header, colIndex) => {
-      record[header] = row[colIndex] ? row[colIndex].trim() : "";
+      const val = row[colIndex];
+      record[header] = val !== undefined ? val.trim() : "";
     });
     records.push(record);
   }
@@ -217,7 +220,7 @@ export function parseCsvContent(csvText: string): Record<string, string>[] {
   return records;
 }
 
-export function importProductsFromCsv(csvText: string): { success: boolean; count: number; error?: string } {
+export function importProductsFromCsv(csvText: string): { success: boolean; count: number; error?: string | undefined } {
   try {
     const records = parseCsvContent(csvText);
     if (records.length === 0) {

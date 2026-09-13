@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useECommerce } from "@/context/ECommerceContext";
-import { formatINR, AVAILABLE_COUPONS } from "@/lib/ecommerceStore";
+import { formatINR } from "@/lib/ecommerceStore";
 
 interface CartDrawerProps {
   onNavigateToShop?: () => void;
@@ -11,37 +11,22 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToShop }) => {
     cart,
     cartCount,
     cartSubtotal,
-    cartDiscount,
     cartTax,
     cartShipping,
     cartTotal,
     freeShippingThreshold,
     freeShippingRemaining,
-    activeCoupon,
-    couponError,
     isCartOpen,
     closeCart,
     openCheckout,
     updateCartQty,
     removeFromCart,
     clearCart,
-    applyCoupon,
-    removeCoupon,
   } = useECommerce();
 
-  const [inputCoupon, setInputCoupon] = useState("");
   const [copiedQuote, setCopiedQuote] = useState(false);
 
   if (!isCartOpen) return null;
-
-  const handleApplyCoupon = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!inputCoupon.trim()) return;
-    const success = applyCoupon(inputCoupon);
-    if (success) {
-      setInputCoupon("");
-    }
-  };
 
   const handleGenerateQuoteSummary = () => {
     const text = [
@@ -53,7 +38,6 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToShop }) => {
           `${idx + 1}. [${item.product.sku}] ${item.product.name} x ${item.quantity} ${item.product.unit || "pcs"} @ ${formatINR(item.unitPrice)} = ${formatINR(item.unitPrice * item.quantity)}`
       ),
       `Subtotal: ${formatINR(cartSubtotal)}`,
-      activeCoupon ? `Discount (${activeCoupon.code}): -${formatINR(cartDiscount)}` : null,
       `Estimated GST (18%): ${formatINR(cartTax)}`,
       `Estimated Total: ${formatINR(cartTotal)}`,
       `====================================================`,
@@ -213,7 +197,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToShop }) => {
                           </h4>
                         </div>
                         <button
-                          onClick={() => removeFromCart(item.product.id)}
+                          onClick={() => removeFromCart(item.id || item.product.id || item.product.sku)}
                           className="text-muted-foreground hover:text-destructive transition-colors p-1 cursor-pointer"
                           title="Remove item"
                         >
@@ -231,7 +215,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToShop }) => {
                       {/* Quantity Stepper */}
                       <div className="flex items-center rounded-lg border border-border bg-white shadow-2xs">
                         <button
-                          onClick={() => updateCartQty(item.product.id, item.quantity - 1)}
+                          onClick={() => updateCartQty(item.id || item.product.id || item.product.sku, item.quantity - 1)}
                           className="flex h-7 w-7 items-center justify-center text-muted-foreground hover:text-foreground hover:bg-steel-light transition-colors rounded-l-lg cursor-pointer"
                           aria-label="Decrease quantity"
                         >
@@ -241,7 +225,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToShop }) => {
                           {item.quantity}
                         </span>
                         <button
-                          onClick={() => updateCartQty(item.product.id, item.quantity + 1)}
+                          onClick={() => updateCartQty(item.id || item.product.id || item.product.sku, item.quantity + 1)}
                           className="flex h-7 w-7 items-center justify-center text-muted-foreground hover:text-foreground hover:bg-steel-light transition-colors rounded-r-lg cursor-pointer"
                           aria-label="Increase quantity"
                         >
@@ -279,79 +263,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToShop }) => {
         {/* Footer & Checkout Area */}
         {cart.length > 0 && (
           <div className="border-t border-border bg-white px-6 py-4 shadow-[0_-4px_12px_rgba(0,0,0,0.03)]">
-            {/* Coupon Section */}
-            <div className="mb-4">
-              {activeCoupon ? (
-                <div className="flex items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50/60 px-3.5 py-2 text-xs">
-                  <div className="flex items-center gap-2">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-white text-[0.65rem] font-bold">
-                      ✓
-                    </span>
-                    <div>
-                      <p className="font-bold text-emerald-900">
-                        Code <strong className="font-mono">{activeCoupon.code}</strong> Applied
-                      </p>
-                      <p className="text-[0.68rem] text-emerald-700">{activeCoupon.description}</p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={removeCoupon}
-                    className="font-semibold text-emerald-800 hover:text-destructive text-xs cursor-pointer"
-                  >
-                    Remove
-                  </button>
-                </div>
-              ) : (
-                <div>
-                  <form onSubmit={handleApplyCoupon} className="flex gap-2">
-                    <input
-                      type="text"
-                      value={inputCoupon}
-                      onChange={(e) => setInputCoupon(e.target.value.toUpperCase())}
-                      placeholder="Enter Promo Code (e.g. QUALITECH10)"
-                      className="flex-1 rounded-xl border border-border px-3.5 py-2 text-xs font-mono uppercase focus:border-brand-blue focus:outline-hidden"
-                    />
-                    <button
-                      type="submit"
-                      className="rounded-xl bg-graphite px-4 py-2 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-brand-blue transition-colors cursor-pointer"
-                    >
-                      Apply
-                    </button>
-                  </form>
-                  {couponError && (
-                    <p className="mt-1 text-[0.68rem] font-medium text-destructive">{couponError}</p>
-                  )}
-                  {/* Preset Suggestions */}
-                  <div className="mt-2 flex flex-wrap gap-1.5 items-center">
-                    <span className="text-[0.65rem] text-muted-foreground">Try:</span>
-                    {AVAILABLE_COUPONS.slice(0, 3).map((cpn) => (
-                      <button
-                        key={cpn.code}
-                        type="button"
-                        onClick={() => applyCoupon(cpn.code)}
-                        className="rounded-md border border-border bg-steel-light/50 px-2 py-0.5 text-[0.65rem] font-mono font-medium text-graphite hover:border-brand-blue hover:text-brand-blue transition-colors cursor-pointer"
-                      >
-                        {cpn.code}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
             {/* Calculations Breakdown */}
-            <div className="space-y-1.5 border-t border-border/70 pt-3 text-xs">
+            <div className="space-y-1.5 pt-1 text-xs">
               <div className="flex justify-between text-muted-foreground">
                 <span>Subtotal (Excl. Tax)</span>
                 <span className="font-semibold text-graphite">{formatINR(cartSubtotal)}</span>
               </div>
-
-              {cartDiscount > 0 && (
-                <div className="flex justify-between text-emerald-600 font-medium">
-                  <span>Coupon Discount</span>
-                  <span>-{formatINR(cartDiscount)}</span>
-                </div>
-              )}
 
               <div className="flex justify-between text-muted-foreground">
                 <span className="flex items-center gap-1">
@@ -401,7 +318,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToShop }) => {
                 <svg className="h-3.5 w-3.5 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                <span>{copiedQuote ? "RFQ Copied to Clipboard! ✓" : "Copy Official RFQ Summary"}</span>
+                <span>{copiedQuote ? "RFQ Copied to Clipboard!" : "Copy Official RFQ Summary"}</span>
               </button>
             </div>
 

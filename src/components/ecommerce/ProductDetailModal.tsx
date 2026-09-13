@@ -6,6 +6,7 @@ import {
   getProductDefaultPrice,
   getProductTieredPricing,
   getEffectiveUnitPrice,
+  getProductExternalLink,
 } from "@/lib/ecommerceStore";
 
 export const ProductDetailModal: React.FC = () => {
@@ -140,6 +141,21 @@ Email: info@qualitechindia.in | Tel: +91-40-27140004
           </div>
 
           <div className="flex items-center gap-2">
+            {product.brand !== "Qualitech" && (
+              <a
+                href={getProductExternalLink(product).url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden sm:inline-flex h-8 items-center gap-1.5 rounded-lg border border-brand-blue/30 bg-blue-50/60 px-2.5 text-xs font-bold text-brand-blue hover:bg-brand-blue hover:text-white transition-colors"
+                title={`Open official ${product.brand} catalog in new tab`}
+              >
+                <span>{getProductExternalLink(product).label}</span>
+                <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            )}
+
             <button
               onClick={handleShareProduct}
               className="flex h-8 items-center gap-1.5 rounded-lg border border-border px-2.5 text-xs text-muted-foreground hover:bg-steel-light hover:text-foreground transition-colors cursor-pointer"
@@ -174,8 +190,11 @@ Email: info@qualitechindia.in | Tel: +91-40-27140004
                   className="h-full w-full object-contain transition-transform duration-300 hover:scale-105"
                 />
                 {product.featured && (
-                  <span className="absolute top-3 left-3 rounded-full bg-brand-yellow px-2.5 py-0.5 text-[0.62rem] font-extrabold uppercase tracking-wider text-graphite shadow-xs">
-                    ★ Featured
+                  <span className="absolute top-3 left-3 flex items-center gap-1 rounded-full bg-brand-yellow px-2.5 py-0.5 text-[0.65rem] font-extrabold uppercase tracking-wider text-graphite shadow-xs">
+                    <svg className="h-3 w-3 fill-current" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    Featured
                   </span>
                 )}
                 <span
@@ -217,6 +236,28 @@ Email: info@qualitechindia.in | Tel: +91-40-27140004
                 </svg>
                 Download Technical Datasheet (.TXT / PDF)
               </button>
+
+              {/* View on Amphenol / Zolex External Catalog */}
+              {product.brand !== "Qualitech" && (
+                <a
+                  href={getProductExternalLink(product).url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`flex w-full items-center justify-center gap-2 rounded-xl border py-2.5 text-xs font-bold transition-all shadow-2xs ${
+                    product.brand === "Amphenol"
+                      ? "border-blue-200 bg-blue-50/70 text-brand-blue hover:bg-brand-blue hover:text-white"
+                      : "border-emerald-200 bg-emerald-50/70 text-emerald-800 hover:bg-emerald-700 hover:text-white"
+                  }`}
+                >
+                  <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                  </svg>
+                  <span>{getProductExternalLink(product).label} Official Portal</span>
+                  <svg className="h-3.5 w-3.5 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </a>
+              )}
             </div>
 
             {/* Right: Product Purchase Controls */}
@@ -231,8 +272,11 @@ Email: info@qualitechindia.in | Tel: +91-40-27140004
 
                 {/* Quality & Traceability Badges */}
                 <div className="mt-2 flex flex-wrap items-center gap-2">
-                  <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2 py-0.5 text-[0.65rem] font-bold text-emerald-700 border border-emerald-200/60">
-                    ✓ 100% Electrical &amp; Hipot Tested
+                  <span className="inline-flex items-center gap-1.5 rounded-md bg-emerald-50 px-2 py-0.5 text-[0.65rem] font-bold text-emerald-700 border border-emerald-200/60">
+                    <svg className="h-3 w-3 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                    100% Electrical &amp; Hipot Tested
                   </span>
                   <span className="inline-flex items-center gap-1 rounded-md bg-steel-light px-2 py-0.5 text-[0.65rem] font-semibold text-muted-foreground">
                     ISO 9001:2015 Traceable
@@ -285,9 +329,10 @@ Email: info@qualitechindia.in | Tel: +91-40-27140004
                     </p>
                     <div className="grid grid-cols-4 gap-1.5 text-center text-xs">
                       {tieredPricing.map((tier, idx) => {
+                        const nextTier = tieredPricing[idx + 1];
                         const isCurrentTier =
                           quantity >= tier.minQty &&
-                          (idx === tieredPricing.length - 1 || quantity < tieredPricing[idx + 1].minQty);
+                          (idx === tieredPricing.length - 1 || (nextTier ? quantity < nextTier.minQty : true));
 
                         return (
                           <button
@@ -351,7 +396,7 @@ Email: info@qualitechindia.in | Tel: +91-40-27140004
                       <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                       </svg>
-                      <span>{addedToast ? "Added to Cart! ✓" : "Add to Cart"}</span>
+                      <span>{addedToast ? "Added to Cart!" : "Add to Cart"}</span>
                     </button>
                   </div>
 
@@ -417,8 +462,10 @@ Email: info@qualitechindia.in | Tel: +91-40-27140004
                 <ul className="space-y-2">
                   {product.features.map((f, i) => (
                     <li key={i} className="flex items-start gap-2.5 text-xs text-graphite">
-                      <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-brand-blue/10 text-[0.6rem] font-bold text-brand-blue">
-                        ✓
+                      <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-brand-blue/10 text-brand-blue">
+                        <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
                       </span>
                       <span>{f}</span>
                     </li>
@@ -431,9 +478,12 @@ Email: info@qualitechindia.in | Tel: +91-40-27140004
                   {product.industries.map((ind) => (
                     <span
                       key={ind}
-                      className="rounded-xl border border-border bg-steel-light/30 px-3 py-1.5 text-xs font-semibold text-graphite"
+                      className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-steel-light/30 px-3 py-1.5 text-xs font-semibold text-graphite"
                     >
-                      🏭 {ind}
+                      <svg className="h-3.5 w-3.5 text-brand-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                      </svg>
+                      {ind}
                     </span>
                   ))}
                 </div>

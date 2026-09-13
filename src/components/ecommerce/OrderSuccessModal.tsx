@@ -3,7 +3,7 @@ import { useECommerce } from "@/context/ECommerceContext";
 import { formatINR } from "@/lib/ecommerceStore";
 
 export const OrderSuccessModal: React.FC = () => {
-  const { lastPlacedOrder, closeOrderSuccess, openOrders } = useECommerce();
+  const { lastPlacedOrder, closeOrderSuccess } = useECommerce();
 
   if (!lastPlacedOrder) return null;
 
@@ -32,7 +32,7 @@ export const OrderSuccessModal: React.FC = () => {
           </div>
           <h2 className="font-display text-2xl font-bold tracking-tight">Order Successfully Confirmed!</h2>
           <p className="mt-1 text-xs text-white/90">
-            Official Tax Invoice &amp; Dispatch Authorization Generated
+            Official Tax Invoice &amp; Dispatch Notification Dispatched
           </p>
           <div className="mt-3 inline-block rounded-full bg-white/15 px-4 py-1 font-mono text-sm font-bold tracking-wider backdrop-blur-sm">
             Order #{order.orderNumber}
@@ -41,10 +41,23 @@ export const OrderSuccessModal: React.FC = () => {
 
         {/* Content Body */}
         <div className="max-h-[calc(85vh-200px)] overflow-y-auto p-6 sm:p-8 space-y-6">
+          {/* Email Notice Card */}
+          <div className="rounded-2xl border border-blue-200 bg-blue-50/60 p-4 flex items-start gap-3">
+            <svg className="h-5 w-5 text-brand-blue shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <div className="text-xs">
+              <p className="font-bold text-graphite">Confirmation Email Dispatched</p>
+              <p className="text-muted-foreground mt-0.5">
+                A full GST tax invoice breakdown and real-time shipping tracking updates have been sent to <strong className="text-brand-blue">{order.customer.email}</strong>.
+              </p>
+            </div>
+          </div>
+
           {/* Status Pipeline */}
           <div className="rounded-2xl border border-border bg-steel-light/20 p-4">
             <div className="flex items-center justify-between text-xs font-bold text-graphite mb-3">
-              <span>Order Tracking Pipeline</span>
+              <span>Order Logistics Status</span>
               <span className="text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full text-[0.65rem]">
                 Estimated Delivery: {order.estimatedDelivery}
               </span>
@@ -70,7 +83,13 @@ export const OrderSuccessModal: React.FC = () => {
                         : "bg-steel-light text-muted-foreground border border-border"
                     }`}
                   >
-                    {step.done ? "✓" : idx + 1}
+                    {step.done ? (
+                      <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    ) : (
+                      idx + 1
+                    )}
                   </div>
                   <span className="mt-1 text-[0.65rem] font-semibold text-graphite">
                     {step.label}
@@ -199,23 +218,12 @@ export const OrderSuccessModal: React.FC = () => {
             <span>Print Tax Invoice</span>
           </button>
 
-          <div className="flex w-full sm:w-auto items-center gap-2">
-            <button
-              onClick={() => {
-                closeOrderSuccess();
-                openOrders();
-              }}
-              className="flex-1 sm:flex-none rounded-xl border border-border px-4 py-2.5 text-xs font-bold text-graphite hover:bg-steel-light transition-colors cursor-pointer"
-            >
-              Track All Orders →
-            </button>
-            <button
-              onClick={closeOrderSuccess}
-              className="flex-1 sm:flex-none rounded-xl bg-brand-blue px-6 py-2.5 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-graphite transition-all cursor-pointer shadow-sm"
-            >
-              Continue Shopping
-            </button>
-          </div>
+          <button
+            onClick={closeOrderSuccess}
+            className="w-full sm:w-auto rounded-xl bg-brand-blue px-8 py-2.5 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-graphite transition-all cursor-pointer shadow-sm text-center"
+          >
+            Continue Shopping →
+          </button>
         </div>
       </div>
     </div>

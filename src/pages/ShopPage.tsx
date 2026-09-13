@@ -6,12 +6,12 @@ import {
   Product,
 } from "@/data/products";
 import { useECommerce } from "@/context/ECommerceContext";
-import { formatINR, getProductDefaultPrice } from "@/lib/ecommerceStore";
+import { formatINR, getProductDefaultPrice, getProductExternalLink } from "@/lib/ecommerceStore";
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
 
 interface ShopPageProps {
-  onNavigateHome: (sectionId?: string, isPage?: boolean) => void;
+  onNavigateHome: (sectionId?: string | undefined, isPage?: boolean | undefined) => void;
 }
 
 export function ShopPage({ onNavigateHome }: ShopPageProps) {
@@ -163,7 +163,7 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
       <Header onNavigate={onNavigateHome} currentPage="products" />
 
       {/* Hero Header */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-steel-light/60 via-background to-background pt-28 pb-10 sm:pt-32 sm:pb-12 border-b border-border/80">
+      <section className="relative overflow-hidden bg-gradient-to-b from-steel-light/60 via-background to-background pt-32 pb-10 sm:pt-36 sm:pb-12 border-b border-border/80">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
@@ -204,38 +204,60 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
             </div>
           </div>
 
-          {/* Search & Brand Fast Bar */}
-          <div className="mt-8 flex flex-col sm:flex-row gap-3 items-center justify-between">
-            {/* Search Input */}
-            <div className="relative w-full sm:max-w-md">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search SKU, connector, harness, lug, pin..."
-                className="w-full rounded-xl border border-border bg-white py-2.5 pl-10 pr-4 text-xs text-graphite shadow-2xs placeholder:text-muted-foreground focus:border-brand-blue focus:outline-hidden"
-              />
-              <svg
-                className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground text-xs"
+          {/* Search, Mobile Filter Trigger & Brand Fast Bar */}
+          <div className="mt-8 flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+            {/* Search Input & Mobile Filter Button */}
+            <div className="flex items-center gap-2 w-full sm:max-w-md">
+              <div className="relative flex-1">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search SKU, connector, harness, lug, pin..."
+                  className="w-full rounded-xl border border-border bg-white py-2.5 pl-10 pr-4 text-xs text-graphite shadow-2xs placeholder:text-muted-foreground focus:border-brand-blue focus:outline-hidden"
+                />
+                <svg
+                  className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
                 >
-                  ✕
-                </button>
-              )}
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1"
+                    aria-label="Clear search"
+                  >
+                    <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
+              </div>
+
+              {/* Mobile Filters Toggle Button */}
+              <button
+                type="button"
+                onClick={() => setMobileFilterOpen(true)}
+                className="lg:hidden flex items-center justify-center gap-1.5 rounded-xl border border-border bg-white px-3.5 py-2.5 text-xs font-bold text-graphite shadow-2xs hover:border-brand-blue shrink-0 cursor-pointer"
+              >
+                <svg className="h-4 w-4 text-brand-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                </svg>
+                <span>Filters</span>
+                {activeFiltersCount > 0 && (
+                  <span className="flex h-4.5 w-4.5 items-center justify-center rounded-full bg-brand-blue text-[0.62rem] font-bold text-white">
+                    {activeFiltersCount}
+                  </span>
+                )}
+              </button>
             </div>
 
             {/* Brand Pills */}
-            <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 w-full sm:w-auto no-scrollbar">
               {BRANDS.map((brand) => (
                 <button
                   key={brand}
@@ -244,7 +266,7 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
                     setSelectedCategory("All Categories");
                     setSelectedSubCategory(null);
                   }}
-                  className={`rounded-xl px-4 py-2 font-display text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                  className={`rounded-xl px-4 py-2 font-display text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shrink-0 ${
                     selectedBrand === brand
                       ? "bg-brand-blue text-white shadow-xs"
                       : "border border-border bg-white text-muted-foreground hover:border-brand-blue hover:text-graphite"
@@ -392,9 +414,13 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
                   Showing <strong className="text-graphite">{filteredProducts.length}</strong> components
                 </p>
                 {selectedIndustry && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-[0.65rem] font-bold text-brand-blue">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-brand-blue">
                     Industry: {selectedIndustry}
-                    <button onClick={() => setSelectedIndustry(null)}>✕</button>
+                    <button onClick={() => setSelectedIndustry(null)} className="hover:text-destructive">
+                      <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
                   </span>
                 )}
               </div>
@@ -409,19 +435,20 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
                     className="rounded-lg border border-border bg-white px-2.5 py-1.5 text-xs font-semibold text-graphite focus:border-brand-blue focus:outline-hidden"
                   >
                     <option value="featured">Featured First</option>
-                    <option value="price-asc">Price: Low to High</option>
-                    <option value="price-desc">Price: High to Low</option>
-                    <option value="sku">SKU / Part Number</option>
-                    <option value="name">Name: A to Z</option>
+                    <option value="price_low">Price: Low to High</option>
+                    <option value="price_high">Price: High to Low</option>
+                    <option value="name_asc">Name: A to Z</option>
                   </select>
                 </div>
 
-                {/* View Mode Toggle */}
+                {/* View Toggle */}
                 <div className="flex items-center rounded-lg border border-border bg-white p-0.5">
                   <button
                     onClick={() => setViewMode("grid")}
-                    className={`rounded p-1.5 transition-colors cursor-pointer ${
-                      viewMode === "grid" ? "bg-brand-blue text-white" : "text-muted-foreground hover:text-foreground"
+                    className={`rounded-md p-1.5 transition-colors cursor-pointer ${
+                      viewMode === "grid"
+                        ? "bg-steel-light text-graphite font-bold"
+                        : "text-muted-foreground hover:text-foreground"
                     }`}
                     title="Grid View"
                   >
@@ -431,8 +458,10 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
                   </button>
                   <button
                     onClick={() => setViewMode("list")}
-                    className={`rounded p-1.5 transition-colors cursor-pointer ${
-                      viewMode === "list" ? "bg-brand-blue text-white" : "text-muted-foreground hover:text-foreground"
+                    className={`rounded-md p-1.5 transition-colors cursor-pointer ${
+                      viewMode === "list"
+                        ? "bg-steel-light text-graphite font-bold"
+                        : "text-muted-foreground hover:text-foreground"
                     }`}
                     title="List View"
                   >
@@ -447,8 +476,10 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
             {/* Product Listing */}
             {paginatedProducts.length === 0 ? (
               <div className="flex flex-col items-center justify-center text-center py-20 rounded-2xl border border-dashed border-border bg-steel-light/10">
-                <div className="h-16 w-16 flex items-center justify-center rounded-full bg-steel-light text-muted-foreground mb-3">
-                  🔍
+                <div className="h-14 w-14 flex items-center justify-center rounded-full bg-steel-light text-muted-foreground mb-3">
+                  <svg className="h-6 w-6 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
                 </div>
                 <h3 className="font-display text-base font-bold text-graphite">No Matching Products Found</h3>
                 <p className="mt-1 text-xs text-muted-foreground max-w-sm">
@@ -541,6 +572,24 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
                           </span>
                         </div>
 
+                        {/* Manufacturer Direct Link Strip */}
+                        {product.brand !== "Qualitech" && (
+                          <div className="mb-2.5">
+                            <a
+                              href={getProductExternalLink(product).url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className={`flex items-center justify-between rounded-lg border px-2.5 py-1.5 text-[0.65rem] font-bold transition-colors ${getProductExternalLink(product).brandColor}`}
+                              title={`View ${product.sku} on official ${product.brand} catalog`}
+                            >
+                              <span>{getProductExternalLink(product).badgeText}</span>
+                              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                              </svg>
+                            </a>
+                          </div>
+                        )}
+
                         <div className="grid grid-cols-2 gap-2">
                           <button
                             onClick={() => openQuickView(product)}
@@ -591,6 +640,17 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
                               {product.brand}
                             </span>
                             <span className="font-mono text-xs text-muted-foreground">{product.sku}</span>
+                            {product.brand !== "Qualitech" && (
+                              <a
+                                href={getProductExternalLink(product).url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-[0.6rem] font-bold text-brand-blue hover:underline"
+                              >
+                                <span>{getProductExternalLink(product).badgeText}</span>
+                              </a>
+                            )}
                           </div>
                           <h3 className="font-display text-sm font-bold text-graphite hover:text-brand-blue transition-colors mt-0.5">
                             {product.name}
@@ -613,6 +673,20 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
                         </div>
 
                         <div className="flex items-center gap-2">
+                          {product.brand !== "Qualitech" && (
+                            <a
+                              href={getProductExternalLink(product).url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="hidden md:inline-flex items-center gap-1 rounded-xl border border-border px-3 py-2 text-xs font-bold text-muted-foreground hover:text-brand-blue hover:border-brand-blue transition-colors"
+                              title={`View ${product.name} on manufacturer catalog`}
+                            >
+                              <span>Official</span>
+                              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                              </svg>
+                            </a>
+                          )}
                           <button
                             onClick={() => openQuickView(product)}
                             className="rounded-xl border border-border px-3.5 py-2 text-xs font-bold text-graphite hover:bg-steel-light transition-colors cursor-pointer"
@@ -663,6 +737,186 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
         </div>
       </section>
 
+      {/* Mobile Filter Drawer Modal */}
+      {mobileFilterOpen && (
+        <div className="fixed inset-0 z-[150] flex justify-end lg:hidden">
+          <div
+            className="fixed inset-0 bg-graphite-deep/60 backdrop-blur-xs transition-opacity"
+            onClick={() => setMobileFilterOpen(false)}
+          />
+
+          <div className="relative z-10 flex h-full w-full max-w-xs flex-col bg-white shadow-2xl animate-in slide-in-from-right duration-300">
+            {/* Drawer Header */}
+            <div className="flex items-center justify-between border-b border-border bg-steel-light/30 px-5 py-4">
+              <div className="flex items-center gap-2">
+                <svg className="h-4 w-4 text-brand-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                </svg>
+                <h3 className="font-display text-sm font-bold uppercase tracking-wider text-graphite">
+                  Filter Catalog
+                </h3>
+              </div>
+              <button
+                onClick={() => setMobileFilterOpen(false)}
+                className="p-1 rounded-lg hover:bg-steel-light text-muted-foreground hover:text-graphite"
+              >
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Drawer Filter List */}
+            <div className="flex-1 overflow-y-auto p-5 space-y-5 text-xs">
+              {/* Brand Filter */}
+              <div>
+                <p className="font-display text-xs font-bold uppercase tracking-wider text-graphite mb-2">
+                  Brand Manufacturer
+                </p>
+                <div className="grid grid-cols-2 gap-1.5">
+                  {BRANDS.map((brand) => (
+                    <button
+                      key={brand}
+                      onClick={() => {
+                        setSelectedBrand(brand);
+                        setSelectedCategory("All Categories");
+                        setSelectedSubCategory(null);
+                      }}
+                      className={`rounded-xl py-2 px-2.5 text-center font-bold transition-all border ${
+                        selectedBrand === brand
+                          ? "bg-brand-blue text-white border-brand-blue shadow-2xs"
+                          : "border-border bg-slate-50 text-slate-700 hover:border-brand-blue"
+                      }`}
+                    >
+                      {brand}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Categories */}
+              <div className="border-t border-border pt-4">
+                <p className="font-display text-xs font-bold uppercase tracking-wider text-graphite mb-2">
+                  Component Category
+                </p>
+                <div className="space-y-1 max-h-48 overflow-y-auto pr-1">
+                  <button
+                    onClick={() => {
+                      setSelectedCategory("All Categories");
+                      setSelectedSubCategory(null);
+                    }}
+                    className={`flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-xs text-left transition-colors ${
+                      selectedCategory === "All Categories"
+                        ? "bg-brand-blue/10 font-bold text-brand-blue"
+                        : "text-muted-foreground hover:bg-steel-light/40"
+                    }`}
+                  >
+                    <span>All Categories</span>
+                    <span>{products.length}</span>
+                  </button>
+                  {availableCategories.map((cat) => {
+                    const count = products.filter(
+                      (p) => (selectedBrand === "All Brands" || p.brand === selectedBrand) && p.category === cat
+                    ).length;
+                    return (
+                      <button
+                        key={cat}
+                        onClick={() => {
+                          setSelectedCategory(cat);
+                          setSelectedSubCategory(null);
+                        }}
+                        className={`flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-xs text-left transition-colors ${
+                          selectedCategory === cat
+                            ? "bg-brand-blue/10 font-bold text-brand-blue"
+                            : "text-muted-foreground hover:bg-steel-light/40"
+                        }`}
+                      >
+                        <span className="line-clamp-1">{cat}</span>
+                        <span className="text-[0.65rem] opacity-70">({count})</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Price Range */}
+              <div className="border-t border-border pt-4">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="font-display text-xs font-bold uppercase tracking-wider text-graphite">
+                    Price Limit (Max)
+                  </p>
+                  <span className="font-mono text-xs font-bold text-brand-blue">
+                    {formatINR(maxPrice)}
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min="500"
+                  max="30000"
+                  step="500"
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(parseInt(e.target.value, 10))}
+                  className="w-full accent-brand-blue cursor-pointer"
+                />
+              </div>
+
+              {/* In-Stock Toggle */}
+              <div className="border-t border-border pt-4">
+                <label className="flex items-center gap-2 font-semibold text-graphite cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={inStockOnly}
+                    onChange={(e) => setInStockOnly(e.target.checked)}
+                    className="rounded text-brand-blue focus:ring-brand-blue h-4 w-4"
+                  />
+                  <span>In-Stock Ready Items Only</span>
+                </label>
+              </div>
+
+              {/* Target Industry */}
+              <div className="border-t border-border pt-4">
+                <p className="font-display text-xs font-bold uppercase tracking-wider text-graphite mb-2">
+                  Industry Applications
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {ALL_INDUSTRIES.map((ind) => (
+                    <button
+                      key={ind}
+                      onClick={() => setSelectedIndustry(selectedIndustry === ind ? null : ind)}
+                      className={`rounded-lg px-2.5 py-1 text-[0.68rem] font-semibold transition-colors border ${
+                        selectedIndustry === ind
+                          ? "border-brand-blue bg-brand-blue text-white"
+                          : "border-border bg-slate-50 text-muted-foreground hover:border-brand-blue"
+                      }`}
+                    >
+                      {ind}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Drawer Footer Actions */}
+            <div className="border-t border-border bg-steel-light/20 p-4 flex gap-2.5">
+              <button
+                type="button"
+                onClick={clearAllFilters}
+                className="flex-1 rounded-xl border border-border py-2.5 text-center text-xs font-bold text-graphite hover:bg-steel-light transition-colors"
+              >
+                Reset All
+              </button>
+              <button
+                type="button"
+                onClick={() => setMobileFilterOpen(false)}
+                className="flex-1 rounded-xl bg-brand-blue py-2.5 text-center font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-graphite transition-all shadow-xs"
+              >
+                Show Results
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Floating Cart Indicator */}
       {cartCount > 0 && (
         <aside
@@ -693,3 +947,4 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
     </div>
   );
 }
+
