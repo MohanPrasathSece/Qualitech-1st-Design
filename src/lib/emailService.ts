@@ -567,3 +567,109 @@ export async function send30DayOrderCleanupEmail(
     })
   ).success;
 }
+
+// ==============================================================================
+// 6. AUTOMATED LOW-STOCK WARNING ALERT EMAIL
+// ==============================================================================
+
+export interface LowStockItemAlert {
+  id: string;
+  sku: string;
+  name: string;
+  brand: string;
+  category: string;
+  stockCount: number;
+  lowStockThreshold: number;
+}
+
+export async function sendLowStockAlertEmail(
+  depletedItems: LowStockItemAlert[],
+  triggerContext: string = "Automated Inventory Depletion Guard"
+): Promise<boolean> {
+  if (!depletedItems || depletedItems.length === 0) return false;
+
+  const itemRowsHtml = depletedItems
+    .map(
+      (item) => `
+      <tr>
+        <td style="padding: 10px; border-bottom: 1px solid #fee2e2; font-family: monospace; font-weight: bold; color: #991b1b;">
+          ${item.sku}
+        </td>
+        <td style="padding: 10px; border-bottom: 1px solid #fee2e2;">
+          <strong>${item.name}</strong><br/>
+          <span style="font-size: 11px; color: #64748b;">${item.brand} • ${item.category}</span>
+        </td>
+        <td style="padding: 10px; border-bottom: 1px solid #fee2e2; text-align: center;">
+          <span style="display: inline-block; background-color: #fee2e2; color: #b91c1c; font-weight: 800; padding: 3px 8px; border-radius: 6px; font-family: monospace;">
+            ${item.stockCount} units
+          </span>
+        </td>
+        <td style="padding: 10px; border-bottom: 1px solid #fee2e2; text-align: center; color: #64748b; font-family: monospace;">
+          &le; ${item.lowStockThreshold} units
+        </td>
+      </tr>`
+    )
+    .join("");
+
+  const emailHtml = `
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset="utf-8"/><title>Low Stock Warning Alert</title></head>
+    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f8fafc; margin: 0; padding: 24px; color: #1e293b;">
+      <div style="max-width: 620px; margin: 0 auto; background: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.06);">
+        <!-- Alert Header -->
+        <div style="background-color: #b91c1c; padding: 24px 32px; color: #ffffff;">
+          <span style="background-color: rgba(255,255,255,0.25); color: #ffffff; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
+            Critical Inventory Notice
+          </span>
+          <h1 style="margin: 10px 0 0 0; font-size: 20px; font-weight: 800;">Automated Low-Stock Warning</h1>
+          <p style="margin: 4px 0 0 0; font-size: 13px; opacity: 0.9;">Warehouse &amp; Supply Chain Operations Desk</p>
+        </div>
+
+        <div style="padding: 28px 32px;">
+          <p style="font-size: 14px; line-height: 1.6; margin-top: 0;">
+            The automated inventory monitor detected <strong>${depletedItems.length} product(s)</strong> that have reached or fallen below safety stock thresholds following a recent transaction (${triggerContext}).
+          </p>
+
+          <table style="width: 100%; border-collapse: collapse; font-size: 12px; margin: 20px 0; border: 1px solid #fecaca; border-radius: 8px; overflow: hidden;">
+            <thead>
+              <tr style="background-color: #fef2f2; text-align: left; text-transform: uppercase; font-size: 11px; color: #991b1b;">
+                <th style="padding: 10px;">SKU</th>
+                <th style="padding: 10px;">Product &amp; Category</th>
+                <th style="padding: 10px; text-align: center;">Current Qty</th>
+                <th style="padding: 10px; text-align: center;">Min. Threshold</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${itemRowsHtml}
+            </tbody>
+          </table>
+
+          <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; font-size: 12px; color: #475569; line-height: 1.5;">
+            <strong>Recommended Restock Actions:</strong>
+            <ul style="margin: 6px 0 0 0; padding-left: 18px;">
+              <li>Issue Purchase Order (PO) to OEM supplier (Amphenol / Zolex) for standard terminal pins.</li>
+              <li>Schedule internal cable assembly wire spool replenishments at IDA Cherlapally facility.</li>
+              <li>Update lead times in catalog if component manufacturing cycle exceeds 5 business days.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="background-color: #f8fafc; padding: 16px 32px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #64748b; text-align: center;">
+          Qualitech Connectronics Pvt. Ltd. • Automated Inventory Depletion Monitor
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  return (
+    await dispatchEmail({
+      to: ADMIN_EMAIL,
+      subject: `[CRITICAL LOW STOCK ALERT] ${depletedItems.length} Product(s) Below Minimum Threshold`,
+      html: emailHtml,
+      text: `Low Stock Alert:\n${depletedItems.map((it) => `${it.sku}: ${it.name} - Qty: ${it.stockCount} (Threshold: ${it.lowStockThreshold})`).join("\n")}`,
+    })
+  ).success;
+}
+

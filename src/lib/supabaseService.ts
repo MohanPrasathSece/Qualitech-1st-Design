@@ -326,7 +326,10 @@ export async function fetchOrdersFromSupabase(): Promise<Order[] | null> {
         shippingCost: Number(row.shipping_cost || 0),
         total: Number(row.total),
         trackingNumber: row.tracking_number || "QC-" + Math.floor(100000 + Math.random() * 900000),
+        trackingLink: row.tracking_link || undefined,
         estimatedDelivery: row.estimated_delivery || "3-5 Business Days",
+        razorpayPaymentId: row.razorpay_payment_id || undefined,
+        razorpayOrderId: row.razorpay_order_id || undefined,
         items,
       });
     }
@@ -357,7 +360,10 @@ export async function saveOrderToSupabase(order: Order): Promise<boolean> {
       shipping_cost: order.shippingCost,
       total: order.total,
       tracking_number: order.trackingNumber,
+      tracking_link: order.trackingLink || null,
       estimated_delivery: order.estimatedDelivery,
+      razorpay_payment_id: order.razorpayPaymentId || null,
+      razorpay_order_id: order.razorpayOrderId || null,
       created_at: order.createdAt || new Date().toISOString(),
     });
 

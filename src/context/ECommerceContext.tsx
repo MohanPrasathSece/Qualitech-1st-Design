@@ -43,6 +43,8 @@ import {
   sendOrderConfirmationEmail,
   sendOrderStatusEmail,
   send30DayOrderCleanupEmail,
+  sendLowStockAlertEmail,
+  LowStockItemAlert,
 } from "@/lib/emailService";
 
 interface ECommerceContextType {
@@ -81,6 +83,12 @@ interface ECommerceContextType {
       "id" | "orderNumber" | "createdAt" | "trackingNumber" | "estimatedDelivery"
     >
   ) => Order;
+  recordIncompleteOrder: (
+    orderData: Omit<
+      Order,
+      "id" | "orderNumber" | "createdAt" | "trackingNumber" | "estimatedDelivery"
+    >
+  ) => Order;
   updateOrderStatus: (
     orderId: string,
     status: Order["orderStatus"],
@@ -94,6 +102,7 @@ interface ECommerceContextType {
   deleteOrders: (orderIds: string[]) => void;
   run30DayCleanup: (days?: number) => { count: number; totalAmount: number };
   exportOrdersCsv: () => string;
+  checkAndTriggerLowStockAlerts: (triggerReason?: string) => Promise<number>;
 
   // Modal Controls
   openCart: () => void;
@@ -283,6 +292,7 @@ export const ECommerceProvider: React.FC<{ children: ReactNode }> = ({ children 
     setLastPlacedOrder(newOrder);
 
     // 1. Deduct stock for each ordered item from catalogue and sync to Supabase
+    const depletedItems: LowStockItemAlert[] = [];
     orderData.items.forEach((item) => {
       const prodId = item.product.id || item.product.sku;
       const currentProds = getStoredProducts();
@@ -290,6 +300,7 @@ export const ECommerceProvider: React.FC<{ children: ReactNode }> = ({ children 
       if (currentProd) {
         const currentStock = typeof currentProd.stockCount === "number" ? currentProd.stockCount : 100;
         const newStock = Math.max(0, currentStock - item.quantity);
+        const threshold = currentProd.lowStockThreshold || 15;
         const updatedProds = updateStoredProduct(prodId, {
           stockCount: newStock,
           inStock: newStock > 0,
@@ -301,8 +312,26 @@ export const ECommerceProvider: React.FC<{ children: ReactNode }> = ({ children 
             console.warn("Stock update sync to Supabase error:", err);
           });
         }
+        if (newStock <= threshold) {
+          depletedItems.push({
+            id: currentProd.id || currentProd.sku,
+            sku: currentProd.sku,
+            name: currentProd.name,
+            brand: currentProd.brand,
+            category: currentProd.category,
+            stockCount: newStock,
+            lowStockThreshold: threshold,
+          });
+        }
       }
     });
+
+    // Dispatch automated Low-Stock Warning Email if any products reached safety threshold
+    if (depletedItems.length > 0) {
+      sendLowStockAlertEmail(depletedItems, `Order #${newOrder.orderNumber} Depletion`).catch((err) => {
+        console.warn("Low stock alert email error:", err);
+      });
+    }
 
     // 2. Send Automated Confirmation & Admin Alert Emails
     sendOrderConfirmationEmail(newOrder).catch((err) => {
@@ -315,6 +344,31 @@ export const ECommerceProvider: React.FC<{ children: ReactNode }> = ({ children 
     });
 
     return newOrder;
+  };
+
+  const recordIncompleteOrder = (
+    orderData: Omit<
+      Order,
+      "id" | "orderNumber" | "createdAt" | "trackingNumber" | "estimatedDelivery"
+    >
+  ): Order => {
+    const incompleteOrder: Order = {
+      ...orderData,
+      id: `ord_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+      orderNumber: `QT-INC-${Math.floor(10000 + Math.random() * 90000)}`,
+      createdAt: new Date().toISOString(),
+      orderStatus: "Payment Incomplete",
+      paymentStatus: "Incomplete",
+      trackingNumber: "N/A - Incomplete",
+      estimatedDelivery: "Pending Payment",
+    };
+
+    // Save to Supabase for audit/abandoned cart tracking
+    saveOrderToSupabase(incompleteOrder).catch((err) => {
+      console.warn("Supabase record incomplete order note:", err);
+    });
+
+    return incompleteOrder;
   };
 
   const updateOrderStatus = (
@@ -396,6 +450,25 @@ export const ECommerceProvider: React.FC<{ children: ReactNode }> = ({ children 
     return exportOrdersToCsv(orders);
   };
 
+  const checkAndTriggerLowStockAlerts = async (triggerReason = "Manual Inventory Health Audit"): Promise<number> => {
+    const currentProds = getStoredProducts();
+    const lowStock: LowStockItemAlert[] = currentProds
+      .filter((p) => (p.stockCount || 0) <= (p.lowStockThreshold || 15))
+      .map((p) => ({
+        id: p.id || p.sku,
+        sku: p.sku,
+        name: p.name,
+        brand: p.brand,
+        category: p.category,
+        stockCount: p.stockCount || 0,
+        lowStockThreshold: p.lowStockThreshold || 15,
+      }));
+    if (lowStock.length > 0) {
+      await sendLowStockAlertEmail(lowStock, triggerReason);
+    }
+    return lowStock.length;
+  };
+
   // Modals
   const openCart = () => setIsCartOpen(true);
   const closeCart = () => setIsCartOpen(false);
@@ -440,11 +513,13 @@ export const ECommerceProvider: React.FC<{ children: ReactNode }> = ({ children 
         applyCoupon,
         removeCoupon,
         placeOrder,
+        recordIncompleteOrder,
         updateOrderStatus,
         updateOrderDetails,
         deleteOrders,
         run30DayCleanup,
         exportOrdersCsv,
+        checkAndTriggerLowStockAlerts,
         openCart,
         closeCart,
         openCheckout,

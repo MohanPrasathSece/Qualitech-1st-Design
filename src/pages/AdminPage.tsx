@@ -13,6 +13,7 @@ import {
 } from "@/lib/productsStore";
 import { useECommerce } from "@/context/ECommerceContext";
 import { formatINR, Order, OrderStatus, getProductDefaultPrice, getProductExternalLink } from "@/lib/ecommerceStore";
+import { downloadQuotationFromOrder } from "@/lib/pdfQuotationService";
 import { testSupabaseConnection, isSupabaseConfigured } from "@/lib/supabaseClient";
 import {
   syncAllProductsToSupabase,
@@ -71,6 +72,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
     deleteOrders,
     run30DayCleanup,
     exportOrdersCsv,
+    checkAndTriggerLowStockAlerts,
   } = useECommerce();
 
   // Authentication State
@@ -86,6 +88,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
   const [rememberMe, setRememberMe] = useState(true);
   const [loginError, setLoginError] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [isAuditingStock, setIsAuditingStock] = useState(false);
 
   // Navigation & Layout
   const [activeSection, setActiveSection] = useState<AdminSection>("overview");
@@ -97,6 +100,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
     message: isSupabaseConfigured ? "Checking Supabase connection..." : "Local Storage Mode (.env optional)",
   });
   const [quoteRequests, setQuoteRequests] = useState<SupabaseQuoteRecord[]>([]);
+  const [selectedRFQ, setSelectedRFQ] = useState<SupabaseQuoteRecord | null>(null);
 
   // Products State
   const [products, setProducts] = useState<Product[]>([]);
@@ -290,10 +294,45 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
     }
   };
 
+  // Valid, Completed Orders (Excludes Incomplete/Abandoned Checkouts)
+  const validOrders = useMemo(() => {
+    return orders.filter(
+      (o) =>
+        o.orderStatus !== "Payment Incomplete" &&
+        o.orderStatus !== "Payment Failed" &&
+        o.paymentStatus !== "Failed" &&
+        o.paymentStatus !== "Incomplete"
+    );
+  }, [orders]);
+
+  const totalSimulatedRevenue = useMemo(() => {
+    return validOrders.reduce((sum, ord) => sum + ord.total, 0);
+  }, [validOrders]);
+
+  const totalCatalogValue = useMemo(() => {
+    return products.reduce((sum, p) => sum + getProductDefaultPrice(p) * (p.stockCount || 100), 0);
+  }, [products]);
+
+  const lowStockCount = useMemo(() => {
+    return products.filter((p) => (p.stockCount || 100) <= (p.lowStockThreshold || 15)).length;
+  }, [products]);
+
   // Filtered Orders (Supports Time Filter, Status Filter & Full text search)
   const filteredOrders = useMemo(() => {
     return orders.filter((ord) => {
-      if (orderStatusFilter !== "All" && ord.orderStatus !== orderStatusFilter) return false;
+      // By default in "All", only show valid confirmed/paid orders
+      if (orderStatusFilter === "All") {
+        if (
+          ord.orderStatus === "Payment Incomplete" ||
+          ord.orderStatus === "Payment Failed" ||
+          ord.paymentStatus === "Failed" ||
+          ord.paymentStatus === "Incomplete"
+        ) {
+          return false;
+        }
+      } else if (ord.orderStatus !== orderStatusFilter) {
+        return false;
+      }
 
       // Time Range Filter
       if (orderTimeFilter !== "All Time") {
@@ -319,7 +358,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
           (ord.customer.email && ord.customer.email.toLowerCase().includes(q)) ||
           (ord.customer.phone && ord.customer.phone.toLowerCase().includes(q)) ||
           (ord.customer.companyName && ord.customer.companyName.toLowerCase().includes(q)) ||
-          ord.trackingNumber.toLowerCase().includes(q)
+          (ord.trackingNumber && ord.trackingNumber.toLowerCase().includes(q))
         );
       }
       return true;
@@ -404,6 +443,22 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
     }
   };
 
+  const handleAuditLowStock = async () => {
+    setIsAuditingStock(true);
+    try {
+      const count = await checkAndTriggerLowStockAlerts("Admin Manual Stock Audit");
+      if (count > 0) {
+        showToast(`Stock Audit Complete: ${count} depleted items detected. Warning email sent to admin!`, "success");
+      } else {
+        showToast("All products are above minimum safety stock levels.", "info");
+      }
+    } catch (err) {
+      showToast("Error running stock audit.", "error");
+    } finally {
+      setIsAuditingStock(false);
+    }
+  };
+
   const handleExportOrders = () => {
     const csv = exportOrdersCsv();
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
@@ -418,22 +473,9 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
 
   // Filtered Tracking Shipments
   const trackingOrders = useMemo(() => {
-    if (trackingFilter === "All") return orders;
-    return orders.filter((o) => o.orderStatus === trackingFilter);
-  }, [orders, trackingFilter]);
-
-  // Analytics Metrics
-  const totalCatalogValue = useMemo(() => {
-    return products.reduce((acc, p) => acc + (getProductDefaultPrice(p) * (p.stockCount || 50)), 0);
-  }, [products]);
-
-  const totalSimulatedRevenue = useMemo(() => {
-    return orders.reduce((acc, ord) => acc + ord.total, 0);
-  }, [orders]);
-
-  const lowStockCount = useMemo(() => {
-    return products.filter((p) => (p.stockCount || 100) <= (p.lowStockThreshold || 15)).length;
-  }, [products]);
+    if (trackingFilter === "All") return validOrders;
+    return validOrders.filter((o) => o.orderStatus === trackingFilter);
+  }, [validOrders, trackingFilter]);
 
   // Form Handlers
   const handleOpenAddForm = () => {
@@ -672,7 +714,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
         </svg>
       ),
-      count: orders.length,
+      count: validOrders.length,
       badgeColor: "bg-emerald-100 text-emerald-800",
     },
     {
@@ -684,7 +726,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
           <path strokeLinecap="round" strokeLinejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
         </svg>
       ),
-      count: orders.filter((o) => o.orderStatus !== "Delivered" && o.orderStatus !== "Cancelled").length,
+      count: validOrders.filter((o) => o.orderStatus !== "Delivered" && o.orderStatus !== "Cancelled").length,
     },
     {
       id: "quotes",
@@ -1101,9 +1143,9 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                       </svg>
                     </span>
                   </div>
-                  <p className="mt-3 text-3xl font-black text-slate-900">{orders.length}</p>
+                  <p className="mt-3 text-3xl font-black text-slate-900">{validOrders.length}</p>
                   <p className="mt-1 text-xs text-emerald-600 font-semibold">
-                    {orders.filter((o) => o.orderStatus === "Confirmed" || o.orderStatus === "Shipped").length} in active processing
+                    {validOrders.filter((o) => o.orderStatus === "Confirmed" || o.orderStatus === "Shipped").length} in active processing
                   </p>
                 </div>
 
@@ -1139,7 +1181,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                     </span>
                   </div>
                   <p className="mt-3 text-3xl font-black text-slate-900">
-                    {orders.filter((o) => o.orderStatus === "Shipped" || o.orderStatus === "Dispatched").length}
+                    {validOrders.filter((o) => o.orderStatus === "Shipped" || o.orderStatus === "Dispatched").length}
                   </p>
                   <p className="mt-1 text-xs text-sky-600 font-semibold">Active in transit</p>
                 </div>
@@ -1178,11 +1220,11 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                     </button>
                   </div>
 
-                  {orders.length === 0 ? (
+                  {validOrders.length === 0 ? (
                     <p className="text-xs text-slate-400 py-6 text-center">No orders recorded yet.</p>
                   ) : (
                     <div className="divide-y divide-slate-100">
-                      {orders.slice(0, 5).map((ord) => (
+                      {validOrders.slice(0, 5).map((ord) => (
                         <div key={ord.id} className="flex items-center justify-between py-3">
                           <div>
                             <p className="font-mono text-xs font-bold text-[#004f9e]">#{ord.orderNumber}</p>
@@ -1329,16 +1371,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                 </div>
 
                 {/* Secondary Actions */}
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setIsImportModalOpen(true)}
-                    className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
-                  >
-                    <svg className="h-4 w-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                    </svg>
-                    Import CSV
-                  </button>
+                <div className="flex flex-wrap items-center gap-2">
                   <button
                     onClick={handleExportCsv}
                     className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
@@ -1347,13 +1380,6 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                     </svg>
                     Export CSV
-                  </button>
-                  <button
-                    onClick={handleResetDefaults}
-                    className="rounded-xl border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
-                    title="Reset to 167 default items"
-                  >
-                    Reset Seed
                   </button>
                 </div>
               </div>
@@ -1906,21 +1932,34 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                             )}
                           </td>
                           <td className="py-3.5 px-4">
-                            <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-[#004f9e]">
+                            <span className="inline-block whitespace-nowrap rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-[#004f9e]">
                               {q.status || "New Enquiry"}
                             </span>
                           </td>
                           <td className="py-3.5 px-4 text-right">
-                            <button
-                              onClick={() => handleDeleteQuoteRequest(q.id, q.rfq_number)}
-                              className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-bold text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
-                              title="Delete Enquiry"
-                            >
-                              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                              </svg>
-                              <span>Delete</span>
-                            </button>
+                            <div className="flex items-center justify-end gap-2">
+                              <button
+                                onClick={() => setSelectedRFQ(q)}
+                                className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-bold text-[#004f9e] hover:bg-blue-50 transition-colors cursor-pointer"
+                                title="View Full Details"
+                              >
+                                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                <span>View</span>
+                              </button>
+                              <button
+                                onClick={() => handleDeleteQuoteRequest(q.id, q.rfq_number)}
+                                className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-bold text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                                title="Delete Enquiry"
+                              >
+                                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                                <span>Delete</span>
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       ))}
@@ -2453,6 +2492,19 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                   {viewingOrder.paymentStatus === "Paid" ? "PREPAID" : "CASH ON DELIVERY"}
                 </span>
 
+                {/* Download PDF Button */}
+                <button
+                  type="button"
+                  onClick={() => downloadQuotationFromOrder(viewingOrder)}
+                  className="flex items-center gap-1.5 rounded-full bg-[#004f9e]/10 border border-[#004f9e]/30 px-3 py-1 text-[0.68rem] font-bold text-[#004f9e] hover:bg-[#004f9e] hover:text-white transition-all cursor-pointer"
+                  title="Download Branded Proforma PDF Invoice"
+                >
+                  <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <span>PDF Invoice</span>
+                </button>
+
                 {/* Close Button */}
                 <button
                   onClick={() => setViewingOrder(null)}
@@ -2744,6 +2796,159 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                     Import Now
                   </button>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* ═══════════════════════════════════════════════════════════ */}
+      {/* RFQ DETAIL MODAL                                           */}
+      {/* ═══════════════════════════════════════════════════════════ */}
+      {selectedRFQ && (
+        <div
+          className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+          onClick={() => setSelectedRFQ(null)}
+        >
+          <div
+            className="relative w-full max-w-2xl rounded-2xl bg-white shadow-2xl overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-slate-100 bg-[#004f9e]/5 px-6 py-4">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider text-[#004f9e] mb-0.5">RFQ Enquiry</p>
+                <h2 className="text-lg font-extrabold text-slate-900">#{selectedRFQ.rfq_number}</h2>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-[#004f9e]">
+                  {selectedRFQ.status || "New Enquiry"}
+                </span>
+                <button
+                  onClick={() => setSelectedRFQ(null)}
+                  className="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors cursor-pointer"
+                >
+                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            {/* Body */}
+            <div className="max-h-[75vh] overflow-y-auto px-6 py-5 space-y-5">
+              {/* Date */}
+              <p className="text-xs text-slate-400">
+                Submitted: {new Date(selectedRFQ.created_at).toLocaleString("en-IN", { dateStyle: "long", timeStyle: "short" })}
+              </p>
+
+              {/* Client Info */}
+              <div>
+                <h3 className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-400">Client Information</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3">
+                    <p className="text-[0.65rem] font-bold uppercase tracking-wider text-slate-400 mb-1">Full Name</p>
+                    <p className="font-bold text-slate-900">{selectedRFQ.full_name || "-"}</p>
+                  </div>
+                  <div className="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3">
+                    <p className="text-[0.65rem] font-bold uppercase tracking-wider text-slate-400 mb-1">Company</p>
+                    <p className="font-bold text-slate-900">{selectedRFQ.company_name || "-"}</p>
+                  </div>
+                  <div className="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3">
+                    <p className="text-[0.65rem] font-bold uppercase tracking-wider text-slate-400 mb-1">Email</p>
+                    <a href={`mailto:${selectedRFQ.email}`} className="font-semibold text-[#004f9e] hover:underline break-all">{selectedRFQ.email || "-"}</a>
+                  </div>
+                  <div className="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3">
+                    <p className="text-[0.65rem] font-bold uppercase tracking-wider text-slate-400 mb-1">Phone</p>
+                    <a href={`tel:${selectedRFQ.phone}`} className="font-semibold text-[#004f9e] hover:underline">{selectedRFQ.phone || "-"}</a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Product Info */}
+              <div>
+                <h3 className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-400">Product Requirements</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3">
+                    <p className="text-[0.65rem] font-bold uppercase tracking-wider text-slate-400 mb-1">Category</p>
+                    <p className="font-bold text-slate-900">{selectedRFQ.product_category || "-"}</p>
+                  </div>
+                  <div className="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3">
+                    <p className="text-[0.65rem] font-bold uppercase tracking-wider text-slate-400 mb-1">Estimated Quantity</p>
+                    <p className="font-bold text-slate-900">{selectedRFQ.estimated_qty ? `${selectedRFQ.estimated_qty} Units` : "-"}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Technical Specs */}
+              {selectedRFQ.technical_specs && (
+                <div>
+                  <h3 className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-400">Technical Specifications</h3>
+                  <div className="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3">
+                    <p className="text-sm text-slate-800 leading-relaxed whitespace-pre-wrap">{selectedRFQ.technical_specs}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Message / Notes */}
+              {(selectedRFQ as any).message && (
+                <div>
+                  <h3 className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-400">Additional Message</h3>
+                  <div className="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3">
+                    <p className="text-sm text-slate-800 leading-relaxed whitespace-pre-wrap">{(selectedRFQ as any).message}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* CAD Attachment */}
+              {selectedRFQ.drawing_attachment_url && (
+                <div>
+                  <h3 className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-400">CAD Drawing / Attachment</h3>
+                  <a
+                    href={selectedRFQ.drawing_attachment_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-xl border border-[#004f9e]/20 bg-[#004f9e]/5 px-4 py-2.5 text-sm font-bold text-[#004f9e] hover:bg-[#004f9e]/10 transition-colors"
+                  >
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                    </svg>
+                    View / Download CAD File
+                  </a>
+                </div>
+              )}
+            </div>
+
+            {/* Footer Actions */}
+            <div className="flex items-center justify-between border-t border-slate-100 px-6 py-4 bg-slate-50/80">
+              <button
+                onClick={() => {
+                  handleDeleteQuoteRequest(selectedRFQ.id, selectedRFQ.rfq_number);
+                  setSelectedRFQ(null);
+                }}
+                className="inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-bold text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                Delete Enquiry
+              </button>
+              <div className="flex gap-2">
+                {selectedRFQ.phone && (
+                  <a
+                    href={`https://wa.me/91${selectedRFQ.phone.replace(/\D/g, "").replace(/^91/, "")}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-500 px-4 py-2 text-sm font-bold text-white hover:bg-emerald-600 transition-colors shadow-sm"
+                  >
+                    WhatsApp
+                  </a>
+                )}
+                <button
+                  onClick={() => setSelectedRFQ(null)}
+                  className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-bold text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+                >
+                  Close
+                </button>
               </div>
             </div>
           </div>

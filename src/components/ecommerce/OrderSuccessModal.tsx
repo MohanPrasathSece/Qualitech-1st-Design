@@ -1,6 +1,7 @@
 import React from "react";
 import { useECommerce } from "@/context/ECommerceContext";
 import { formatINR } from "@/lib/ecommerceStore";
+import { downloadQuotationFromOrder } from "@/lib/pdfQuotationService";
 
 export const OrderSuccessModal: React.FC = () => {
   const { lastPlacedOrder, closeOrderSuccess } = useECommerce();
@@ -208,15 +209,27 @@ export const OrderSuccessModal: React.FC = () => {
 
         {/* Footer Actions */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-border bg-steel-light/20 p-5">
-          <button
-            onClick={handlePrintInvoice}
-            className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-border bg-white px-5 py-2.5 text-xs font-bold text-graphite hover:border-brand-blue hover:text-brand-blue transition-colors cursor-pointer shadow-2xs"
-          >
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-            </svg>
-            <span>Print Tax Invoice</span>
-          </button>
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <button
+              onClick={() => downloadQuotationFromOrder(order)}
+              className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-brand-blue/10 border border-brand-blue/30 px-4 py-2.5 text-xs font-bold text-brand-blue hover:bg-brand-blue hover:text-white transition-all cursor-pointer shadow-2xs"
+            >
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span>Download Branded PDF</span>
+            </button>
+
+            <button
+              onClick={handlePrintInvoice}
+              className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-border bg-white px-4 py-2.5 text-xs font-bold text-graphite hover:border-brand-blue hover:text-brand-blue transition-colors cursor-pointer shadow-2xs"
+            >
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+              </svg>
+              <span>Print</span>
+            </button>
+          </div>
 
           <button
             onClick={closeOrderSuccess}

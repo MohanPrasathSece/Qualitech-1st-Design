@@ -26,6 +26,7 @@ import { CartDrawer } from "@/components/ecommerce/CartDrawer";
 import { ProductDetailModal } from "@/components/ecommerce/ProductDetailModal";
 import { CheckoutModal } from "@/components/ecommerce/CheckoutModal";
 import { OrderSuccessModal } from "@/components/ecommerce/OrderSuccessModal";
+import { WhatsAppWidget } from "@/components/common/WhatsAppWidget";
 
 export default function App() {
   return (
@@ -37,6 +38,7 @@ export default function App() {
       <ProductDetailModal />
       <CheckoutModal />
       <OrderSuccessModal />
+      <WhatsAppWidget />
     </ECommerceProvider>
   );
 }

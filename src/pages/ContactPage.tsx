@@ -5,6 +5,8 @@ import { Footer } from "@/components/site/Footer";
 import { sendContactFormEmail } from "@/lib/emailService";
 import { submitQuoteRequestToSupabase } from "@/lib/supabaseService";
 
+import { downloadQuotationFromRFQ } from "@/lib/pdfQuotationService";
+
 interface ContactPageProps {
   onNavigate: (href: string, isPage?: boolean) => void;
 }
@@ -12,6 +14,7 @@ interface ContactPageProps {
 export function ContactPage({ onNavigate }: ContactPageProps) {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submittedData, setSubmittedData] = useState<any>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -28,6 +31,8 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    const dataSnapshot = { ...formData };
+    setSubmittedData(dataSnapshot);
 
     try {
       // 1. Save to Supabase RFQ / Contact database table
@@ -55,18 +60,21 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
     } finally {
       setIsSubmitting(false);
       setFormSubmitted(true);
-      setTimeout(() => {
-        setFormSubmitted(false);
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          company: "",
-          interest: "Custom Cable Assemblies",
-          message: "",
-        });
-      }, 5000);
     }
+  };
+
+  const handleDownloadPDF = () => {
+    if (!submittedData) return;
+    downloadQuotationFromRFQ({
+      rfqNumber: Math.floor(10000 + Math.random() * 90000).toString(),
+      fullName: submittedData.name,
+      email: submittedData.email,
+      phone: submittedData.phone,
+      companyName: submittedData.company,
+      productCategory: submittedData.interest,
+      technicalSpecs: submittedData.message,
+      estimatedQty: 100,
+    });
   };
 
   return (
@@ -119,11 +127,42 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                       </svg>
                     </div>
                     <h3 className="mt-4 font-display text-lg font-bold text-green-900">
-                      Enquiry Received!
+                      Requirement Received!
                     </h3>
                     <p className="mt-2 text-xs text-green-700 max-w-md mx-auto">
-                      Thank you for contacting Qualitech Connectronics. Our engineering sales team will reach out to you shortly.
+                      Thank you for contacting Qualitech Connectronics. Your enquiry has been registered and routed to our applications engineering desk.
                     </p>
+
+                    <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+                      <button
+                        type="button"
+                        onClick={handleDownloadPDF}
+                        className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-blue px-5 py-2.5 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-graphite transition-all shadow-sm cursor-pointer"
+                      >
+                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        <span>Download Formal RFQ Estimate (PDF)</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setFormSubmitted(false);
+                          setFormData({
+                            name: "",
+                            email: "",
+                            phone: "",
+                            company: "",
+                            interest: "Custom Cable Assemblies",
+                            message: "",
+                          });
+                        }}
+                        className="rounded-xl border border-green-300 bg-white px-4 py-2.5 text-xs font-bold text-green-800 hover:bg-green-100/60 transition-colors cursor-pointer"
+                      >
+                        Submit Another Requirement
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="mt-8 space-y-4">

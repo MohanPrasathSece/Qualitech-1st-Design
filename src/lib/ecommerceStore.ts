@@ -38,7 +38,9 @@ export type OrderStatus =
   | "Shipped"
   | "Dispatched"
   | "Delivered"
-  | "Cancelled";
+  | "Cancelled"
+  | "Payment Incomplete"
+  | "Payment Failed";
 
 export type PaymentMethod =
   | "UPI / Razorpay (Instant)"
@@ -63,7 +65,7 @@ export interface Order {
   customer: CustomerInfo;
   shippingMethod: ShippingOption;
   paymentMethod: PaymentMethod;
-  paymentStatus: "Paid" | "Pending Approval" | "Awaiting Wire" | "Verified" | "Cash on Delivery";
+  paymentStatus: "Paid" | "Pending Approval" | "Awaiting Wire" | "Verified" | "Cash on Delivery" | "Failed" | "Incomplete";
   orderStatus: OrderStatus;
   subtotal: number;
   discount: number;
@@ -74,6 +76,8 @@ export interface Order {
   trackingNumber: string;
   trackingLink?: string | undefined;
   estimatedDelivery: string;
+  razorpayPaymentId?: string | undefined;
+  razorpayOrderId?: string | undefined;
 }
 
 // Storage Keys

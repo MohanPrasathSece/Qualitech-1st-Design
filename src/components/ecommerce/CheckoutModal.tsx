@@ -7,19 +7,20 @@ import {
 import { openRazorpayCheckout } from "@/lib/razorpayService";
 
 export const CheckoutModal: React.FC = () => {
-  const {
-    cart,
-    cartCount,
-    cartSubtotal,
-    cartTax,
-    cartShipping,
-    cartTotal,
-    selectedShipping,
-    isCheckoutOpen,
-    closeCheckout,
-    openCart,
-    placeOrder,
-  } = useECommerce();
+    const {
+      cart,
+      cartCount,
+      cartSubtotal,
+      cartTax,
+      cartShipping,
+      cartTotal,
+      selectedShipping,
+      isCheckoutOpen,
+      closeCheckout,
+      openCart,
+      placeOrder,
+      recordIncompleteOrder,
+    } = useECommerce();
 
   const [step, setStep] = useState<1 | 2>(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -106,12 +107,13 @@ export const CheckoutModal: React.FC = () => {
       customerPhone: customer.phone,
       companyName: customer.companyName,
       gstin: customer.gstin,
-      onSuccess: (paymentId) => {
+      onSuccess: (paymentId, orderId) => {
+        // Complete Order Creation on Verified Payment
         placeOrder({
           items: cart,
           customer: {
             ...customer,
-            orderNotes: `${customer.orderNotes || ""} [Razorpay Txn: ${paymentId}]`,
+            orderNotes: `${customer.orderNotes || ""} [Razorpay Txn: ${paymentId}${orderId ? ` | Order ID: ${orderId}` : ""}]`,
           },
           shippingMethod: selectedShipping,
           paymentMethod: "UPI / Razorpay (Instant)",
@@ -122,6 +124,8 @@ export const CheckoutModal: React.FC = () => {
           tax: cartTax,
           shippingCost: cartShipping,
           total: cartTotal,
+          razorpayPaymentId: paymentId,
+          razorpayOrderId: orderId || undefined,
         });
 
         setIsSubmitting(false);
@@ -129,10 +133,45 @@ export const CheckoutModal: React.FC = () => {
       },
       onFailure: (err) => {
         setIsSubmitting(false);
-        setErrorMessage(err?.description || "Payment failed or cancelled. Please retry.");
+        setErrorMessage(err?.description || "Razorpay payment was not completed. Please retry or choose Cash on Delivery.");
+        
+        // Log incomplete payment attempt in Supabase for audit
+        recordIncompleteOrder({
+          items: cart,
+          customer: {
+            ...customer,
+            orderNotes: `${customer.orderNotes || ""} [Payment Failed: ${err?.description || "Cancelled by user"}]`,
+          },
+          shippingMethod: selectedShipping,
+          paymentMethod: "UPI / Razorpay (Instant)",
+          paymentStatus: "Failed",
+          orderStatus: "Payment Incomplete",
+          subtotal: cartSubtotal,
+          discount: 0,
+          tax: cartTax,
+          shippingCost: cartShipping,
+          total: cartTotal,
+        });
       },
       onDismiss: () => {
         setIsSubmitting(false);
+        // Log abandoned checkout attempt
+        recordIncompleteOrder({
+          items: cart,
+          customer: {
+            ...customer,
+            orderNotes: `${customer.orderNotes || ""} [Checkout Dismissed by Customer]`,
+          },
+          shippingMethod: selectedShipping,
+          paymentMethod: "UPI / Razorpay (Instant)",
+          paymentStatus: "Incomplete",
+          orderStatus: "Payment Incomplete",
+          subtotal: cartSubtotal,
+          discount: 0,
+          tax: cartTax,
+          shippingCost: cartShipping,
+          total: cartTotal,
+        });
       },
     });
   };
