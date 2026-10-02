@@ -153,69 +153,14 @@ export const AVAILABLE_COUPONS: Coupon[] = [
   },
 ];
 
-// Default Pricing Generator for Products that don't have prices yet
+// Exact Pricing Getter - uses exact price from data/Excel without fake additions
 export function getProductDefaultPrice(product: Product): number {
-  if (product.price && product.price > 0) return product.price;
-
-  // Generate realistic industrial price based on brand and category
-  let basePrice = 1250;
-  if (product.brand === "Amphenol") {
-    if (product.category.includes("Fiber") || product.name.includes("Fiber") || product.name.includes("Optical")) {
-      basePrice = 4850;
-    } else if (product.category.includes("Antenna") || product.name.includes("Antenna")) {
-      basePrice = 3200;
-    } else if (product.name.includes("MIL") || product.name.includes("Tactical") || product.name.includes("RADSOK")) {
-      basePrice = 6400;
-    } else if (product.name.includes("High Speed") || product.name.includes("Backplane")) {
-      basePrice = 2850;
-    } else {
-      basePrice = 1650;
-    }
-  } else if (product.brand === "Zolex") {
-    if (product.category.includes("Gland") || product.name.includes("Flameproof")) {
-      basePrice = 850;
-    } else if (product.category.includes("Earth") || product.name.includes("Rod")) {
-      basePrice = 1450;
-    } else if (product.category.includes("SS Cable Ties") || product.name.includes("Ties")) {
-      basePrice = 420;
-    } else if (product.category.includes("Bimetallic") || product.name.includes("Bimetal")) {
-      basePrice = 680;
-    } else if (product.category.includes("Lug") || product.name.includes("Lug")) {
-      basePrice = 350;
-    } else {
-      basePrice = 290;
-    }
-  } else {
-    // Qualitech Manufacturing
-    if (product.name.includes("Defense") || product.name.includes("Military")) {
-      basePrice = 14500;
-    } else if (product.name.includes("Harness") || product.name.includes("OEM")) {
-      basePrice = 8900;
-    } else if (product.name.includes("RF") || product.name.includes("Coaxial")) {
-      basePrice = 2450;
-    } else {
-      basePrice = 5200;
-    }
-  }
-
-  // Add deterministic pseudo-hash based on SKU or ID length for variation
-  const idStr = product.id || product.sku || "p";
-  const variation = (idStr.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) % 15) * 50;
-  return basePrice + variation;
+  return product.price || 0;
 }
 
-// Compute Tiered Volume Discounts for B2B procurement
+// Tiered Pricing Getter - only returns tiers if explicitly defined in data
 export function getProductTieredPricing(product: Product): TieredPrice[] {
-  if (product.tieredPricing && product.tieredPricing.length > 0) {
-    return product.tieredPricing;
-  }
-  const basePrice = getProductDefaultPrice(product);
-  return [
-    { minQty: 1, price: basePrice, discountLabel: "Standard" },
-    { minQty: 10, price: Math.round(basePrice * 0.92), discountLabel: "8% Off" },
-    { minQty: 50, price: Math.round(basePrice * 0.85), discountLabel: "15% Off (Volume)" },
-    { minQty: 100, price: Math.round(basePrice * 0.78), discountLabel: "22% Off (OEM Bulk)" },
-  ];
+  return product.tieredPricing || [];
 }
 
 // Calculate the effective unit price for a given quantity

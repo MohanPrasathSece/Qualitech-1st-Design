@@ -10,10 +10,8 @@ export const PRODUCTS_UPDATED_EVENT = "qualitech:products_updated";
  * Ensures that all products returned have consistent e-commerce pricing & inventory
  */
 function normalizeProduct(p: any): Product {
-  const brand =
-    p.brand === "Amphenol" || p.brand === "Zolex" || p.brand === "Qualitech"
-      ? p.brand
-      : "Qualitech";
+  const rawBrand = String(p.brand || "").trim();
+  const brand: Product["brand"] = (rawBrand === "Zolex" || rawBrand === "Qualitech" ? rawBrand : "Amphenol") as Product["brand"];
 
   const tempProd: Product = {
     id: p.id || `prod-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
@@ -92,14 +90,14 @@ export function addStoredProduct(product: Partial<Product>): Product[] {
 
 export function updateStoredProduct(id: string, updates: Partial<Product>): Product[] {
   const current = getStoredProducts();
-  const updated = current.map((p) => (p.id === id ? normalizeProduct({ ...p, ...updates }) : p));
+  const updated = current.map((p) => (p.id === id || p.sku === id ? normalizeProduct({ ...p, ...updates }) : p));
   saveStoredProducts(updated);
   return updated;
 }
 
 export function deleteStoredProduct(id: string): Product[] {
   const current = getStoredProducts();
-  const updated = current.filter((p) => p.id !== id);
+  const updated = current.filter((p) => p.id !== id && p.sku !== id);
   saveStoredProducts(updated);
   return updated;
 }

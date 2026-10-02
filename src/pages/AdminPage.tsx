@@ -586,13 +586,25 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
     showToast(`Duplicated product as "${duplicate.name}".`, "success");
   };
 
-  const handleToggleStock = (prod: Product) => {
+  const handleUpdateStockCount = (prod: Product, newCount: number) => {
+    const qty = Math.max(0, newCount);
     const prodId = prod.id || prod.sku;
-    const updated = updateStoredProduct(prodId, { inStock: !prod.inStock });
+    const updated = updateStoredProduct(prodId, { stockCount: qty, inStock: qty > 0 });
     setProducts(updated);
     const updatedProd = updated.find((p) => (p.id || p.sku) === prodId);
     if (updatedProd) saveProductToSupabase(updatedProd).catch(console.warn);
-    showToast(`${prod.name} is now ${!prod.inStock ? "In Stock" : "Out of Stock"}.`, "info");
+    showToast(`Updated stock for ${prod.name} to ${qty} ${prod.unit || "pcs"}.`, "success");
+  };
+
+  const handleToggleStock = (prod: Product) => {
+    const prodId = prod.id || prod.sku;
+    const newStockState = !prod.inStock;
+    const newCount = newStockState ? Math.max(10, prod.stockCount || 10) : 0;
+    const updated = updateStoredProduct(prodId, { inStock: newStockState, stockCount: newCount });
+    setProducts(updated);
+    const updatedProd = updated.find((p) => (p.id || p.sku) === prodId);
+    if (updatedProd) saveProductToSupabase(updatedProd).catch(console.warn);
+    showToast(`${prod.name} is now ${newStockState ? "In Stock" : "Out of Stock"}.`, "info");
   };
 
   const handleExportJson = () => {
@@ -1412,7 +1424,9 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                               </div>
                               <div className="max-w-xs">
                                 <p className="font-bold text-slate-900 line-clamp-1">{p.name}</p>
-                                <p className="font-mono text-xs text-slate-400">{p.sku}</p>
+                                {p.sku && p.sku !== p.name && (
+                                  <p className="font-mono text-xs text-slate-400">{p.sku}</p>
+                                )}
                               </div>
                             </div>
                           </td>
@@ -1442,8 +1456,44 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                             {formatINR(price)}
                           </td>
 
-                          <td className="py-3.5 px-4 text-center font-mono font-semibold text-slate-700">
-                            {p.stockCount || 100} {p.unit || "pcs"}
+                          <td className="py-3.5 px-4 text-center">
+                            <div className="flex items-center justify-center gap-1">
+                              <button
+                                onClick={() => handleUpdateStockCount(p, (p.stockCount || 0) - 10)}
+                                className="h-7 px-1.5 rounded-md border border-slate-200 bg-slate-100 text-[0.65rem] font-bold text-slate-600 hover:bg-slate-200 transition-colors cursor-pointer"
+                                title="Decrease by 10"
+                              >
+                                -10
+                              </button>
+                              <button
+                                onClick={() => handleUpdateStockCount(p, (p.stockCount || 0) - 1)}
+                                className="h-7 w-7 rounded-md border border-slate-200 bg-slate-100 text-xs font-bold text-slate-700 hover:bg-slate-200 transition-colors cursor-pointer"
+                                title="Decrease by 1"
+                              >
+                                -
+                              </button>
+                              <input
+                                type="number"
+                                min="0"
+                                value={p.stockCount ?? 0}
+                                onChange={(e) => handleUpdateStockCount(p, parseInt(e.target.value, 10) || 0)}
+                                className="w-16 text-center font-mono text-xs font-bold text-slate-900 border border-slate-300 rounded-md py-1 bg-white focus:border-[#004f9e] focus:outline-hidden"
+                              />
+                              <button
+                                onClick={() => handleUpdateStockCount(p, (p.stockCount || 0) + 1)}
+                                className="h-7 w-7 rounded-md border border-slate-200 bg-slate-100 text-xs font-bold text-slate-700 hover:bg-slate-200 transition-colors cursor-pointer"
+                                title="Increase by 1"
+                              >
+                                +
+                              </button>
+                              <button
+                                onClick={() => handleUpdateStockCount(p, (p.stockCount || 0) + 10)}
+                                className="h-7 px-1.5 rounded-md border border-slate-200 bg-slate-100 text-[0.65rem] font-bold text-slate-600 hover:bg-slate-200 transition-colors cursor-pointer"
+                                title="Increase by 10"
+                              >
+                                +10
+                              </button>
+                            </div>
                           </td>
 
                           <td className="py-3.5 px-4 text-center">

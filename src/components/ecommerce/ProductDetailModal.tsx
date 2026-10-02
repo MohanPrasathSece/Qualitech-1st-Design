@@ -3,9 +3,6 @@ import { Product } from "@/data/products";
 import { useECommerce } from "@/context/ECommerceContext";
 import {
   formatINR,
-  getProductDefaultPrice,
-  getProductTieredPricing,
-  getEffectiveUnitPrice,
   getProductExternalLink,
 } from "@/lib/ecommerceStore";
 
@@ -24,23 +21,23 @@ export const ProductDetailModal: React.FC = () => {
   const [copiedLink, setCopiedLink] = useState(false);
   const [addedToast, setAddedToast] = useState(false);
 
-  // Reset quantity on product change
+  const [imageError, setImageError] = useState(false);
+
+  // Reset quantity and error state on product change
   React.useEffect(() => {
     if (quickViewProduct) {
       setQuantity(quickViewProduct.minOrderQty || 1);
       setActiveTab("specs");
+      setImageError(false);
     }
   }, [quickViewProduct]);
 
   if (!quickViewProduct) return null;
 
   const product = quickViewProduct;
-  const basePrice = getProductDefaultPrice(product);
-  const tieredPricing = getProductTieredPricing(product);
-  const unitPrice = getEffectiveUnitPrice(product, quantity);
+  const isOutOfStock = !product.inStock || (product.stockCount !== undefined && product.stockCount <= 0);
+  const unitPrice = product.price || 0;
   const totalItemPrice = unitPrice * quantity;
-  const standardTotal = basePrice * quantity;
-  const savings = standardTotal - totalItemPrice;
 
   // Find related products in same category or brand
   const relatedProducts = products
@@ -48,12 +45,14 @@ export const ProductDetailModal: React.FC = () => {
     .slice(0, 4);
 
   const handleAddToCart = () => {
+    if (isOutOfStock) return;
     addToCart(product, quantity);
     setAddedToast(true);
     setTimeout(() => setAddedToast(false), 2500);
   };
 
   const handleBuyNow = () => {
+    if (isOutOfStock) return;
     addToCart(product, quantity);
     closeQuickView();
     openCheckout();
@@ -136,8 +135,12 @@ Email: info@qualitechindia.in | Tel: +91 98490 01484
             >
               {product.brand}
             </span>
-            <span className="text-xs text-muted-foreground">•</span>
-            <span className="text-xs font-mono font-medium text-muted-foreground">{product.sku}</span>
+            {product.sku && product.sku !== product.name && (
+              <>
+                <span className="text-xs text-muted-foreground">•</span>
+                <span className="text-xs font-mono font-medium text-muted-foreground">{product.sku}</span>
+              </>
+            )}
           </div>
 
           <div className="flex items-center gap-2">
@@ -183,12 +186,25 @@ Email: info@qualitechindia.in | Tel: +91 98490 01484
           <div className="grid gap-8 md:grid-cols-[1.1fr_1.3fr]">
             {/* Left: Product Media & Badges */}
             <div className="space-y-4">
-              <div className="relative aspect-4/3 overflow-hidden rounded-2xl border border-border bg-steel-light/10 p-4">
-                <img
-                  src={product.image || "/logo.png"}
-                  alt={product.name}
-                  className="h-full w-full object-contain transition-transform duration-300 hover:scale-105"
-                />
+              <div className="relative aspect-4/3 overflow-hidden rounded-2xl border border-border bg-steel-light/10 p-4 flex items-center justify-center">
+                {!imageError && product.image && product.image !== "/logo.png" ? (
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    onError={() => setImageError(true)}
+                    className="h-full w-full object-contain transition-transform duration-300 hover:scale-105"
+                  />
+                ) : (
+                  <div className="flex flex-col items-center justify-center p-6 text-center">
+                    <div className="h-16 w-16 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 mb-2 border border-slate-200">
+                      <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Image Not Available</span>
+                    <span className="text-[0.65rem] text-slate-400 font-mono mt-0.5">{product.sku}</span>
+                  </div>
+                )}
                 {product.featured && (
                   <span className="absolute top-3 left-3 flex items-center gap-1 rounded-full bg-brand-yellow px-2.5 py-0.5 text-[0.65rem] font-extrabold uppercase tracking-wider text-graphite shadow-xs">
                     <svg className="h-3 w-3 fill-current" viewBox="0 0 20 20">
@@ -199,12 +215,12 @@ Email: info@qualitechindia.in | Tel: +91 98490 01484
                 )}
                 <span
                   className={`absolute top-3 right-3 rounded-full px-2.5 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider ${
-                    product.inStock
+                    !isOutOfStock
                       ? "bg-emerald-100 text-emerald-800"
                       : "bg-rose-100 text-rose-800"
                   }`}
                 >
-                  {product.inStock ? "● In Stock" : "○ Out of Stock"}
+                  {!isOutOfStock ? "● In Stock" : "○ Out of Stock"}
                 </span>
               </div>
 
@@ -220,8 +236,8 @@ Email: info@qualitechindia.in | Tel: +91 98490 01484
                   <span className="text-[0.65rem] font-bold uppercase tracking-wider text-muted-foreground">
                     Available Stock
                   </span>
-                  <p className="mt-0.5 font-bold text-emerald-600">
-                    {product.stockCount || 120} {product.unit || "units"} available
+                  <p className={`mt-0.5 font-bold ${isOutOfStock ? "text-rose-600" : "text-emerald-600"}`}>
+                    {product.stockCount ?? 0} {product.unit || "units"} {!isOutOfStock ? "available" : "(Out of stock)"}
                   </p>
                 </div>
               </div>
@@ -298,11 +314,6 @@ Email: info@qualitechindia.in | Tel: +91 98490 01484
                         <span className="font-display text-2xl font-extrabold text-brand-blue">
                           {formatINR(unitPrice)}
                         </span>
-                        {unitPrice < basePrice && (
-                          <span className="text-xs text-muted-foreground line-through">
-                            {formatINR(basePrice)}
-                          </span>
-                        )}
                         <span className="text-xs text-muted-foreground">/ {product.unit || "unit"}</span>
                       </div>
                     </div>
@@ -314,99 +325,63 @@ Email: info@qualitechindia.in | Tel: +91 98490 01484
                       <p className="font-display text-base font-bold text-graphite mt-0.5">
                         {formatINR(totalItemPrice)}
                       </p>
-                      {savings > 0 && (
-                        <p className="text-[0.68rem] font-bold text-emerald-600">
-                          Saving {formatINR(savings)} ({Math.round((savings / standardTotal) * 100)}% off)
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Tiered Pricing Table */}
-                  <div className="mt-3 border-t border-border/60 pt-3">
-                    <p className="text-[0.65rem] font-bold uppercase tracking-wider text-graphite mb-1.5">
-                      Volume B2B Pricing Tiers
-                    </p>
-                    <div className="grid grid-cols-4 gap-1.5 text-center text-xs">
-                      {tieredPricing.map((tier, idx) => {
-                        const nextTier = tieredPricing[idx + 1];
-                        const isCurrentTier =
-                          quantity >= tier.minQty &&
-                          (idx === tieredPricing.length - 1 || (nextTier ? quantity < nextTier.minQty : true));
-
-                        return (
-                          <button
-                            key={tier.minQty}
-                            type="button"
-                            onClick={() => setQuantity(tier.minQty)}
-                            className={`rounded-lg p-1.5 border transition-all cursor-pointer ${
-                              isCurrentTier
-                                ? "border-brand-blue bg-white shadow-2xs text-brand-blue ring-1 ring-brand-blue"
-                                : "border-border/70 bg-white/60 text-muted-foreground hover:bg-white"
-                            }`}
-                          >
-                            <span className="block text-[0.62rem] font-bold text-muted-foreground">
-                              {tier.minQty}+ {product.unit || "pcs"}
-                            </span>
-                            <span className="block font-bold text-graphite text-[0.72rem] mt-0.5">
-                              {formatINR(tier.price)}
-                            </span>
-                            {tier.discountLabel && (
-                              <span className="block text-[0.55rem] font-bold text-emerald-600">
-                                {tier.discountLabel}
-                              </span>
-                            )}
-                          </button>
-                        );
-                      })}
                     </div>
                   </div>
                 </div>
 
                 {/* Quantity & CTA Buttons */}
                 <div className="mt-5 space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center rounded-xl border border-border bg-steel-light/30 shadow-2xs">
-                      <button
-                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                        className="flex h-10 w-10 items-center justify-center text-base font-bold text-muted-foreground hover:text-foreground hover:bg-steel-light transition-colors rounded-l-xl cursor-pointer"
-                      >
-                        -
-                      </button>
-                      <input
-                        type="number"
-                        min="1"
-                        max="10000"
-                        value={quantity}
-                        onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value, 10) || 1))}
-                        className="w-16 text-center text-sm font-bold text-graphite bg-transparent focus:outline-hidden"
-                      />
-                      <button
-                        onClick={() => setQuantity(quantity + 1)}
-                        className="flex h-10 w-10 items-center justify-center text-base font-bold text-muted-foreground hover:text-foreground hover:bg-steel-light transition-colors rounded-r-xl cursor-pointer"
-                      >
-                        +
-                      </button>
+                  {isOutOfStock ? (
+                    <div className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-center">
+                      <p className="text-xs font-bold text-rose-700 uppercase tracking-wider">Item Currently Out of Stock</p>
+                      <p className="text-xs text-rose-600 mt-1">This product is currently unavailable. You cannot add it to cart or place an instant order.</p>
                     </div>
+                  ) : (
+                    <>
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center rounded-xl border border-border bg-steel-light/30 shadow-2xs">
+                          <button
+                            onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                            className="flex h-10 w-10 items-center justify-center text-base font-bold text-muted-foreground hover:text-foreground hover:bg-steel-light transition-colors rounded-l-xl cursor-pointer"
+                          >
+                            -
+                          </button>
+                          <input
+                            type="number"
+                            min="1"
+                            max="10000"
+                            value={quantity}
+                            onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value, 10) || 1))}
+                            className="w-16 text-center text-sm font-bold text-graphite bg-transparent focus:outline-hidden"
+                          />
+                          <button
+                            onClick={() => setQuantity(quantity + 1)}
+                            className="flex h-10 w-10 items-center justify-center text-base font-bold text-muted-foreground hover:text-foreground hover:bg-steel-light transition-colors rounded-r-xl cursor-pointer"
+                          >
+                            +
+                          </button>
+                        </div>
 
-                    <button
-                      onClick={handleAddToCart}
-                      className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-graphite px-5 py-3 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-brand-blue transition-all cursor-pointer shadow-sm"
-                    >
-                      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                      </svg>
-                      <span>{addedToast ? "Added to Cart!" : "Add to Cart"}</span>
-                    </button>
-                  </div>
+                        <button
+                          onClick={handleAddToCart}
+                          className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-graphite px-5 py-3 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-brand-blue transition-all cursor-pointer shadow-sm"
+                        >
+                          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                          </svg>
+                          <span>{addedToast ? "Added to Cart!" : "Add to Cart"}</span>
+                        </button>
+                      </div>
 
-                  <button
-                    onClick={handleBuyNow}
-                    className="w-full flex items-center justify-center gap-2 rounded-xl bg-brand-blue py-3.5 font-display text-xs font-bold uppercase tracking-[0.16em] text-white shadow-md hover:bg-brand-blue-soft transition-all cursor-pointer"
-                  >
-                    <span>Instant Checkout / Buy Now</span>
-                    <span>→</span>
-                  </button>
+                      <button
+                        onClick={handleBuyNow}
+                        className="w-full flex items-center justify-center gap-2 rounded-xl bg-brand-blue py-3.5 font-display text-xs font-bold uppercase tracking-[0.16em] text-white shadow-md hover:bg-brand-blue-soft transition-all cursor-pointer"
+                      >
+                        <span>Instant Checkout / Buy Now</span>
+                        <span>→</span>
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -532,7 +507,7 @@ Email: info@qualitechindia.in | Tel: +91 98490 01484
                       {rel.name}
                     </p>
                     <p className="text-[0.65rem] text-brand-blue font-bold mt-0.5">
-                      {formatINR(getProductDefaultPrice(rel))}
+                      {formatINR(rel.price || 0)}
                     </p>
                   </div>
                 ))}

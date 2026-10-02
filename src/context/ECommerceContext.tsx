@@ -239,6 +239,10 @@ export const ECommerceProvider: React.FC<{ children: ReactNode }> = ({ children 
 
   // Actions
   const addToCart = (product: Product, quantity = 1, note?: string) => {
+    if (!product.inStock || (product.stockCount !== undefined && product.stockCount <= 0)) {
+      alert(`"${product.name}" is currently out of stock and cannot be added to cart.`);
+      return;
+    }
     const updated = addToStoredCart(product, quantity, note);
     setCart(updated);
     setIsCartOpen(true);

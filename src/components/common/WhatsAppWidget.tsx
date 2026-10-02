@@ -67,7 +67,7 @@ export const WhatsAppWidget: React.FC = () => {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-[90] font-sans">
+    <div className="fixed bottom-20 right-6 z-[90] font-sans">
       {/* Popover Window */}
       {isOpen && (
         <div className="mb-4 w-84 sm:w-96 rounded-2xl bg-white p-5 shadow-2xl border border-border animate-in fade-in slide-in-from-bottom-5 duration-200">

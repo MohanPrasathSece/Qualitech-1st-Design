@@ -538,9 +538,11 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
 
                         {/* Title & SKU */}
                         <div className="mt-3">
-                          <p className="font-mono text-[0.68rem] text-muted-foreground">
-                            {product.sku}
-                          </p>
+                          {product.sku && product.sku !== product.name && (
+                            <p className="font-mono text-[0.68rem] text-muted-foreground">
+                              {product.sku}
+                            </p>
+                          )}
                           <h3
                             onClick={() => openQuickView(product)}
                             className="mt-0.5 font-display text-sm font-bold text-graphite line-clamp-2 hover:text-brand-blue transition-colors cursor-pointer leading-snug"
@@ -567,9 +569,11 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
                               {formatINR(price)}
                             </p>
                           </div>
-                          <span className="text-[0.65rem] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md font-bold">
-                            Volume Tier Avail.
-                          </span>
+                          {product.tieredPricing && product.tieredPricing.length > 0 && (
+                            <span className="text-[0.65rem] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md font-bold">
+                              Volume Tier Avail.
+                            </span>
+                          )}
                         </div>
 
                         {/* Manufacturer Direct Link Strip */}
@@ -597,15 +601,24 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
                           >
                             Quick View
                           </button>
-                          <button
-                            onClick={() => addToCart(product, 1)}
-                            className="flex items-center justify-center gap-1.5 rounded-xl bg-graphite py-2 text-center text-xs font-bold uppercase tracking-wider text-white hover:bg-brand-blue transition-colors cursor-pointer shadow-2xs"
-                          >
-                            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                            </svg>
-                            <span>Add</span>
-                          </button>
+                          {(!product.inStock || (product.stockCount !== undefined && product.stockCount <= 0)) ? (
+                            <button
+                              disabled
+                              className="flex items-center justify-center rounded-xl bg-slate-200 py-2 text-center text-xs font-bold uppercase tracking-wider text-slate-400 cursor-not-allowed"
+                            >
+                              <span>Out of Stock</span>
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => addToCart(product, 1)}
+                              className="flex items-center justify-center gap-1.5 rounded-xl bg-graphite py-2 text-center text-xs font-bold uppercase tracking-wider text-white hover:bg-brand-blue transition-colors cursor-pointer shadow-2xs"
+                            >
+                              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                              </svg>
+                              <span>Add</span>
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -639,7 +652,9 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
                             <span className="rounded-md bg-steel-light px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider text-graphite">
                               {product.brand}
                             </span>
-                            <span className="font-mono text-xs text-muted-foreground">{product.sku}</span>
+                            {product.sku && product.sku !== product.name && (
+                              <span className="font-mono text-xs text-muted-foreground">{product.sku}</span>
+                            )}
                             {product.brand !== "Qualitech" && (
                               <a
                                 href={getProductExternalLink(product).url}
@@ -693,12 +708,21 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
                           >
                             Details
                           </button>
-                          <button
-                            onClick={() => addToCart(product, 1)}
-                            className="rounded-xl bg-brand-blue px-4 py-2 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-graphite transition-all cursor-pointer shadow-xs"
-                          >
-                            + Cart
-                          </button>
+                          {(!product.inStock || (product.stockCount !== undefined && product.stockCount <= 0)) ? (
+                            <button
+                              disabled
+                              className="rounded-xl bg-slate-200 px-4 py-2 font-display text-xs font-bold uppercase tracking-wider text-slate-400 cursor-not-allowed"
+                            >
+                              Out of Stock
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => addToCart(product, 1)}
+                              className="rounded-xl bg-brand-blue px-4 py-2 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-graphite transition-all cursor-pointer shadow-xs"
+                            >
+                              + Cart
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>
