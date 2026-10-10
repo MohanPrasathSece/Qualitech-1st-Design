@@ -25,6 +25,7 @@ import {
   deleteQuoteRequestFromSupabase,
   SupabaseQuoteRecord,
 } from "@/lib/supabaseService";
+import { ProductImage } from "@/components/common/ProductImage";
 
 import p1 from "@/assets/p1.jpg";
 import p2 from "@/assets/p2.jpg";
@@ -1420,7 +1421,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                           <td className="py-3.5 px-4">
                             <div className="flex items-center gap-3">
                               <div className="h-11 w-11 shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-slate-50 p-1">
-                                <img src={p.image || "/logo.png"} alt={p.name} className="h-full w-full object-contain" />
+                                <ProductImage src={p.image} alt={p.name} className="h-full w-full object-contain" showText={false} />
                               </div>
                               <div className="max-w-xs">
                                 <p className="font-bold text-slate-900 line-clamp-1">{p.name}</p>
@@ -2419,7 +2420,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                     <label className="block text-sm font-semibold text-slate-700 mb-2">Product Image (Supabase Storage)</label>
                     <div className="flex items-center gap-4">
                       <div className="h-24 w-24 shrink-0 overflow-hidden rounded-xl border border-slate-200 p-1.5 bg-white shadow-xs">
-                        <img src={formData.image || "/logo.png"} alt="Preview" className="h-full w-full object-contain" />
+                        <ProductImage src={formData.image} alt="Preview" className="h-full w-full object-contain" />
                       </div>
                       <div className="space-y-2.5 flex-1">
                         <input

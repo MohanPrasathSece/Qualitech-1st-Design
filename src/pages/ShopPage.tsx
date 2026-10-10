@@ -9,6 +9,7 @@ import { useECommerce } from "@/context/ECommerceContext";
 import { formatINR, getProductDefaultPrice, getProductExternalLink } from "@/lib/ecommerceStore";
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
+import { ProductImage } from "@/components/common/ProductImage";
 
 interface ShopPageProps {
   onNavigateHome: (sectionId?: string | undefined, isPage?: boolean | undefined) => void;
@@ -536,8 +537,8 @@ export function ShopPage({ onNavigateHome, initialBrand = "All Brands" }: ShopPa
                       {/* Top Badges */}
                       <div>
                         <div className="relative aspect-4/3 overflow-hidden rounded-xl border border-border/60 bg-steel-light/20 p-2">
-                          <img
-                            src={product.image || "/logo.png"}
+                          <ProductImage
+                            src={product.image}
                             alt={product.name}
                             className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
                           />
@@ -671,10 +672,11 @@ export function ShopPage({ onNavigateHome, initialBrand = "All Brands" }: ShopPa
                         onClick={() => openQuickView(product)}
                       >
                         <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl border border-border/80 bg-steel-light/20 p-1.5">
-                          <img
-                            src={product.image || "/logo.png"}
+                          <ProductImage
+                            src={product.image}
                             alt={product.name}
                             className="h-full w-full object-contain"
+                            showText={false}
                           />
                         </div>
                         <div>

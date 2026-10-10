@@ -25,7 +25,7 @@ function normalizeProduct(p: any): Product {
     specs: typeof p.specs === "object" && p.specs !== null ? p.specs : { Manufacturer: brand },
     industries: Array.isArray(p.industries) && p.industries.length > 0 ? p.industries : ["Industrial Automation", "Telecommunications"],
     featured: Boolean(p.featured),
-    image: p.image || "/logo.png",
+    image: p.image || "",
     inStock: p.inStock !== undefined ? Boolean(p.inStock) : true,
     externalUrl: p.externalUrl || "",
     isEnquiry: Boolean(p.isEnquiry),
@@ -270,7 +270,7 @@ export function importProductsFromCsv(csvText: string): { success: boolean; coun
       const featured = row["Is featured?"] === "1" || row["Featured"] === "1" || row["Featured"] === "Yes";
 
       const description = row["Description"] || row["Short description"] || row["description"] || "";
-      const image = row["Images"] || row["Image"] || "/logo.png";
+      const image = row["Images"] || row["Image"] || "";
       const externalUrl = row["External URL"] || row["external_url"] || "";
 
       const newProd = normalizeProduct({

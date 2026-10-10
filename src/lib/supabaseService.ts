@@ -86,7 +86,7 @@ export function supabaseRowToProduct(row: any): Product {
     specs: row.specs && typeof row.specs === "object" ? row.specs : {},
     industries: Array.isArray(row.industries) ? row.industries : [],
     featured: Boolean(row.featured),
-    image: row.image || "/logo.png",
+    image: row.image || "",
     inStock: Boolean(row.in_stock),
     externalUrl: row.external_url || undefined,
     isEnquiry: Boolean(row.is_enquiry),
@@ -305,7 +305,7 @@ export async function fetchOrdersFromSupabase(): Promise<Order[] | null> {
           features: [],
           specs: {},
           industries: [],
-          image: "/logo.png",
+          image: "",
           inStock: true,
         },
       }));

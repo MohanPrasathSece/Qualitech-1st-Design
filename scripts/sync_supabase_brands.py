@@ -45,7 +45,7 @@ for p in new_prods:
         "specs": p.get("specs", {}),
         "industries": p.get("industries", []),
         "featured": p.get("featured", False),
-        "image": p.get("image", "/logo.png"),
+        "image": p.get("image", ""),
         "in_stock": p.get("inStock", True),
         "external_url": p.get("externalUrl", None),
         "price": p.get("price", 100),

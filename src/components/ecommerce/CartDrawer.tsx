@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useECommerce } from "@/context/ECommerceContext";
 import { formatINR } from "@/lib/ecommerceStore";
 import { downloadQuotationFromCart } from "@/lib/pdfQuotationService";
+import { ProductImage } from "@/components/common/ProductImage";
 
 interface CartDrawerProps {
   onNavigateToShop?: () => void;
@@ -170,10 +171,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToShop }) => {
                 >
                   {/* Thumbnail */}
                   <div className="h-20 w-20 shrink-0 overflow-hidden rounded-lg border border-border/80 bg-white p-1">
-                    <img
-                      src={item.product.image || "/logo.png"}
+                    <ProductImage
+                      src={item.product.image}
                       alt={item.product.name}
                       className="h-full w-full object-contain"
+                      showText={false}
                     />
                   </div>
 

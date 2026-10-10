@@ -5,6 +5,7 @@ import {
   formatINR,
   getProductExternalLink,
 } from "@/lib/ecommerceStore";
+import { ProductImage } from "@/components/common/ProductImage";
 
 export const ProductDetailModal: React.FC = () => {
   const {
@@ -187,24 +188,11 @@ Email: info@qualitechindia.in | Tel: +91 98490 01484
             {/* Left: Product Media & Badges */}
             <div className="space-y-4">
               <div className="relative aspect-4/3 overflow-hidden rounded-2xl border border-border bg-steel-light/10 p-4 flex items-center justify-center">
-                {!imageError && product.image && product.image !== "/logo.png" ? (
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    onError={() => setImageError(true)}
-                    className="h-full w-full object-contain transition-transform duration-300 hover:scale-105"
-                  />
-                ) : (
-                  <div className="flex flex-col items-center justify-center p-6 text-center">
-                    <div className="h-16 w-16 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 mb-2 border border-slate-200">
-                      <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                      </svg>
-                    </div>
-                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Image Not Available</span>
-                    <span className="text-[0.65rem] text-slate-400 font-mono mt-0.5">{product.sku}</span>
-                  </div>
-                )}
+                <ProductImage
+                  src={product.image}
+                  alt={product.name}
+                  className="h-full w-full object-contain transition-transform duration-300 hover:scale-105"
+                />
                 {product.featured && (
                   <span className="absolute top-3 left-3 flex items-center gap-1 rounded-full bg-brand-yellow px-2.5 py-0.5 text-[0.65rem] font-extrabold uppercase tracking-wider text-graphite shadow-xs">
                     <svg className="h-3 w-3 fill-current" viewBox="0 0 20 20">
@@ -497,10 +485,11 @@ Email: info@qualitechindia.in | Tel: +91 98490 01484
                     className="group rounded-xl border border-border p-2.5 transition-all hover:border-brand-blue hover:shadow-xs cursor-pointer bg-white"
                   >
                     <div className="aspect-square w-full overflow-hidden rounded-lg bg-steel-light/20 p-2">
-                      <img
-                        src={rel.image || "/logo.png"}
+                      <ProductImage
+                        src={rel.image}
                         alt={rel.name}
                         className="h-full w-full object-contain group-hover:scale-105 transition-transform"
+                        showText={false}
                       />
                     </div>
                     <p className="mt-2 font-display text-[0.72rem] font-bold text-graphite line-clamp-1">

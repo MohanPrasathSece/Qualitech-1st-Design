@@ -84,7 +84,7 @@ for r_idx in range(2, sheet.max_row + 1):
         "brand": "FCI / Amphenol", "category": category, "sub_category": sub_category,
         "description": note_str if note_str else f"{name_str} - FCI Amphenol connector component.",
         "features": [], "specs": {}, "industries": ["Electronics", "Industrial", "Telecom"],
-        "featured": False, "image": "/logo.png", "in_stock": qty_num > 0,
+        "featured": False, "image": "", "in_stock": qty_num > 0,
         "external_url": None, "is_enquiry": False,
         "price": rate_num if rate_num > 0 else 0.0, "sale_price": None,
         "stock_count": qty_num, "low_stock_threshold": 10, "min_order_qty": 1,

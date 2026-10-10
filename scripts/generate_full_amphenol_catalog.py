@@ -119,10 +119,10 @@ item_id_counter = 1
 
 # List of assets for high quality images
 image_pool = [
-    "/logo.png",
-    "/logo.png",
-    "/logo.png",
-    "/logo.png"
+    "",
+    "",
+    "",
+    ""
 ]
 
 for cat_obj in amphenol_tree:

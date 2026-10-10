@@ -27,7 +27,7 @@ async function seed() {
   // Clean and transform TS object syntax into standard objects
   // We can use Function constructor in a sandbox to parse the array safely
   const sanitized = rawProductsStr
-    .replace(/image:\s*[a-zA-Z0-9_]+/g, 'image: "/logo.png"') // Replace imported image symbols with string path
+    .replace(/image:\s*[a-zA-Z0-9_]+/g, 'image: ""') // Replace imported image symbols with string path
     .replace(/\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/gm, ''); // Strip comments
 
   let products = [];
@@ -53,7 +53,7 @@ async function seed() {
     specs: p.specs || {},
     industries: p.industries || [],
     featured: Boolean(p.featured),
-    image: p.image || "/logo.png",
+    image: p.image || "",
     in_stock: p.inStock ?? true,
     external_url: p.externalUrl || null,
     is_enquiry: Boolean(p.isEnquiry),

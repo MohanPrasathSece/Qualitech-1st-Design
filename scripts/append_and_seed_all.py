@@ -32,7 +32,7 @@ for p in all_new_prods:
     specs: {specs_js},
     industries: {industries_js},
     featured: {str(p.get('featured', False)).lower()},
-    image: {json.dumps(p.get('image', '/logo.png'))},
+    image: {json.dumps(p.get('image', ''))},
     inStock: {str(p.get('inStock', True)).lower()},
     price: {p.get('price', 100)},
     stockCount: {p.get('stockCount', 100)},

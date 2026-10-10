@@ -9,10 +9,10 @@ amphenol_products = []
 item_id_counter = 1
 
 image_pool = [
-    "/logo.png",
-    "/logo.png",
-    "/logo.png",
-    "/logo.png"
+    "",
+    "",
+    "",
+    ""
 ]
 
 for cat_obj in amp_tree:
