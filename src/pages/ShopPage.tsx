@@ -12,9 +12,10 @@ import { Header } from "@/components/site/Header";
 
 interface ShopPageProps {
   onNavigateHome: (sectionId?: string | undefined, isPage?: boolean | undefined) => void;
+  initialBrand?: string | undefined;
 }
 
-export function ShopPage({ onNavigateHome }: ShopPageProps) {
+export function ShopPage({ onNavigateHome, initialBrand = "All Brands" }: ShopPageProps) {
   const {
     products,
     addToCart,
@@ -24,7 +25,7 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
     openCart,
   } = useECommerce();
 
-  const [selectedBrand, setSelectedBrand] = useState<string>("All Brands");
+  const [selectedBrand, setSelectedBrand] = useState<string>(initialBrand);
   const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
   const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(null);
   const [selectedIndustry, setSelectedIndustry] = useState<string | null>(null);
@@ -33,6 +34,12 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
   const [maxPrice, setMaxPrice] = useState<number>(30000);
   const [sortBy, setSortBy] = useState<"featured" | "price-asc" | "price-desc" | "sku" | "name">("featured");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+
+  useEffect(() => {
+    if (initialBrand) {
+      setSelectedBrand(initialBrand);
+    }
+  }, [initialBrand]);
 
   // Pagination states
   const [page, setPage] = useState(1);
@@ -96,6 +103,13 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
       return true;
     });
 
+    const brandRank = (brand: string) => {
+      if (brand === "Qualitech") return 1;
+      if (brand === "Amphenol") return 2;
+      if (brand === "Zolex") return 3;
+      return 4;
+    };
+
     if (sortBy === "name") {
       result = [...result].sort((a, b) => a.name.localeCompare(b.name));
     } else if (sortBy === "price-asc") {
@@ -105,7 +119,11 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
     } else if (sortBy === "sku") {
       result = [...result].sort((a, b) => a.sku.localeCompare(b.sku));
     } else {
-      result = [...result].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+      result = [...result].sort((a, b) => {
+        const rankDiff = brandRank(a.brand) - brandRank(b.brand);
+        if (rankDiff !== 0) return rankDiff;
+        return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
+      });
     }
 
     return result;
@@ -174,10 +192,22 @@ export function ShopPage({ onNavigateHome }: ShopPageProps) {
                 </span>
               </div>
               <h1 className="mt-3 font-display text-3xl sm:text-4xl font-extrabold text-graphite tracking-tight">
-                Industrial Components &amp; Assemblies
+                {selectedBrand === "Amphenol"
+                  ? "Amphenol Product Catalogue"
+                  : selectedBrand === "Zolex"
+                  ? "Zolex Product Catalogue"
+                  : selectedBrand === "Qualitech"
+                  ? "Qualitech Product Catalogue (401 Products)"
+                  : "Industrial Components & Assemblies"}
               </h1>
               <p className="mt-2 text-sm text-muted-foreground max-w-2xl">
-                Authorized lines for Amphenol connectors &amp; antennas, Zolex copper lugs &amp; cable ties, plus Qualitech custom military &amp; OEM wire harnesses.
+                {selectedBrand === "Amphenol"
+                  ? "Official line for High Precision GNSS Antennas, Circular MIL-Spec, Industrial M12/SPE, RADSOK Power, RF & Fiber Solutions."
+                  : selectedBrand === "Zolex"
+                  ? "High-Conductivity Copper Tube Lugs, Bimetallic Lugs, Crimp Terminals, Bootlace Ferrules, SS Cable Ties & Glands."
+                  : selectedBrand === "Qualitech"
+                  ? "401+ Genuine Qualitech products including precision electronics stock, custom wire harnesses, and turnkey cable assemblies."
+                  : "Authorized lines for Amphenol connectors & antennas, Zolex copper lugs & cable ties, plus Qualitech custom military & OEM wire harnesses."}
               </p>
             </div>
 

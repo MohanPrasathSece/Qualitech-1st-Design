@@ -19,6 +19,7 @@ import { AboutPage } from "@/pages/AboutPage";
 import { ManufacturingPage } from "@/pages/ManufacturingPage";
 import { AmphenolPage } from "@/pages/AmphenolPage";
 import { ZolexPage } from "@/pages/ZolexPage";
+import { QualitechPage } from "@/pages/QualitechPage";
 import { ContactPage } from "@/pages/ContactPage";
 import { AdminPage } from "@/pages/AdminPage";
 import { ECommerceProvider } from "@/context/ECommerceContext";
@@ -805,6 +806,13 @@ function HomeContent() {
       return;
     }
 
+    if (cleanTarget === "#qualitech") {
+      setCurrentPage("qualitech");
+      window.history.pushState(null, "", "#qualitech");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
     if (cleanTarget === "#amphenol") {
       setCurrentPage("amphenol");
       window.history.pushState(null, "", "#amphenol");
@@ -866,6 +874,10 @@ function HomeContent() {
 
   if (currentPage === "manufacturing") {
     return <ManufacturingPage onNavigate={handleNavigate} />;
+  }
+
+  if (currentPage === "qualitech") {
+    return <QualitechPage onNavigate={handleNavigate} />;
   }
 
   if (currentPage === "amphenol") {

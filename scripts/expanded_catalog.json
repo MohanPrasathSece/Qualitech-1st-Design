@@ -1,0 +1,4955 @@
+{
+  "amphenol": [
+    {
+      "id": "amp-gnss-01",
+      "sku": "AMPHENOL-GNSS-ACT-L1L2L5",
+      "name": "High Precision GNSS Multi-Band Active Patch Antenna (L1/L2/L5)",
+      "brand": "Amphenol",
+      "category": "Antennas",
+      "subCategory": "High Precision GNSS Antennas",
+      "description": "Industrial grade high-precision GNSS active antenna supporting GPS, GLONASS, Galileo, and BeiDou frequencies (L1/L2/L5/E1/E5b) for RTK and centimeter-level positioning accuracy.",
+      "features": [
+        "Multi-band support: GPS L1/L2/L5, GLONASS G1/G2, Galileo E1/E5b, BeiDou B1/B2/B3",
+        "High gain LNA (28dB - 38dB) with low noise figure (<1.5dB)",
+        "IP67 / IP69K weatherproof enclosure with UV resistant casing",
+        "Pre-filtered high out-of-band rejection for cellular & Wi-Fi immunity"
+      ],
+      "specs": {
+        "Frequency Range": "1164 - 1610 MHz",
+        "Peak Gain": "38 dBi max",
+        "Impedance": "50 Ohms",
+        "VSWR": "< 1.5:1",
+        "Connector Type": "SMA Plug / TNC / FAURA",
+        "Mounting Type": "Screw Mount / Magnetic Mount"
+      },
+      "industries": [
+        "Autonomous Vehicles",
+        "Precision Agriculture",
+        "Surveying & Geodesy",
+        "Telematics"
+      ],
+      "featured": true,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 4850,
+      "stockCount": 150,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "datasheetUrl": "https://www.amphenol-cs.com/product-series/gnss.html"
+    },
+    {
+      "id": "amp-gnss-02",
+      "sku": "AMPHENOL-GNSS-FPC-L1L5",
+      "name": "Embedded Flexible FPC Dual-Band GNSS Antenna (L1/L5)",
+      "brand": "Amphenol",
+      "category": "Antennas",
+      "subCategory": "High Precision GNSS Antennas",
+      "description": "Ultra-thin flexible printed circuit (FPC) internal antenna optimized for compact IoT devices, wearables, and asset trackers requiring precise GPS/GNSS location tracking.",
+      "features": [
+        "Dual-band L1 + L5 GNSS capability",
+        "Flexible 3M adhesive backing for quick installation inside plastic housings",
+        "Micro-coaxial cable assembly with IPEX MHF4 / U.FL connector"
+      ],
+      "specs": {
+        "Frequency": "1575.42 MHz & 1176.45 MHz",
+        "Dimensions": "40 x 15 x 0.2 mm",
+        "Impedance": "50 Ohms",
+        "Cable Length": "100mm micro-coax"
+      },
+      "industries": [
+        "IoT & Smart City",
+        "Asset Tracking",
+        "Wearables"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 1250,
+      "stockCount": 300,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "amp-gnss-03",
+      "sku": "AMPHENOL-GNSS-DOME-5IN1",
+      "name": "Rugged Vehicle Dome GNSS + 5G + Wi-Fi 6E Combo Antenna",
+      "brand": "Amphenol",
+      "category": "Antennas",
+      "subCategory": "High Precision GNSS Antennas",
+      "description": "Heavy-duty 5-in-1 multi-purpose vehicle antenna featuring high-precision GNSS positioning, 2x2 MIMO 5G/4G LTE, and 2x2 MIMO Wi-Fi 6E for fleet telematics and emergency vehicles.",
+      "features": [
+        "5-in-1 integrated dome design: 1x GNSS, 2x 5G/4G, 2x Wi-Fi 6E",
+        "High impact IK10 & IP69K waterproof rating",
+        "Heavy-duty bolt mount through vehicle roof"
+      ],
+      "specs": {
+        "GNSS Band": "GPS L1/L2, GLONASS, BeiDou, Galileo",
+        "Cellular Band": "617 - 5925 MHz (5G NR Sub-6GHz)",
+        "IP Rating": "IP67 / IP69K"
+      },
+      "industries": [
+        "Automotive",
+        "Public Safety",
+        "Fleet Telematics"
+      ],
+      "featured": true,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 9200,
+      "stockCount": 85,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "amp-gnss-04",
+      "sku": "AMPHENOL-GNSS-MAG-SURVEY",
+      "name": "Survey Grade High-Gain Active GNSS Antenna with Choke Ring",
+      "brand": "Amphenol",
+      "category": "Antennas",
+      "subCategory": "High Precision GNSS Antennas",
+      "description": "Geodetic survey grade GNSS antenna with multipath rejection technology and integrated choke ring for base stations and reference monitoring.",
+      "features": [
+        "Full constellation tracking (GPS, GLONASS, Galileo, BeiDou, QZSS, IRNSS)",
+        "Sub-millimeter phase center stability",
+        "Heavy aluminum housing with IP68 seal"
+      ],
+      "specs": {
+        "Frequency": "1164 - 1610 MHz",
+        "Gain": "40 dBi",
+        "Noise Figure": "< 1.2 dB"
+      },
+      "industries": [
+        "Surveying & Geodesy",
+        "Mining & Construction"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 14500,
+      "stockCount": 40,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "amp-ant-5g-01",
+      "sku": "AMPHENOL-5G-PUCK-EXT",
+      "name": "5G NR Sub-6GHz & 4G LTE High Gain External Puck Antenna",
+      "brand": "Amphenol",
+      "category": "Antennas",
+      "subCategory": "5G & 4G LTE Cellular Antennas",
+      "description": "Wideband 617-5925 MHz cellular puck antenna for industrial routers, kiosks, and smart metering enclosures.",
+      "features": [
+        "Covers global 5G Sub-6GHz and legacy 4G/3G/2G bands",
+        "Vandal-resistant low-profile housing",
+        "SMA male connector lead"
+      ],
+      "specs": {
+        "Frequency": "617-5925 MHz",
+        "Gain": "5 dBi",
+        "Connector": "SMA Male"
+      },
+      "industries": [
+        "Telecommunications",
+        "Industrial Automation"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 2800,
+      "stockCount": 200,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "amp-ant-wifi-01",
+      "sku": "AMPHENOL-WIFI6E-DIPOLE",
+      "name": "Wi-Fi 6E & Bluetooth 5.3 Tri-Band Terminal Dipole Antenna",
+      "brand": "Amphenol",
+      "category": "Antennas",
+      "subCategory": "Wi-Fi 6E & Bluetooth Antennas",
+      "description": "Tri-band terminal antenna supporting 2.4 GHz, 5 GHz, and 6 GHz spectrum for high-speed Wi-Fi 6E networking.",
+      "features": [
+        "Tri-band 2.4/5/6 GHz operation",
+        "Articulating RP-SMA connector",
+        "High efficiency >75%"
+      ],
+      "specs": {
+        "Frequency": "2400-7125 MHz",
+        "Gain": "4 dBi",
+        "Connector": "RP-SMA Plug"
+      },
+      "industries": [
+        "Telecommunications",
+        "Industrial IoT"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 950,
+      "stockCount": 350,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "amp-circ-01",
+      "sku": "AMPHENOL-CIRC-MIL-38999",
+      "name": "MIL-DTL-38999 Series III Circular Connectors",
+      "brand": "Amphenol",
+      "category": "Connectors",
+      "subCategory": "Board to Board",
+      "description": "High-density harsh environment circular connectors engineered for military aerospace and heavy industrial defense systems.",
+      "features": [
+        "Tri-start thread coupling mechanism",
+        "100% scoop-proof contact design",
+        "Operates up to 200\u00b0C severe thermal environments"
+      ],
+      "specs": {
+        "Shell Size": "9 to 25",
+        "Contact Count": "2 to 128 pins",
+        "IP Rating": "IP67 / IP68"
+      },
+      "industries": [
+        "Defense",
+        "Aerospace",
+        "Marine"
+      ],
+      "featured": true,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 6800,
+      "stockCount": 120,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "amp-ind-01",
+      "sku": "AMPHENOL-IND-CIRC-M12",
+      "name": "Industrial M12 A-Code / D-Code / X-Code Sensor Connectors",
+      "brand": "Amphenol",
+      "category": "Connectors",
+      "subCategory": "Wire / Cable / Flex to Board",
+      "description": "Compact IP67 sealed M12 circular connectors for industrial automation, fieldbus systems, Single Pair Ethernet (SPE), and 10GbE High-Speed Ethernet.",
+      "features": [
+        "Available in A, B, D, K, L, S, T, and X coding",
+        "Shielded metal housing for high EMI suppression"
+      ],
+      "specs": {
+        "Pin Count": "3, 4, 5, 8, 12 pins",
+        "Current Rating": "Up to 12A per contact",
+        "IP Rating": "IP67 / IP68 sealed"
+      },
+      "industries": [
+        "Industrial Automation",
+        "Robotics"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 1450,
+      "stockCount": 450,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "amp-ind-02",
+      "sku": "AMPHENOL-IND-SPE-IP67",
+      "name": "Single Pair Ethernet (SPE) IP67 Connector System",
+      "brand": "Amphenol",
+      "category": "Connectors",
+      "subCategory": "Wire / Cable / Flex to Board",
+      "description": "IEC 63171-6 compliant Single Pair Ethernet interconnect transmitting 1 Gb/s data and up to 50W PoDL over a single twisted pair.",
+      "features": [
+        "1 Gb/s up to 40 meters, 10 Mb/s up to 1000 meters",
+        "Power over Data Line (PoDL) up to 50W",
+        "IP67 industrial housing"
+      ],
+      "specs": {
+        "Standard": "IEC 63171-6",
+        "Bandwidth": "600 MHz",
+        "Current": "4A max"
+      },
+      "industries": [
+        "Industrial Automation",
+        "Robotics",
+        "Process Control"
+      ],
+      "featured": true,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 1890,
+      "stockCount": 220,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "amp-dsub-01",
+      "sku": "AMPHENOL-DSUB-STD-09",
+      "name": "D-Subminiature Standard & High Density Connectors",
+      "brand": "Amphenol",
+      "category": "Connectors",
+      "subCategory": "Input / Output (I/O)",
+      "description": "Industry standard D-Sub connectors available in 9, 15, 25, 37, and 50 pin counts with solder cup, PCB straight, right angle, and crimp terminations.",
+      "features": [
+        "Stamped and formed or machined precision pin contacts",
+        "Steel shell with tin plating for grounding continuity"
+      ],
+      "specs": {
+        "Positions": "9, 15, 25, 37, 50 pin",
+        "Current Rating": "5A per pin"
+      },
+      "industries": [
+        "Telecommunications",
+        "Industrial Automation"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 380,
+      "stockCount": 800,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "amp-radsok-01",
+      "sku": "AMPHENOL-RADSOK-PWR-01",
+      "name": "Heavy Duty RADSOK Power Connectors (Up to 1000A)",
+      "brand": "Amphenol",
+      "category": "Connectors",
+      "subCategory": "Power",
+      "description": "Patented RADSOK socket technology featuring twisted hyperbolic grid geometry for maximum contact surface area, extremely low millivolt drop, and high current carrying capability.",
+      "features": [
+        "Handles continuous currents from 35A up to 1000A",
+        "Up to 40% more current capacity than standard contacts"
+      ],
+      "specs": {
+        "Contact Sizes": "2.4mm to 14mm RADSOK pins",
+        "Current Rating": "70A to 1000A"
+      },
+      "industries": [
+        "Power & Energy",
+        "EV Charging",
+        "Data Centers"
+      ],
+      "featured": true,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 3400,
+      "stockCount": 210,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "amp-pcb-01",
+      "sku": "AMPHENOL-EXAMAX-112G",
+      "name": "ExaMAX2 High-Speed Backplane Connector System (112 Gb/s)",
+      "brand": "Amphenol",
+      "category": "Connectors",
+      "subCategory": "Board to Board",
+      "description": "Next-generation 112 Gb/s PAM4 high-speed backplane connector system engineered for AI servers, cloud networking, and supercomputers.",
+      "features": [
+        "Industry leading signal integrity up to 112 Gb/s PAM4",
+        "Zero skew differential pair design",
+        "Low crosstalk design"
+      ],
+      "specs": {
+        "Data Rate": "112 Gbps PAM4",
+        "Impedance": "85 / 92 Ohms",
+        "Pitch": "1.8mm"
+      },
+      "industries": [
+        "Data Centers",
+        "Telecommunications"
+      ],
+      "featured": true,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 5600,
+      "stockCount": 110,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "amp-rf-01",
+      "sku": "AMPHENOL-RF-CONN-SMA",
+      "name": "Precision RF Coaxial Connectors (SMA / BNC / N-Type / TNC)",
+      "brand": "Amphenol",
+      "category": "Connectors",
+      "subCategory": "Input / Output (I/O)",
+      "description": "High performance 50 Ohm precision RF coaxial connectors engineered for microwave, telecommunications test equipment, and wireless communications.",
+      "features": [
+        "DC to 18 GHz frequency bandwidth",
+        "Gold-plated center conductor contacts"
+      ],
+      "specs": {
+        "Impedance": "50 Ohms",
+        "Frequency Range": "DC - 18 GHz",
+        "VSWR": "< 1.15:1"
+      },
+      "industries": [
+        "Telecommunications",
+        "Test & Measurement"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 620,
+      "stockCount": 600,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "amp-rf-02",
+      "sku": "AMPHENOL-MICRO-IPEX-UFL",
+      "name": "Micro-Miniature RF Connectors & Cables (MCX / MMCX / IPEX MHF)",
+      "brand": "Amphenol",
+      "category": "Connectors",
+      "subCategory": "Input / Output (I/O)",
+      "description": "Ultra micro coaxial connectors and 0.81mm / 1.13mm / 1.37mm jumper cables for compact wireless modules and GNSS receivers.",
+      "features": [
+        "Ultra-low mated height down to 1.2mm",
+        "DC to 6 GHz operation",
+        "Snap-on coupling"
+      ],
+      "specs": {
+        "Impedance": "50 Ohms",
+        "Mated Height": "1.2mm - 2.5mm",
+        "Cable Gauge": "0.81mm micro coax"
+      },
+      "industries": [
+        "Telecommunications",
+        "IoT & Smart City"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 340,
+      "stockCount": 750,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "amp-fo-01",
+      "sku": "AMPHENOL-FO-PATCH-LC-SC",
+      "name": "Fiber Optic Connectors & Optical Patch Cords (LC / SC / MPO)",
+      "brand": "Amphenol",
+      "category": "Fiber Optics",
+      "subCategory": "Fiber Optic Connectors & Patch Cords",
+      "description": "Single-mode OS2 and multi-mode OM3/OM4 optical fiber patch cables equipped with low loss ceramic ferrule LC, SC, and MPO/MTP connectors.",
+      "features": [
+        "Ultra low insertion loss (< 0.15 dB)",
+        "100% factory tested",
+        "LSZH flame-retardant outer jacket"
+      ],
+      "specs": {
+        "Fiber Type": "Single-Mode OS2 / Multi-Mode OM4",
+        "Insertion Loss": "< 0.2 dB"
+      },
+      "industries": [
+        "Telecommunications",
+        "Data Centers"
+      ],
+      "featured": true,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 1850,
+      "stockCount": 320,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "amp-fo-02",
+      "sku": "AMPHENOL-TAC-FO-MIL",
+      "name": "Harsh-Environment Tactical Military Fiber Cable Assembly",
+      "brand": "Amphenol",
+      "category": "Fiber Optics",
+      "subCategory": "Tactical Military Fiber Solutions",
+      "description": "Ruggedized 2/4-channel expanded beam tactical fiber optic cable assembly designed for battlefield communications and broadcasting.",
+      "features": [
+        "Expanded beam optical technology resistant to dirt & mud",
+        "Hermetically sealed IP68 connectors"
+      ],
+      "specs": {
+        "Channels": "2 or 4 fiber channels",
+        "IP Rating": "IP68 submerged",
+        "Operating Temp": "-55\u00b0C to +85\u00b0C"
+      },
+      "industries": [
+        "Defense",
+        "Broadcast",
+        "Mining"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 28500,
+      "stockCount": 25,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "amp-ev-01",
+      "sku": "AMPHENOL-EV-HVSL-800",
+      "name": "EV High-Voltage Interconnect System (HVSL 800 / Excel|Mate)",
+      "brand": "Amphenol",
+      "category": "Connectors",
+      "subCategory": "Power",
+      "description": "High voltage 1000V DC electric vehicle power connector designed for EV battery packs, inverters, power distribution units (PDU), and motor controllers.",
+      "features": [
+        "Integrated HVIL safety interlock loop",
+        "360\u00b0 EMI shielding",
+        "Touch-proof IP2X protection"
+      ],
+      "specs": {
+        "Rated Voltage": "1000V DC",
+        "Current Rating": "Up to 250A continuous",
+        "IP Rating": "IP67 / IP6K9K"
+      },
+      "industries": [
+        "Automotive",
+        "EV Charging",
+        "Power & Energy"
+      ],
+      "featured": true,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 5400,
+      "stockCount": 140,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    }
+  ],
+  "zolex": [
+    {
+      "id": "zolex-prod-001",
+      "sku": "ZOLEX-NON-INSULATED-RING-TYPE-TERM-01",
+      "name": "Zolex Non-Insulated Ring Type Terminals",
+      "brand": "Zolex",
+      "category": "Crimp Terminals",
+      "subCategory": "Ring Type Terminals",
+      "description": "Premium Zolex Non-Insulated Ring Type Terminals manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": true,
+      "image": "https://zolex.in/wp-content/uploads/2026/05/1-ZR_Angle-01700-px-x-700-px-2.png",
+      "inStock": true,
+      "price": 120,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/non-insulated-ring-type-terminals/"
+    },
+    {
+      "id": "zolex-prod-002",
+      "sku": "ZOLEX-INSULATED-RING-TYPE-TERMINAL-02",
+      "name": "Zolex Insulated Ring Type Terminals",
+      "brand": "Zolex",
+      "category": "Crimp Terminals",
+      "subCategory": "Ring Type Terminals",
+      "description": "Premium Zolex Insulated Ring Type Terminals manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": true,
+      "image": "https://zolex.in/wp-content/uploads/2026/05/02-ZRI-SERIES_-2700-px-x-700-px-1.png",
+      "inStock": true,
+      "price": 135,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/insulated-ring-type-terminals/"
+    },
+    {
+      "id": "zolex-prod-003",
+      "sku": "ZOLEX-DOUBLE-GRIP-INSULATED-RING-T-03",
+      "name": "Zolex Double Grip Insulated Ring Type Terminals",
+      "brand": "Zolex",
+      "category": "Crimp Terminals",
+      "subCategory": "Ring Type Terminals",
+      "description": "Premium Zolex Double Grip Insulated Ring Type Terminals manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": true,
+      "image": "https://zolex.in/wp-content/uploads/2026/05/03-ZRIM-SERIES_6700-px-x-700-px-1.png",
+      "inStock": true,
+      "price": 150,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/double-grip-insulated-ring-type-terminals/"
+    },
+    {
+      "id": "zolex-prod-004",
+      "sku": "ZOLEX-NON-INSULATED-FORK-TYPE-TERM-04",
+      "name": "Zolex Non-Insulated Fork Type Terminals",
+      "brand": "Zolex",
+      "category": "Crimp Terminals",
+      "subCategory": "Fork Type Terminals",
+      "description": "Premium Zolex Non-Insulated Fork Type Terminals manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": true,
+      "image": "https://zolex.in/wp-content/uploads/2026/05/04-ZF-SERIES_1700-px-x-700-px.png",
+      "inStock": true,
+      "price": 165,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/non-insulated-fork-type-terminals/"
+    },
+    {
+      "id": "zolex-prod-005",
+      "sku": "ZOLEX-INSULATED-FORK-TYPE-TERMINAL-05",
+      "name": "Zolex Insulated Fork Type Terminals",
+      "brand": "Zolex",
+      "category": "Crimp Terminals",
+      "subCategory": "Fork Type Terminals",
+      "description": "Premium Zolex Insulated Fork Type Terminals manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": true,
+      "image": "https://zolex.in/wp-content/uploads/2026/05/05-ZFI-SERIES_5-700-px-x-700-px_.png",
+      "inStock": true,
+      "price": 180,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/insulated-fork-type-terminals/"
+    },
+    {
+      "id": "zolex-prod-006",
+      "sku": "ZOLEX-DOUBLE-GRIP-INSULATED-FORK-T-06",
+      "name": "Zolex Double Grip Insulated Fork Type Terminals",
+      "brand": "Zolex",
+      "category": "Crimp Terminals",
+      "subCategory": "Fork Type Terminals",
+      "description": "Premium Zolex Double Grip Insulated Fork Type Terminals manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": true,
+      "image": "https://zolex.in/wp-content/uploads/2026/05/06-ZFIM-SERIES_5-700-px-x-700-px-1.png",
+      "inStock": true,
+      "price": 195,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/double-grip-insulated-fork-type-terminals/"
+    },
+    {
+      "id": "zolex-prod-007",
+      "sku": "ZOLEX-NON-INSULATED-PIN-TYPE-TERMI-07",
+      "name": "Zolex Non-Insulated Pin Type Terminals",
+      "brand": "Zolex",
+      "category": "Crimp Terminals",
+      "subCategory": "Pin Type Terminals",
+      "description": "Premium Zolex Non-Insulated Pin Type Terminals manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": true,
+      "image": "https://zolex.in/wp-content/uploads/2026/05/07-ZP-SERIES_2-700-px-x-700-px-1.png",
+      "inStock": true,
+      "price": 210,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/non-insulated-pin-type-terminals/"
+    },
+    {
+      "id": "zolex-prod-008",
+      "sku": "ZOLEX-INSULATED-PIN-TYPE-TERMINALS-08",
+      "name": "Zolex Insulated Pin Type Terminals",
+      "brand": "Zolex",
+      "category": "Crimp Terminals",
+      "subCategory": "Pin Type Terminals",
+      "description": "Premium Zolex Insulated Pin Type Terminals manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": true,
+      "image": "https://zolex.in/wp-content/uploads/2026/05/08-ZPI-SERIES_5-700-px-x-700-px-1.png",
+      "inStock": true,
+      "price": 225,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/insulated-pin-type-terminals/"
+    },
+    {
+      "id": "zolex-prod-009",
+      "sku": "ZOLEX-DOUBLE-GRIP-INSULATED-PIN-TY-09",
+      "name": "Zolex Double Grip Insulated Pin Type Terminals",
+      "brand": "Zolex",
+      "category": "Crimp Terminals",
+      "subCategory": "Pin Type Terminals",
+      "description": "Premium Zolex Double Grip Insulated Pin Type Terminals manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": true,
+      "image": "https://zolex.in/wp-content/uploads/2026/05/09-ZPIM-SERIES_5700-px-x-700-px-1.png",
+      "inStock": true,
+      "price": 240,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/double-grip-insulated-pin-type-terminals/"
+    },
+    {
+      "id": "zolex-prod-010",
+      "sku": "ZOLEX-NON-INSULATED-END-SLEEVE-10",
+      "name": "Zolex Non-Insulated End Sleeve",
+      "brand": "Zolex",
+      "category": "Crimp Terminals",
+      "subCategory": "End Sleeves (Bootlace Ferrules)",
+      "description": "Premium Zolex Non-Insulated End Sleeve manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": true,
+      "image": "https://zolex.in/wp-content/uploads/2026/04/10-ZSF-SERIES_2-700-px-x-700-px-1.png",
+      "inStock": true,
+      "price": 255,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/non-insulated-end-sleeve/"
+    },
+    {
+      "id": "zolex-prod-011",
+      "sku": "ZOLEX-INSULATED-END-SLEEVE-11",
+      "name": "Zolex Insulated End Sleeve",
+      "brand": "Zolex",
+      "category": "Crimp Terminals",
+      "subCategory": "End Sleeves (Bootlace Ferrules)",
+      "description": "Premium Zolex Insulated End Sleeve manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": true,
+      "image": "https://zolex.in/wp-content/uploads/2026/04/12-ZSFI-SERIES_2-700-px-x-700-px.png",
+      "inStock": true,
+      "price": 270,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/insulated-end-sleeve/"
+    },
+    {
+      "id": "zolex-prod-012",
+      "sku": "ZOLEX-TWIN-INSULATED-END-SLEEVE-12",
+      "name": "Zolex Twin Insulated End Sleeve",
+      "brand": "Zolex",
+      "category": "Crimp Terminals",
+      "subCategory": "End Sleeves (Bootlace Ferrules)",
+      "description": "Premium Zolex Twin Insulated End Sleeve manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": true,
+      "image": "https://zolex.in/wp-content/uploads/2026/04/13-ZSFT-SERIES_4700-px-x-700-px.png",
+      "inStock": true,
+      "price": 285,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/twin-insulated-end-sleeve/"
+    },
+    {
+      "id": "zolex-prod-013",
+      "sku": "ZOLEX-COPPER-TUBE-CRIMPING-LUGS-ON-13",
+      "name": "Zolex Copper Tube Crimping Lugs One Hole Standard Series With Inspection Window",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "Premium Zolex Copper Tube Crimping Lugs One Hole Standard Series With Inspection Window manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/01-ZCT-700-X-700.png",
+      "inStock": true,
+      "price": 300,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/copper-tube-crimping-lugs-one-hole-standard-series-with-inspection-window/"
+    },
+    {
+      "id": "zolex-prod-014",
+      "sku": "ZOLEX-COPPER-TUBE-CRIMPING-LUGS-ON-14",
+      "name": "Zolex Copper Tube Crimping Lugs One Hole Heavy Duty",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "Premium Zolex Copper Tube Crimping Lugs One Hole Heavy Duty manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/02-ZCT-Heavy-Duty-700-X-700.png",
+      "inStock": true,
+      "price": 315,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/copper-tube-crimping-lugs-one-hole-heavy-duty/"
+    },
+    {
+      "id": "zolex-prod-015",
+      "sku": "ZOLEX-COPPER-TUBE-CRIMPING-LUGS-ON-15",
+      "name": "Zolex Copper Tube Crimping Lugs One Hole",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "Premium Zolex Copper Tube Crimping Lugs One Hole manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/02-ZCT-Heavy-Duty-700-X-700-1.png",
+      "inStock": true,
+      "price": 330,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/copper-tube-crimping-lugs-one-hole/"
+    },
+    {
+      "id": "zolex-prod-016",
+      "sku": "ZOLEX-COPPER-TUBE-CRIMPING-LUGS-TW-16",
+      "name": "Zolex Copper Tube Crimping Lugs Two Hole",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "Premium Zolex Copper Tube Crimping Lugs Two Hole manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/04-ZCT-E-700-X-700_.png",
+      "inStock": true,
+      "price": 345,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/copper-tube-crimping-lugs-two-hole/"
+    },
+    {
+      "id": "zolex-prod-017",
+      "sku": "ZOLEX-COPPER-TUBE-CRIMPING-LUGS-FO-17",
+      "name": "Zolex Copper Tube Crimping Lugs Four Hole",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "Premium Zolex Copper Tube Crimping Lugs Four Hole manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/05-ZCT-E-700-X-700____-2.png",
+      "inStock": true,
+      "price": 360,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/copper-tube-crimping-lugs-four-hole/"
+    },
+    {
+      "id": "zolex-prod-018",
+      "sku": "ZOLEX-COPPER-TUBE-CRIMPING-THROUGH-18",
+      "name": "Zolex Copper Tube Crimping Through Connectors",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "Premium Zolex Copper Tube Crimping Through Connectors manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/06-ZCC-700-X-700.png",
+      "inStock": true,
+      "price": 375,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/copper-tube-crimping-through-connector/"
+    },
+    {
+      "id": "zolex-prod-019",
+      "sku": "ZOLEX-COPPER-TUBE-CRIMPING-LUGS-ON-19",
+      "name": "Zolex Copper Tube Crimping Lugs One Hol",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "Premium Zolex Copper Tube Crimping Lugs One Hol manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/07-ZKR-700-X-700.png",
+      "inStock": true,
+      "price": 390,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/copper-tube-crimping-lugs-one-hol/"
+    },
+    {
+      "id": "zolex-prod-020",
+      "sku": "ZOLEX-COPPER-TUBE-CRIMPING-LUGS-TW-20",
+      "name": "Zolex Copper Tube Crimping Lugs Two Hole",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "Premium Zolex Copper Tube Crimping Lugs Two Hole manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/08-ZKR-E-700-X-700.png",
+      "inStock": true,
+      "price": 405,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/copper-tube-crimping-lugs-two-hole-2/"
+    },
+    {
+      "id": "zolex-prod-021",
+      "sku": "ZOLEX-COPPER-TUBE-CRIMPING-LUGS-ON-21",
+      "name": "Zolex Copper Tube Crimping Lugs One Hole 45 Degree",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "Premium Zolex Copper Tube Crimping Lugs One Hole 45 Degree manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/09-ZKR-H-45-DEGREE.png",
+      "inStock": true,
+      "price": 420,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/copper-tube-crimping-lugs-one-hole-45-degree/"
+    },
+    {
+      "id": "zolex-prod-022",
+      "sku": "ZOLEX-COPPER-TUBE-CRIMPING-LUGS-ON-22",
+      "name": "Zolex Copper Tube Crimping Lugs One Hole 90 Degree",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "Premium Zolex Copper Tube Crimping Lugs One Hole 90 Degree manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/10-ZKR-F-90-DEGREE__-2.png",
+      "inStock": true,
+      "price": 435,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/copper-tube-crimping-lugs-one-hole-90-degree/"
+    },
+    {
+      "id": "zolex-prod-023",
+      "sku": "ZOLEX-COPPER-TUBE-CRIMPING-LUGS-TW-23",
+      "name": "Zolex Copper Tube Crimping Lugs Two Hole 90 Degree",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "Premium Zolex Copper Tube Crimping Lugs Two Hole 90 Degree manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/11-ZKR-F-90-DEGREE-TWO-HOLL__-2.png",
+      "inStock": true,
+      "price": 450,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/copper-tube-crimping-lugs-two-hole-90-degree/"
+    },
+    {
+      "id": "zolex-prod-024",
+      "sku": "ZOLEX-COPPER-TUBE-CRIMPING-THROUGH-24",
+      "name": "Zolex Copper Tube Crimping Through Connectors",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "Premium Zolex Copper Tube Crimping Through Connectors manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/12-ZKS__-2.png",
+      "inStock": true,
+      "price": 465,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/copper-tube-crimping-through-connectors/"
+    },
+    {
+      "id": "zolex-prod-025",
+      "sku": "ZOLEX-ALUMINIUM-TUBE-CRIMPING-LUGS-25",
+      "name": "Zolex Aluminium Tube Crimping Lugs One Hole",
+      "brand": "Zolex",
+      "category": "Aluminium Lugs & Connectors",
+      "subCategory": "Aluminium Tube Crimping Lugs",
+      "description": "Premium Zolex Aluminium Tube Crimping Lugs One Hole manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/05/01-ZAT-700-X-700.png",
+      "inStock": true,
+      "price": 480,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/aluminium-tube-crimping-lugs-one-hole/"
+    },
+    {
+      "id": "zolex-prod-026",
+      "sku": "ZOLEX-ALUMINIUM-TUBE-CRIMPING-THRO-26",
+      "name": "Zolex Aluminium Tube Crimping Through Connectors",
+      "brand": "Zolex",
+      "category": "Aluminium Lugs & Connectors",
+      "subCategory": "Aluminium Tube Crimping Lugs",
+      "description": "Premium Zolex Aluminium Tube Crimping Through Connectors manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/05/02-ZAC-700-X-700-1.png",
+      "inStock": true,
+      "price": 120,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/aluminium-tube-crimping-through-connectors/"
+    },
+    {
+      "id": "zolex-prod-027",
+      "sku": "ZOLEX-ALUMINIUM-SOLID-CRIMPING-LUG-27",
+      "name": "Zolex Aluminium Solid Crimping Lugs One Hole",
+      "brand": "Zolex",
+      "category": "Aluminium Lugs & Connectors",
+      "subCategory": "Aluminium Tube Crimping Lugs",
+      "description": "Premium Zolex Aluminium Solid Crimping Lugs One Hole manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/05/03-ZAL-700-X-700.png",
+      "inStock": true,
+      "price": 135,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/aluminium-solid-crimping-lugs-one-hole/"
+    },
+    {
+      "id": "zolex-prod-028",
+      "sku": "ZOLEX-ALUMINIUM-SOLID-CRIMPING-LUG-28",
+      "name": "Zolex Aluminium Solid Crimping Lugs One Hole Din Standard 46329",
+      "brand": "Zolex",
+      "category": "Aluminium Lugs & Connectors",
+      "subCategory": "Aluminium Tube Crimping Lugs",
+      "description": "Premium Zolex Aluminium Solid Crimping Lugs One Hole Din Standard 46329 manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/05/04-ZADIN-700-X-700-1.png",
+      "inStock": true,
+      "price": 150,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/aluminium-solid-crimping-lugs-one-hole-din-standard/"
+    },
+    {
+      "id": "zolex-prod-029",
+      "sku": "ZOLEX-ALUMINIUM-SOLID-CONNECTORS-D-29",
+      "name": "Zolex Aluminium Solid Connectors Din Standard",
+      "brand": "Zolex",
+      "category": "Crimp Terminals",
+      "subCategory": "Ring Type Terminals",
+      "description": "Premium Zolex Aluminium Solid Connectors Din Standard manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/05/05-ZADINC-700-X-700.png",
+      "inStock": true,
+      "price": 165,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/aluminium-solid-connectors-din-standard/"
+    },
+    {
+      "id": "zolex-prod-030",
+      "sku": "ZOLEX-ALUMINIUM-SOLID-CONNECTORS-30",
+      "name": "Zolex Aluminium Solid Connectors",
+      "brand": "Zolex",
+      "category": "Crimp Terminals",
+      "subCategory": "Ring Type Terminals",
+      "description": "Premium Zolex Aluminium Solid Connectors manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/05/06-ZALK-700-X-700.png",
+      "inStock": true,
+      "price": 180,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/aluminium-solid-connectors/"
+    },
+    {
+      "id": "zolex-prod-031",
+      "sku": "ZOLEX-ALUMINIUM-3-CORE-SOLID-SECTI-31",
+      "name": "Zolex Aluminium 3 Core Solid Section Cable Lugs",
+      "brand": "Zolex",
+      "category": "Aluminium Lugs & Connectors",
+      "subCategory": "Aluminium Tube Crimping Lugs",
+      "description": "Premium Zolex Aluminium 3 Core Solid Section Cable Lugs manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/05/07-ZALT-3-700-X-700.png",
+      "inStock": true,
+      "price": 195,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/aluminium-3-core-solid-section-cable-lugs/"
+    },
+    {
+      "id": "zolex-prod-032",
+      "sku": "ZOLEX-ALUMINIUM-4-CORE-SOLID-SECTI-32",
+      "name": "Zolex Aluminium 4 Core Solid Section Cable Lugs",
+      "brand": "Zolex",
+      "category": "Aluminium Lugs & Connectors",
+      "subCategory": "Aluminium Tube Crimping Lugs",
+      "description": "Premium Zolex Aluminium 4 Core Solid Section Cable Lugs manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/05/08-ZALT-4-700-X-700.png",
+      "inStock": true,
+      "price": 210,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/aluminium-4-core-solid-section-cable-lugs/"
+    },
+    {
+      "id": "zolex-prod-033",
+      "sku": "ZOLEX-BIMETALLIC-CRIMPING-LUGS--AL-33",
+      "name": "Zolex Bimetallic Crimping Lugs, Al/Cu",
+      "brand": "Zolex",
+      "category": "Bimetallic Lugs & Connectors",
+      "subCategory": "Bimetallic Crimping Lugs (Al/Cu)",
+      "description": "Premium Zolex Bimetallic Crimping Lugs, Al/Cu manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/05/01-GPT-700-X-700.png",
+      "inStock": true,
+      "price": 225,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/bimetallic-crimping-lugs-al-cu/"
+    },
+    {
+      "id": "zolex-prod-034",
+      "sku": "ZOLEX-BIMETALLIC-CRIMPING-LUGS--AL-34",
+      "name": "Zolex Bimetallic Crimping Lugs, Al/Cu",
+      "brand": "Zolex",
+      "category": "Bimetallic Lugs & Connectors",
+      "subCategory": "Bimetallic Crimping Lugs (Al/Cu)",
+      "description": "Premium Zolex Bimetallic Crimping Lugs, Al/Cu manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/05/02-BML-700-X-700.png",
+      "inStock": true,
+      "price": 240,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/bimetallic-crimping-lugs-al-cu-2/"
+    },
+    {
+      "id": "zolex-prod-035",
+      "sku": "ZOLEX-BIMETALLIC-CRIMPING-LUGS-NAR-35",
+      "name": "Zolex Bimetallic Crimping Lugs Narrow Palm, AI/Cu",
+      "brand": "Zolex",
+      "category": "Bimetallic Lugs & Connectors",
+      "subCategory": "Bimetallic Crimping Lugs (Al/Cu)",
+      "description": "Premium Zolex Bimetallic Crimping Lugs Narrow Palm, AI/Cu manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/05/03-BMLN-700-X-700-1.png",
+      "inStock": true,
+      "price": 255,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/bimetallic-crimping-lugs-narrow-palm-ai-cu/"
+    },
+    {
+      "id": "zolex-prod-036",
+      "sku": "ZOLEX-BIMETALLIC-CRIMPING-REDUCING-36",
+      "name": "Zolex Bimetallic Crimping Reducing Links Al/Cu",
+      "brand": "Zolex",
+      "category": "Crimp Terminals",
+      "subCategory": "Ring Type Terminals",
+      "description": "Premium Zolex Bimetallic Crimping Reducing Links Al/Cu manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/05/04-BMC-700-X-700.png",
+      "inStock": true,
+      "price": 270,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/bimetallic-crimping-reducing-links-al-cu/"
+    },
+    {
+      "id": "zolex-prod-037",
+      "sku": "ZOLEX-BIMETALLIC-CRIMPING-STALF-LU-37",
+      "name": "Zolex Bimetallic Crimping Stalf Lugs Al/Cu",
+      "brand": "Zolex",
+      "category": "Bimetallic Lugs & Connectors",
+      "subCategory": "Bimetallic Crimping Lugs (Al/Cu)",
+      "description": "Premium Zolex Bimetallic Crimping Stalf Lugs Al/Cu manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/05/05-BMS-700-X-700.png",
+      "inStock": true,
+      "price": 285,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/bimetallic-crimping-stalf-lugs-al-cu/"
+    },
+    {
+      "id": "zolex-prod-038",
+      "sku": "ZOLEX-ROLLER-BALL-LOCK-TYPE-STEEL-38",
+      "name": "Zolex Roller Ball Lock Type Steel Cable Ties Coated",
+      "brand": "Zolex",
+      "category": "SS Cable Ties",
+      "subCategory": "Roller Ball Lock Ties (Coated & Uncoated)",
+      "description": "Premium Zolex Roller Ball Lock Type Steel Cable Ties Coated manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/02/01-EBC-700-X-700__.png",
+      "inStock": true,
+      "price": 300,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/roller-ball-lock-type-steel-cable-ties-coated/"
+    },
+    {
+      "id": "zolex-prod-039",
+      "sku": "ZOLEX-ROLLER-BALL-LOCK-TYPE-STEEL-39",
+      "name": "Zolex Roller Ball Lock Type Steel Cable Ties Coated",
+      "brand": "Zolex",
+      "category": "SS Cable Ties",
+      "subCategory": "Roller Ball Lock Ties (Coated & Uncoated)",
+      "description": "Premium Zolex Roller Ball Lock Type Steel Cable Ties Coated manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/02/02-ERC-700-X-700___.png",
+      "inStock": true,
+      "price": 315,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/roller-ball-lock-type-steel-cable-ties-coated-2/"
+    },
+    {
+      "id": "zolex-prod-040",
+      "sku": "ZOLEX-LADDER-TYPE-STEEL-CABLE-TIES-40",
+      "name": "Zolex Ladder Type Steel Cable Ties Coated",
+      "brand": "Zolex",
+      "category": "SS Cable Ties",
+      "subCategory": "Roller Ball Lock Ties (Coated & Uncoated)",
+      "description": "Premium Zolex Ladder Type Steel Cable Ties Coated manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/02/03-ELC-700-X-700___.png",
+      "inStock": true,
+      "price": 330,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/ladder-type-steel-cable-ties-coated/"
+    },
+    {
+      "id": "zolex-prod-041",
+      "sku": "ZOLEX-ROLLER-BALL-LOCK-TYPE-STEEL-41",
+      "name": "Zolex Roller Ball Lock Type Steel Cable Ties Uncoated",
+      "brand": "Zolex",
+      "category": "SS Cable Ties",
+      "subCategory": "Roller Ball Lock Ties (Coated & Uncoated)",
+      "description": "Premium Zolex Roller Ball Lock Type Steel Cable Ties Uncoated manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/02/04-EBU-700-X-700___.png",
+      "inStock": true,
+      "price": 345,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/roller-ball-lock-type-steel-cable-ties-uncoated/"
+    },
+    {
+      "id": "zolex-prod-042",
+      "sku": "ZOLEX-CABLE-MARKER-TAGS---CARRIER-42",
+      "name": "Zolex Cable Marker Tags & Carrier Strips",
+      "brand": "Zolex",
+      "category": "SS Cable Ties",
+      "subCategory": "Roller Ball Lock Ties (Coated & Uncoated)",
+      "description": "Premium Zolex Cable Marker Tags & Carrier Strips manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/02/05-ET-700-X-700________.png",
+      "inStock": true,
+      "price": 360,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/cable-marker-tags-carrier-strips/"
+    },
+    {
+      "id": "zolex-prod-043",
+      "sku": "ZOLEX-LADDER-TYPE-STEEL-CABLE-TIES-43",
+      "name": "Zolex Ladder Type Steel Cable Ties Uncoated",
+      "brand": "Zolex",
+      "category": "SS Cable Ties",
+      "subCategory": "Roller Ball Lock Ties (Coated & Uncoated)",
+      "description": "Premium Zolex Ladder Type Steel Cable Ties Uncoated manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/02/06-ELU-700-X-700____.png",
+      "inStock": true,
+      "price": 375,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/ladder-type-steel-cable-ties-uncoated/"
+    },
+    {
+      "id": "zolex-prod-044",
+      "sku": "ZOLEX-RELEASABLE-TYPE-STAINLESS-ST-44",
+      "name": "Zolex Releasable Type Stainless Steel Cable Ties",
+      "brand": "Zolex",
+      "category": "SS Cable Ties",
+      "subCategory": "Roller Ball Lock Ties (Coated & Uncoated)",
+      "description": "Premium Zolex Releasable Type Stainless Steel Cable Ties manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/02/07-ERU-700-X-700____.png",
+      "inStock": true,
+      "price": 390,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/releasable-type-stainless-steel-cable-ties/"
+    },
+    {
+      "id": "zolex-prod-045",
+      "sku": "ZOLEX-STRAPS-45",
+      "name": "Zolex Straps",
+      "brand": "Zolex",
+      "category": "Crimp Terminals",
+      "subCategory": "Ring Type Terminals",
+      "description": "Premium Zolex Straps manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/05/08-ESU-700-X-700_.png",
+      "inStock": true,
+      "price": 405,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/straps/"
+    },
+    {
+      "id": "zolex-prod-046",
+      "sku": "ZOLEX-BUCKLES-46",
+      "name": "Zolex Buckles",
+      "brand": "Zolex",
+      "category": "Crimp Terminals",
+      "subCategory": "Ring Type Terminals",
+      "description": "Premium Zolex Buckles manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/02/09-EJC-700-X-700.png",
+      "inStock": true,
+      "price": 420,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/buckles/"
+    },
+    {
+      "id": "zolex-prod-047",
+      "sku": "ZOLEX-A2-INDUSTRIAL-CABLE-GLAND-47",
+      "name": "Zolex A2 Industrial Cable Gland",
+      "brand": "Zolex",
+      "category": "Cable Glands & Accessories",
+      "subCategory": "Industrial Cable Glands (A2, BW, CW, E1W, A2F)",
+      "description": "Premium Zolex A2 Industrial Cable Gland manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/01-ZA2-700-X-700-2.png",
+      "inStock": true,
+      "price": 435,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/a2-industrial-cable-gland/"
+    },
+    {
+      "id": "zolex-prod-048",
+      "sku": "ZOLEX-A1-CXT-INDUSTRIAL-CABLE-GLAN-48",
+      "name": "Zolex A1 CXT Industrial Cable Glands",
+      "brand": "Zolex",
+      "category": "Cable Glands & Accessories",
+      "subCategory": "Industrial Cable Glands (A2, BW, CW, E1W, A2F)",
+      "description": "Premium Zolex A1 CXT Industrial Cable Glands manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/02-ZCXT-700-X-700-1.png",
+      "inStock": true,
+      "price": 450,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/a1-cxt-industrial-cable-glands/"
+    },
+    {
+      "id": "zolex-prod-049",
+      "sku": "ZOLEX-BW-INDUSTRIAL-CABLE-GLAND-49",
+      "name": "Zolex BW Industrial Cable Gland",
+      "brand": "Zolex",
+      "category": "Cable Glands & Accessories",
+      "subCategory": "Industrial Cable Glands (A2, BW, CW, E1W, A2F)",
+      "description": "Premium Zolex BW Industrial Cable Gland manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/03-ZBW-700-X-700-1.png",
+      "inStock": true,
+      "price": 465,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/bw-industrial-cable-gland/"
+    },
+    {
+      "id": "zolex-prod-050",
+      "sku": "ZOLEX-CW-CABLE-GLAND-50",
+      "name": "Zolex CW Cable Gland",
+      "brand": "Zolex",
+      "category": "Cable Glands & Accessories",
+      "subCategory": "Industrial Cable Glands (A2, BW, CW, E1W, A2F)",
+      "description": "Premium Zolex CW Cable Gland manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/04-ZCW-700-X-700-1.png",
+      "inStock": true,
+      "price": 480,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/cw-cable-gland/"
+    },
+    {
+      "id": "zolex-prod-051",
+      "sku": "ZOLEX-E1W-INDUSTRIAL-CABLE-GLAND-51",
+      "name": "Zolex E1W Industrial Cable Gland",
+      "brand": "Zolex",
+      "category": "Cable Glands & Accessories",
+      "subCategory": "Industrial Cable Glands (A2, BW, CW, E1W, A2F)",
+      "description": "Premium Zolex E1W Industrial Cable Gland manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/05-ZE1W-700-X-700-1.png",
+      "inStock": true,
+      "price": 120,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/e1w-industrial-cable-gland/"
+    },
+    {
+      "id": "zolex-prod-052",
+      "sku": "ZOLEX-IP68-CABLE-GLAND-52",
+      "name": "Zolex IP68 Cable Gland",
+      "brand": "Zolex",
+      "category": "Cable Glands & Accessories",
+      "subCategory": "Industrial Cable Glands (A2, BW, CW, E1W, A2F)",
+      "description": "Premium Zolex IP68 Cable Gland manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/06-ZGU-700-X-700-NI.png",
+      "inStock": true,
+      "price": 135,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/ip68-cable-gland/"
+    },
+    {
+      "id": "zolex-prod-053",
+      "sku": "ZOLEX-SINGLE-COMPRESSION-CABLE-GLA-53",
+      "name": "Zolex Single Compression Cable Gland",
+      "brand": "Zolex",
+      "category": "Cable Glands & Accessories",
+      "subCategory": "Industrial Cable Glands (A2, BW, CW, E1W, A2F)",
+      "description": "Premium Zolex Single Compression Cable Gland manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/07-ZSC-700-X-700-NI.png",
+      "inStock": true,
+      "price": 150,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/single-compression-cable-gland/"
+    },
+    {
+      "id": "zolex-prod-054",
+      "sku": "ZOLEX-SIBG-CABLE-GLAND-54",
+      "name": "Zolex SIBG Cable Gland",
+      "brand": "Zolex",
+      "category": "Cable Glands & Accessories",
+      "subCategory": "Industrial Cable Glands (A2, BW, CW, E1W, A2F)",
+      "description": "Premium Zolex SIBG Cable Gland manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/08-SIBG-700-X-700-NI__-2.png",
+      "inStock": true,
+      "price": 165,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/sibg-cable-gland/"
+    },
+    {
+      "id": "zolex-prod-055",
+      "sku": "ZOLEX-DOUBLE-COMPRESSION-FLAMEPROO-55",
+      "name": "Zolex Double Compression Flameproof Cable Gland",
+      "brand": "Zolex",
+      "category": "Cable Glands & Accessories",
+      "subCategory": "Industrial Cable Glands (A2, BW, CW, E1W, A2F)",
+      "description": "Premium Zolex Double Compression Flameproof Cable Gland manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/09-ZDC-700-X-700-NI.png",
+      "inStock": true,
+      "price": 180,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/double-compression-flameproof-cable-gland/"
+    },
+    {
+      "id": "zolex-prod-056",
+      "sku": "ZOLEX-DOUBLE-COMPRESSION-WEATHER-P-56",
+      "name": "Zolex Double Compression Weather-Proof Cable Gland",
+      "brand": "Zolex",
+      "category": "Cable Glands & Accessories",
+      "subCategory": "Industrial Cable Glands (A2, BW, CW, E1W, A2F)",
+      "description": "Premium Zolex Double Compression Weather-Proof Cable Gland manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/10-ZDCW-700-X-700-NI.png",
+      "inStock": true,
+      "price": 195,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/double-compression-weather-proof-cable-gland/"
+    },
+    {
+      "id": "zolex-prod-057",
+      "sku": "ZOLEX-DOUBLE-COMPRESSION-FOR-UNARM-57",
+      "name": "Zolex Double Compression For Unarmoured Cable Gland",
+      "brand": "Zolex",
+      "category": "Cable Glands & Accessories",
+      "subCategory": "Industrial Cable Glands (A2, BW, CW, E1W, A2F)",
+      "description": "Premium Zolex Double Compression For Unarmoured Cable Gland manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/11-ZUDC-700-X-700-NI.png",
+      "inStock": true,
+      "price": 210,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/double-compression-for-unarmoured-cable-gland/"
+    },
+    {
+      "id": "zolex-prod-058",
+      "sku": "ZOLEX-MARINE-CABLE-GLAND-58",
+      "name": "Zolex Marine Cable Gland",
+      "brand": "Zolex",
+      "category": "Cable Glands & Accessories",
+      "subCategory": "Industrial Cable Glands (A2, BW, CW, E1W, A2F)",
+      "description": "Premium Zolex Marine Cable Gland manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/12-Z-MCG-700-X-700-NI.png",
+      "inStock": true,
+      "price": 225,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/marine-cable-gland/"
+    },
+    {
+      "id": "zolex-prod-059",
+      "sku": "ZOLEX-COPPER-BONDED-EARTH-ROD-59",
+      "name": "Zolex Copper Bonded Earth Rod",
+      "brand": "Zolex",
+      "category": "Earthing Accessories",
+      "subCategory": "Copper Bonded & Pure Copper Earth Rods",
+      "description": "Premium Zolex Copper Bonded Earth Rod manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/01-ZBR-700-X-700-2.png",
+      "inStock": true,
+      "price": 240,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/copper-bonded-earth-rod/"
+    },
+    {
+      "id": "zolex-prod-060",
+      "sku": "ZOLEX-COPPER-BONDED-EARTH-RODS-UNT-60",
+      "name": "Zolex Copper Bonded Earth Rods-Unthreaded",
+      "brand": "Zolex",
+      "category": "Earthing Accessories",
+      "subCategory": "Copper Bonded & Pure Copper Earth Rods",
+      "description": "Premium Zolex Copper Bonded Earth Rods-Unthreaded manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/02-ZBRNT-700-X-700.png",
+      "inStock": true,
+      "price": 255,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/copper-bonded-earth-rods-unthreaded/"
+    },
+    {
+      "id": "zolex-prod-061",
+      "sku": "ZOLEX-COUPLERS-PRESS-FIT-FOR-UNTHR-61",
+      "name": "Zolex Couplers Press Fit For Unthreaded Rod",
+      "brand": "Zolex",
+      "category": "Earthing Accessories",
+      "subCategory": "Copper Bonded & Pure Copper Earth Rods",
+      "description": "Premium Zolex Couplers Press Fit For Unthreaded Rod manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/03-ZFC-700-X-700.png",
+      "inStock": true,
+      "price": 270,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/couplers-press-fit-for-unthreaded-rod/"
+    },
+    {
+      "id": "zolex-prod-062",
+      "sku": "ZOLEX-PURE-COPPER-EARTH-ROD--INTER-62",
+      "name": "Zolex Pure Copper Earth Rod (Internally Threaded)",
+      "brand": "Zolex",
+      "category": "Earthing Accessories",
+      "subCategory": "Copper Bonded & Pure Copper Earth Rods",
+      "description": "Premium Zolex Pure Copper Earth Rod (Internally Threaded) manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/04-ZCR-IT-700-X-700.png",
+      "inStock": true,
+      "price": 285,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/pure-copper-earth-rod-internally-threaded/"
+    },
+    {
+      "id": "zolex-prod-063",
+      "sku": "ZOLEX-AERIAL-ELEVATION-ROD-63",
+      "name": "Zolex Aerial Elevation Rod",
+      "brand": "Zolex",
+      "category": "Earthing Accessories",
+      "subCategory": "Copper Bonded & Pure Copper Earth Rods",
+      "description": "Premium Zolex Aerial Elevation Rod manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/05-ZAE-700-X-700.png",
+      "inStock": true,
+      "price": 300,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/aerial-elevation-rod/"
+    },
+    {
+      "id": "zolex-prod-064",
+      "sku": "ZOLEX-PURE-COPPER-EARTH-ROD--INTER-64",
+      "name": "Zolex Pure Copper Earth Rod (Internally Threaded)",
+      "brand": "Zolex",
+      "category": "Earthing Accessories",
+      "subCategory": "Copper Bonded & Pure Copper Earth Rods",
+      "description": "Premium Zolex Pure Copper Earth Rod (Internally Threaded) manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/06-ZCR-700-X-700.png",
+      "inStock": true,
+      "price": 315,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/pure-copper-earth-rod-internally-threaded-2/"
+    },
+    {
+      "id": "zolex-prod-065",
+      "sku": "ZOLEX-C-CONNECTORS-STANDARD-65",
+      "name": "Zolex C Connectors Standard",
+      "brand": "Zolex",
+      "category": "Crimp Terminals",
+      "subCategory": "Ring Type Terminals",
+      "description": "Premium Zolex C Connectors Standard manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/07-ZXCC-700-X-700.png",
+      "inStock": true,
+      "price": 330,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/c-connectors-standard/"
+    },
+    {
+      "id": "zolex-prod-066",
+      "sku": "ZOLEX-MULTIPLE-POINTS-66",
+      "name": "Zolex Multiple Points",
+      "brand": "Zolex",
+      "category": "Crimp Terminals",
+      "subCategory": "Ring Type Terminals",
+      "description": "Premium Zolex Multiple Points manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/11-ZMP700-X-700.png",
+      "inStock": true,
+      "price": 345,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/multiple-points/"
+    },
+    {
+      "id": "zolex-prod-067",
+      "sku": "ZOLEX-AIR-TERMINAL-BASE-67",
+      "name": "Zolex Air Terminal Base",
+      "brand": "Zolex",
+      "category": "Crimp Terminals",
+      "subCategory": "Ring Type Terminals",
+      "description": "Premium Zolex Air Terminal Base manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/12-ZTB-C-700-X-700.png",
+      "inStock": true,
+      "price": 360,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/air-terminal-base/"
+    },
+    {
+      "id": "zolex-prod-068",
+      "sku": "ZOLEX-HEAVY-AIR-TERMINAL-BASE-68",
+      "name": "Zolex Heavy Air Terminal Base",
+      "brand": "Zolex",
+      "category": "Crimp Terminals",
+      "subCategory": "Ring Type Terminals",
+      "description": "Premium Zolex Heavy Air Terminal Base manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/13-ZTB-C-700-X-700.png",
+      "inStock": true,
+      "price": 375,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/heavy-air-terminal-base/"
+    },
+    {
+      "id": "zolex-prod-069",
+      "sku": "ZOLEX-ROD-TO-CLAMPS-TYPE--A-69",
+      "name": "Zolex Rod To Clamps Type \u2018A\u2019",
+      "brand": "Zolex",
+      "category": "Earthing Accessories",
+      "subCategory": "Copper Bonded & Pure Copper Earth Rods",
+      "description": "Premium Zolex Rod To Clamps Type \u2018A\u2019 manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/14-ZTC-700-X-700.png",
+      "inStock": true,
+      "price": 390,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/rod-to-clamps-type-a/"
+    },
+    {
+      "id": "zolex-prod-070",
+      "sku": "ZOLEX-ROD-TO-CLAMPS-TYPE--A--WITH-70",
+      "name": "Zolex Rod To Clamps Type \u2018A\u2019 With Extra Grip",
+      "brand": "Zolex",
+      "category": "Earthing Accessories",
+      "subCategory": "Copper Bonded & Pure Copper Earth Rods",
+      "description": "Premium Zolex Rod To Clamps Type \u2018A\u2019 With Extra Grip manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/15-ZTC-D-700-X-700.png",
+      "inStock": true,
+      "price": 405,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/rod-to-clamps-type-a-with-extra-grip/"
+    },
+    {
+      "id": "zolex-prod-071",
+      "sku": "ZOLEX-CABLE-TIE-TENSIONING---CUTTI-71",
+      "name": "Zolex Cable Tie Tensioning & Cutting Automatic Gun",
+      "brand": "Zolex",
+      "category": "SS Cable Ties",
+      "subCategory": "Roller Ball Lock Ties (Coated & Uncoated)",
+      "description": "Premium Zolex Cable Tie Tensioning & Cutting Automatic Gun manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/01-EN-AG-01-700-X-700.png",
+      "inStock": true,
+      "price": 420,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/cable-tie-tensioning-cutting-automatic-gun/"
+    },
+    {
+      "id": "zolex-prod-072",
+      "sku": "ZOLEX-BAND-STRAP-TENSIONING---CUTT-72",
+      "name": "Zolex Band Strap Tensioning & Cutting Tool",
+      "brand": "Zolex",
+      "category": "Crimp Terminals",
+      "subCategory": "Ring Type Terminals",
+      "description": "Premium Zolex Band Strap Tensioning & Cutting Tool manufactured to IS / DIN standards for electrical panels, power distribution, and industrial wiring.",
+      "features": [
+        "High conductivity electrolytic grade material",
+        "Tin plated finish for maximum corrosion protection",
+        "Precision engineered for uniform crimping and low electrical resistance",
+        "100% Quality Inspected to ISO standards"
+      ],
+      "specs": {
+        "Brand": "Zolex",
+        "Material": "Electrolytic Copper / Aluminium",
+        "Plating": "Electro-Tin Plated",
+        "Compliance": "DIN / IEC / IS Standards"
+      },
+      "industries": [
+        "Power & Energy",
+        "Industrial Automation",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "https://zolex.in/wp-content/uploads/2026/06/02-EN-HP-02-700-X-700-1.png",
+      "inStock": true,
+      "price": 435,
+      "stockCount": 250,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours",
+      "externalUrl": "https://zolex.in/product/band-strap-tensioning-cutting-tool/"
+    },
+    {
+      "id": "zolex-var-073",
+      "sku": "ZOLEX-CU-1.5MM-M6",
+      "name": "Zolex 1.5 mm\u00b2 Copper Tube Crimping Lug (M6 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 1.5 mm\u00b2 cable with M6 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "1.5 mm\u00b2",
+        "Stud Hole": "M6",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 48.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-074",
+      "sku": "ZOLEX-CU-1.5MM-M8",
+      "name": "Zolex 1.5 mm\u00b2 Copper Tube Crimping Lug (M8 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 1.5 mm\u00b2 cable with M8 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "1.5 mm\u00b2",
+        "Stud Hole": "M8",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 48.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-075",
+      "sku": "ZOLEX-CU-1.5MM-M10",
+      "name": "Zolex 1.5 mm\u00b2 Copper Tube Crimping Lug (M10 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 1.5 mm\u00b2 cable with M10 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "1.5 mm\u00b2",
+        "Stud Hole": "M10",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 48.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-076",
+      "sku": "ZOLEX-CU-1.5MM-M12",
+      "name": "Zolex 1.5 mm\u00b2 Copper Tube Crimping Lug (M12 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 1.5 mm\u00b2 cable with M12 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "1.5 mm\u00b2",
+        "Stud Hole": "M12",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 48.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-077",
+      "sku": "ZOLEX-CU-2.5MM-M6",
+      "name": "Zolex 2.5 mm\u00b2 Copper Tube Crimping Lug (M6 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 2.5 mm\u00b2 cable with M6 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "2.5 mm\u00b2",
+        "Stud Hole": "M6",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 51.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-078",
+      "sku": "ZOLEX-CU-2.5MM-M8",
+      "name": "Zolex 2.5 mm\u00b2 Copper Tube Crimping Lug (M8 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 2.5 mm\u00b2 cable with M8 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "2.5 mm\u00b2",
+        "Stud Hole": "M8",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 51.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-079",
+      "sku": "ZOLEX-CU-2.5MM-M10",
+      "name": "Zolex 2.5 mm\u00b2 Copper Tube Crimping Lug (M10 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 2.5 mm\u00b2 cable with M10 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "2.5 mm\u00b2",
+        "Stud Hole": "M10",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 51.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-080",
+      "sku": "ZOLEX-CU-2.5MM-M12",
+      "name": "Zolex 2.5 mm\u00b2 Copper Tube Crimping Lug (M12 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 2.5 mm\u00b2 cable with M12 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "2.5 mm\u00b2",
+        "Stud Hole": "M12",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 51.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-081",
+      "sku": "ZOLEX-CU-4MM-M6",
+      "name": "Zolex 4 mm\u00b2 Copper Tube Crimping Lug (M6 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 4 mm\u00b2 cable with M6 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "4 mm\u00b2",
+        "Stud Hole": "M6",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 57.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-082",
+      "sku": "ZOLEX-CU-4MM-M8",
+      "name": "Zolex 4 mm\u00b2 Copper Tube Crimping Lug (M8 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 4 mm\u00b2 cable with M8 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "4 mm\u00b2",
+        "Stud Hole": "M8",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 57.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-083",
+      "sku": "ZOLEX-CU-4MM-M10",
+      "name": "Zolex 4 mm\u00b2 Copper Tube Crimping Lug (M10 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 4 mm\u00b2 cable with M10 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "4 mm\u00b2",
+        "Stud Hole": "M10",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 57.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-084",
+      "sku": "ZOLEX-CU-4MM-M12",
+      "name": "Zolex 4 mm\u00b2 Copper Tube Crimping Lug (M12 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 4 mm\u00b2 cable with M12 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "4 mm\u00b2",
+        "Stud Hole": "M12",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 57.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-085",
+      "sku": "ZOLEX-CU-6MM-M6",
+      "name": "Zolex 6 mm\u00b2 Copper Tube Crimping Lug (M6 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 6 mm\u00b2 cable with M6 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "6 mm\u00b2",
+        "Stud Hole": "M6",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 63.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-086",
+      "sku": "ZOLEX-CU-6MM-M8",
+      "name": "Zolex 6 mm\u00b2 Copper Tube Crimping Lug (M8 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 6 mm\u00b2 cable with M8 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "6 mm\u00b2",
+        "Stud Hole": "M8",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 63.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-087",
+      "sku": "ZOLEX-CU-6MM-M10",
+      "name": "Zolex 6 mm\u00b2 Copper Tube Crimping Lug (M10 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 6 mm\u00b2 cable with M10 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "6 mm\u00b2",
+        "Stud Hole": "M10",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 63.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-088",
+      "sku": "ZOLEX-CU-6MM-M12",
+      "name": "Zolex 6 mm\u00b2 Copper Tube Crimping Lug (M12 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 6 mm\u00b2 cable with M12 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "6 mm\u00b2",
+        "Stud Hole": "M12",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 63.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-089",
+      "sku": "ZOLEX-CU-10MM-M6",
+      "name": "Zolex 10 mm\u00b2 Copper Tube Crimping Lug (M6 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 10 mm\u00b2 cable with M6 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "10 mm\u00b2",
+        "Stud Hole": "M6",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 75.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-090",
+      "sku": "ZOLEX-CU-10MM-M8",
+      "name": "Zolex 10 mm\u00b2 Copper Tube Crimping Lug (M8 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 10 mm\u00b2 cable with M8 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "10 mm\u00b2",
+        "Stud Hole": "M8",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 75.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-091",
+      "sku": "ZOLEX-CU-10MM-M10",
+      "name": "Zolex 10 mm\u00b2 Copper Tube Crimping Lug (M10 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 10 mm\u00b2 cable with M10 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "10 mm\u00b2",
+        "Stud Hole": "M10",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 75.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-092",
+      "sku": "ZOLEX-CU-10MM-M12",
+      "name": "Zolex 10 mm\u00b2 Copper Tube Crimping Lug (M12 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 10 mm\u00b2 cable with M12 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "10 mm\u00b2",
+        "Stud Hole": "M12",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 75.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-093",
+      "sku": "ZOLEX-CU-16MM-M6",
+      "name": "Zolex 16 mm\u00b2 Copper Tube Crimping Lug (M6 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 16 mm\u00b2 cable with M6 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "16 mm\u00b2",
+        "Stud Hole": "M6",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 93.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-094",
+      "sku": "ZOLEX-CU-16MM-M8",
+      "name": "Zolex 16 mm\u00b2 Copper Tube Crimping Lug (M8 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 16 mm\u00b2 cable with M8 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "16 mm\u00b2",
+        "Stud Hole": "M8",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 93.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-095",
+      "sku": "ZOLEX-CU-16MM-M10",
+      "name": "Zolex 16 mm\u00b2 Copper Tube Crimping Lug (M10 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 16 mm\u00b2 cable with M10 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "16 mm\u00b2",
+        "Stud Hole": "M10",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 93.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-096",
+      "sku": "ZOLEX-CU-16MM-M12",
+      "name": "Zolex 16 mm\u00b2 Copper Tube Crimping Lug (M12 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 16 mm\u00b2 cable with M12 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "16 mm\u00b2",
+        "Stud Hole": "M12",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 93.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-097",
+      "sku": "ZOLEX-CU-25MM-M6",
+      "name": "Zolex 25 mm\u00b2 Copper Tube Crimping Lug (M6 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 25 mm\u00b2 cable with M6 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "25 mm\u00b2",
+        "Stud Hole": "M6",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 120.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-098",
+      "sku": "ZOLEX-CU-25MM-M8",
+      "name": "Zolex 25 mm\u00b2 Copper Tube Crimping Lug (M8 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 25 mm\u00b2 cable with M8 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "25 mm\u00b2",
+        "Stud Hole": "M8",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 120.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-099",
+      "sku": "ZOLEX-CU-25MM-M10",
+      "name": "Zolex 25 mm\u00b2 Copper Tube Crimping Lug (M10 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 25 mm\u00b2 cable with M10 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "25 mm\u00b2",
+        "Stud Hole": "M10",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 120.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-100",
+      "sku": "ZOLEX-CU-25MM-M12",
+      "name": "Zolex 25 mm\u00b2 Copper Tube Crimping Lug (M12 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 25 mm\u00b2 cable with M12 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "25 mm\u00b2",
+        "Stud Hole": "M12",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 120.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-101",
+      "sku": "ZOLEX-CU-35MM-M6",
+      "name": "Zolex 35 mm\u00b2 Copper Tube Crimping Lug (M6 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 35 mm\u00b2 cable with M6 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "35 mm\u00b2",
+        "Stud Hole": "M6",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 150.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-102",
+      "sku": "ZOLEX-CU-35MM-M8",
+      "name": "Zolex 35 mm\u00b2 Copper Tube Crimping Lug (M8 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 35 mm\u00b2 cable with M8 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "35 mm\u00b2",
+        "Stud Hole": "M8",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 150.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-103",
+      "sku": "ZOLEX-CU-35MM-M10",
+      "name": "Zolex 35 mm\u00b2 Copper Tube Crimping Lug (M10 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 35 mm\u00b2 cable with M10 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "35 mm\u00b2",
+        "Stud Hole": "M10",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 150.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-104",
+      "sku": "ZOLEX-CU-35MM-M12",
+      "name": "Zolex 35 mm\u00b2 Copper Tube Crimping Lug (M12 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 35 mm\u00b2 cable with M12 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "35 mm\u00b2",
+        "Stud Hole": "M12",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 150.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-105",
+      "sku": "ZOLEX-CU-50MM-M6",
+      "name": "Zolex 50 mm\u00b2 Copper Tube Crimping Lug (M6 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 50 mm\u00b2 cable with M6 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "50 mm\u00b2",
+        "Stud Hole": "M6",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 195.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-106",
+      "sku": "ZOLEX-CU-50MM-M8",
+      "name": "Zolex 50 mm\u00b2 Copper Tube Crimping Lug (M8 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 50 mm\u00b2 cable with M8 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "50 mm\u00b2",
+        "Stud Hole": "M8",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 195.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-107",
+      "sku": "ZOLEX-CU-50MM-M10",
+      "name": "Zolex 50 mm\u00b2 Copper Tube Crimping Lug (M10 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 50 mm\u00b2 cable with M10 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "50 mm\u00b2",
+        "Stud Hole": "M10",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 195.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-108",
+      "sku": "ZOLEX-CU-50MM-M12",
+      "name": "Zolex 50 mm\u00b2 Copper Tube Crimping Lug (M12 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 50 mm\u00b2 cable with M12 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "50 mm\u00b2",
+        "Stud Hole": "M12",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 195.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-109",
+      "sku": "ZOLEX-CU-70MM-M6",
+      "name": "Zolex 70 mm\u00b2 Copper Tube Crimping Lug (M6 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 70 mm\u00b2 cable with M6 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "70 mm\u00b2",
+        "Stud Hole": "M6",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 255.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-110",
+      "sku": "ZOLEX-CU-70MM-M8",
+      "name": "Zolex 70 mm\u00b2 Copper Tube Crimping Lug (M8 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 70 mm\u00b2 cable with M8 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "70 mm\u00b2",
+        "Stud Hole": "M8",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 255.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-111",
+      "sku": "ZOLEX-CU-70MM-M10",
+      "name": "Zolex 70 mm\u00b2 Copper Tube Crimping Lug (M10 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 70 mm\u00b2 cable with M10 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "70 mm\u00b2",
+        "Stud Hole": "M10",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 255.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-112",
+      "sku": "ZOLEX-CU-70MM-M12",
+      "name": "Zolex 70 mm\u00b2 Copper Tube Crimping Lug (M12 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 70 mm\u00b2 cable with M12 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "70 mm\u00b2",
+        "Stud Hole": "M12",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 255.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-113",
+      "sku": "ZOLEX-CU-95MM-M6",
+      "name": "Zolex 95 mm\u00b2 Copper Tube Crimping Lug (M6 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 95 mm\u00b2 cable with M6 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "95 mm\u00b2",
+        "Stud Hole": "M6",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 330.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-114",
+      "sku": "ZOLEX-CU-95MM-M8",
+      "name": "Zolex 95 mm\u00b2 Copper Tube Crimping Lug (M8 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 95 mm\u00b2 cable with M8 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "95 mm\u00b2",
+        "Stud Hole": "M8",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 330.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-115",
+      "sku": "ZOLEX-CU-95MM-M10",
+      "name": "Zolex 95 mm\u00b2 Copper Tube Crimping Lug (M10 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 95 mm\u00b2 cable with M10 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "95 mm\u00b2",
+        "Stud Hole": "M10",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 330.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-116",
+      "sku": "ZOLEX-CU-95MM-M12",
+      "name": "Zolex 95 mm\u00b2 Copper Tube Crimping Lug (M12 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 95 mm\u00b2 cable with M12 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "95 mm\u00b2",
+        "Stud Hole": "M12",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 330.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-117",
+      "sku": "ZOLEX-CU-120MM-M6",
+      "name": "Zolex 120 mm\u00b2 Copper Tube Crimping Lug (M6 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 120 mm\u00b2 cable with M6 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "120 mm\u00b2",
+        "Stud Hole": "M6",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 405.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-118",
+      "sku": "ZOLEX-CU-120MM-M8",
+      "name": "Zolex 120 mm\u00b2 Copper Tube Crimping Lug (M8 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 120 mm\u00b2 cable with M8 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "120 mm\u00b2",
+        "Stud Hole": "M8",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 405.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-119",
+      "sku": "ZOLEX-CU-120MM-M10",
+      "name": "Zolex 120 mm\u00b2 Copper Tube Crimping Lug (M10 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 120 mm\u00b2 cable with M10 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "120 mm\u00b2",
+        "Stud Hole": "M10",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 405.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-120",
+      "sku": "ZOLEX-CU-120MM-M12",
+      "name": "Zolex 120 mm\u00b2 Copper Tube Crimping Lug (M12 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 120 mm\u00b2 cable with M12 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "120 mm\u00b2",
+        "Stud Hole": "M12",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 405.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-121",
+      "sku": "ZOLEX-CU-150MM-M6",
+      "name": "Zolex 150 mm\u00b2 Copper Tube Crimping Lug (M6 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 150 mm\u00b2 cable with M6 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "150 mm\u00b2",
+        "Stud Hole": "M6",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 495.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-122",
+      "sku": "ZOLEX-CU-150MM-M8",
+      "name": "Zolex 150 mm\u00b2 Copper Tube Crimping Lug (M8 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 150 mm\u00b2 cable with M8 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "150 mm\u00b2",
+        "Stud Hole": "M8",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 495.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-123",
+      "sku": "ZOLEX-CU-150MM-M10",
+      "name": "Zolex 150 mm\u00b2 Copper Tube Crimping Lug (M10 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 150 mm\u00b2 cable with M10 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "150 mm\u00b2",
+        "Stud Hole": "M10",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 495.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-124",
+      "sku": "ZOLEX-CU-150MM-M12",
+      "name": "Zolex 150 mm\u00b2 Copper Tube Crimping Lug (M12 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 150 mm\u00b2 cable with M12 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "150 mm\u00b2",
+        "Stud Hole": "M12",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 495.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-125",
+      "sku": "ZOLEX-CU-185MM-M6",
+      "name": "Zolex 185 mm\u00b2 Copper Tube Crimping Lug (M6 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 185 mm\u00b2 cable with M6 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "185 mm\u00b2",
+        "Stud Hole": "M6",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 600.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-126",
+      "sku": "ZOLEX-CU-185MM-M8",
+      "name": "Zolex 185 mm\u00b2 Copper Tube Crimping Lug (M8 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 185 mm\u00b2 cable with M8 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "185 mm\u00b2",
+        "Stud Hole": "M8",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 600.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-127",
+      "sku": "ZOLEX-CU-185MM-M10",
+      "name": "Zolex 185 mm\u00b2 Copper Tube Crimping Lug (M10 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 185 mm\u00b2 cable with M10 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "185 mm\u00b2",
+        "Stud Hole": "M10",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 600.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-128",
+      "sku": "ZOLEX-CU-185MM-M12",
+      "name": "Zolex 185 mm\u00b2 Copper Tube Crimping Lug (M12 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 185 mm\u00b2 cable with M12 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "185 mm\u00b2",
+        "Stud Hole": "M12",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 600.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-129",
+      "sku": "ZOLEX-CU-240MM-M6",
+      "name": "Zolex 240 mm\u00b2 Copper Tube Crimping Lug (M6 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 240 mm\u00b2 cable with M6 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "240 mm\u00b2",
+        "Stud Hole": "M6",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 765.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-130",
+      "sku": "ZOLEX-CU-240MM-M8",
+      "name": "Zolex 240 mm\u00b2 Copper Tube Crimping Lug (M8 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 240 mm\u00b2 cable with M8 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "240 mm\u00b2",
+        "Stud Hole": "M8",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 765.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-131",
+      "sku": "ZOLEX-CU-240MM-M10",
+      "name": "Zolex 240 mm\u00b2 Copper Tube Crimping Lug (M10 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 240 mm\u00b2 cable with M10 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "240 mm\u00b2",
+        "Stud Hole": "M10",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 765.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-132",
+      "sku": "ZOLEX-CU-240MM-M12",
+      "name": "Zolex 240 mm\u00b2 Copper Tube Crimping Lug (M12 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 240 mm\u00b2 cable with M12 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "240 mm\u00b2",
+        "Stud Hole": "M12",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 765.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-133",
+      "sku": "ZOLEX-CU-300MM-M6",
+      "name": "Zolex 300 mm\u00b2 Copper Tube Crimping Lug (M6 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 300 mm\u00b2 cable with M6 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "300 mm\u00b2",
+        "Stud Hole": "M6",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 945.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-134",
+      "sku": "ZOLEX-CU-300MM-M8",
+      "name": "Zolex 300 mm\u00b2 Copper Tube Crimping Lug (M8 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 300 mm\u00b2 cable with M8 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "300 mm\u00b2",
+        "Stud Hole": "M8",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 945.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-135",
+      "sku": "ZOLEX-CU-300MM-M10",
+      "name": "Zolex 300 mm\u00b2 Copper Tube Crimping Lug (M10 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 300 mm\u00b2 cable with M10 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "300 mm\u00b2",
+        "Stud Hole": "M10",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 945.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    },
+    {
+      "id": "zolex-var-136",
+      "sku": "ZOLEX-CU-300MM-M12",
+      "name": "Zolex 300 mm\u00b2 Copper Tube Crimping Lug (M12 Stud)",
+      "brand": "Zolex",
+      "category": "Copper Lugs & Connectors",
+      "subCategory": "Copper Tube Crimping Lugs",
+      "description": "High conductivity ETP copper tube lug for 300 mm\u00b2 cable with M12 stud hole size, electro-tin plated.",
+      "features": [
+        "Electrolytic ETP Copper 99.9%",
+        "Inspection hole for wire insertion verification",
+        "Tin plated anti-corrosion finish"
+      ],
+      "specs": {
+        "Cable Size": "300 mm\u00b2",
+        "Stud Hole": "M12",
+        "Material": "ETP Copper",
+        "Plating": "Tin Plated"
+      },
+      "industries": [
+        "Power & Energy",
+        "Electrical Switchgear"
+      ],
+      "featured": false,
+      "image": "/logo.png",
+      "inStock": true,
+      "price": 945.0,
+      "stockCount": 500,
+      "unit": "pcs",
+      "leadTime": "24-48 Hours"
+    }
+  ]
+}
