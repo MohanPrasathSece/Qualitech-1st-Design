@@ -1,7 +1,7 @@
 import { PRODUCTS, Product } from "@/data/products";
 import { getProductDefaultPrice, getProductTieredPricing } from "./ecommerceStore";
 
-const STORAGE_KEY = "qualitech_products_catalogue_v1";
+const STORAGE_KEY = "qualitech_products_catalogue_v10";
 
 // Event for cross-component re-renders
 export const PRODUCTS_UPDATED_EVENT = "qualitech:products_updated";
@@ -57,7 +57,7 @@ export function getStoredProducts(): Product[] {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed) && parsed.length > 0) {
+      if (Array.isArray(parsed) && parsed.length >= PRODUCTS.length) {
         return parsed.map(normalizeProduct);
       }
     }
@@ -65,6 +65,7 @@ export function getStoredProducts(): Product[] {
     console.error("Failed to load products from localStorage", err);
   }
   const defaultList = PRODUCTS.map(normalizeProduct);
+  saveStoredProducts(defaultList);
   return defaultList;
 }
 
