@@ -1,7 +1,7 @@
 import { PRODUCTS, Product } from "@/data/products";
 import { getProductDefaultPrice, getProductTieredPricing } from "./ecommerceStore";
 
-const STORAGE_KEY = "qualitech_products_catalogue_v11";
+const STORAGE_KEY = "qualitech_products_catalogue_v15";
 
 // Event for cross-component re-renders
 export const PRODUCTS_UPDATED_EVENT = "qualitech:products_updated";
@@ -10,8 +10,10 @@ function resolveDefaultImage(p: any): string {
   const brand = String(p.brand || "").trim();
   const rawImg = String(p.image || "").trim();
 
-  // If already a valid product image path, return it
-  if (rawImg && rawImg !== "/logo.png" && !rawImg.endsWith("/logo.png") && !["p1", "p2", "p3", "p4", "p5", "p6"].includes(rawImg)) {
+  // If brand is Amphenol, resolve its specific category image (skip generic fallback amp-fci-01.jpg)
+  if (brand === "Amphenol" && (!rawImg || rawImg === "/images/products/amphenol/amp-fci-01.jpg" || rawImg.includes("qualitech"))) {
+    // proceed to Amphenol specific mapping below
+  } else if (rawImg && rawImg !== "/logo.png" && !rawImg.endsWith("/logo.png") && !["p1", "p2", "p3", "p4", "p5", "p6"].includes(rawImg)) {
     return rawImg;
   }
 
@@ -23,6 +25,46 @@ function resolveDefaultImage(p: any): string {
   }
 
   if (brand === "Amphenol") {
+    const text = `${p.sku || ""} ${p.name || ""} ${p.category || ""} ${p.subCategory || ""}`.toLowerCase();
+    if (text.includes("gnss") || text.includes("gps")) {
+      return "/images/products/amphenol/amp-gnss-antenna.png";
+    }
+    if (text.includes("cellular") || text.includes("5g") || text.includes("4g") || text.includes("lte") || text.includes("telematics") || text.includes("combo")) {
+      return "/images/products/amphenol/amp-cellular-antenna.png";
+    }
+    if (text.includes("wi-fi") || text.includes("wifi") || text.includes("bluetooth")) {
+      return "/images/products/amphenol/amp-wifi-antenna.png";
+    }
+    if (text.includes("embedded") || text.includes("internal") || text.includes("fpc") || text.includes("nfc")) {
+      return "/images/products/amphenol/amp-embedded-antenna.png";
+    }
+    if (text.includes("backplane") || text.includes("paladin") || text.includes("pcie") || text.includes("high-speed")) {
+      return "/images/products/amphenol/amp-paladin-backplane.png";
+    }
+    if (text.includes("sheerpwr") || text.includes("circular") || text.includes("mil-spec") || text.includes("circ")) {
+      return "/images/products/amphenol/amp-sheerpwr-circular.png";
+    }
+    if (text.includes("ethernet") || text.includes("single pair") || text.includes("spe") || text.includes("m12") || text.includes("m8")) {
+      return "/images/products/amphenol/amp-spe-ethernet.png";
+    }
+    if (text.includes("micro-miniature") || text.includes("micro rf") || text.includes("micro-coax") || text.includes("mcx") || text.includes("mmcx")) {
+      return "/images/products/amphenol/amp-micro-rf.png";
+    }
+    if (text.includes("coaxial") || text.includes("bnc") || text.includes("filter rf") || text.includes("sma") || text.includes("rf ")) {
+      return "/images/products/amphenol/amp-rf-bnc.png";
+    }
+    if (text.includes("usb") || text.includes("modular") || text.includes("rj45") || text.includes("musb")) {
+      return "/images/products/amphenol/amp-rugged-usb.png";
+    }
+    if (text.includes("fiber") || text.includes("optical") || text.includes("transceiver")) {
+      return "/images/products/amphenol/amp-fiber-optic.png";
+    }
+    if (text.includes("power") || text.includes("radsok") || text.includes("hvsl") || text.includes("high-voltage") || text.includes("busbar")) {
+      return "/images/products/amphenol/amp-power-ev.png";
+    }
+    if (text.includes("dac") || text.includes("copper cable") || text.includes("cable assembl")) {
+      return "/images/products/amphenol/amp-dac-01.jpg";
+    }
     return "/images/products/amphenol/amp-fci-01.jpg";
   }
 

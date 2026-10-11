@@ -757,7 +757,7 @@ function FinalCTA({ onNavigate }: { onNavigate?: (target: string) => void }) {
 
 /* ─── Root App Component & Multi-Page Router ─── */
 
-type PageType = "home" | "products" | "about" | "manufacturing" | "amphenol" | "zolex" | "contact" | "admin";
+type PageType = "home" | "products" | "about" | "manufacturing" | "qualitech" | "amphenol" | "zolex" | "contact" | "admin";
 
 function HomeContent() {
   const getPageFromHash = (): PageType => {
@@ -767,6 +767,7 @@ function HomeContent() {
     if (hash === "#products" || hash === "#shop") return "products";
     if (hash === "#about-page" || hash === "#about-us") return "about";
     if (hash === "#manufacturing" || hash === "#cable-assemblies") return "manufacturing";
+    if (hash === "#qualitech") return "qualitech";
     if (hash === "#amphenol") return "amphenol";
     if (hash === "#zolex") return "zolex";
     if (hash === "#contact-page" || hash === "#contact-us") return "contact";
