@@ -1,10 +1,37 @@
 import { PRODUCTS, Product } from "@/data/products";
 import { getProductDefaultPrice, getProductTieredPricing } from "./ecommerceStore";
 
-const STORAGE_KEY = "qualitech_products_catalogue_v10";
+const STORAGE_KEY = "qualitech_products_catalogue_v11";
 
 // Event for cross-component re-renders
 export const PRODUCTS_UPDATED_EVENT = "qualitech:products_updated";
+
+function resolveDefaultImage(p: any): string {
+  const brand = String(p.brand || "").trim();
+  const rawImg = String(p.image || "").trim();
+
+  // If already a valid product image path, return it
+  if (rawImg && rawImg !== "/logo.png" && !rawImg.endsWith("/logo.png") && !["p1", "p2", "p3", "p4", "p5", "p6"].includes(rawImg)) {
+    return rawImg;
+  }
+
+  // Qualitech product image auto-mapping
+  if (brand === "Qualitech" && p.sku) {
+    const pn = String(p.sku).replace(/\(.*?\)/g, "").trim();
+    const safeSku = pn.replace(/[^a-zA-Z0-9_\-\.]/g, "_").replace(/^_+|_+$/g, "");
+    return `/images/products/qualitech/${safeSku}.jpg`;
+  }
+
+  if (brand === "Amphenol") {
+    return "/images/products/amphenol/amp-fci-01.jpg";
+  }
+
+  if (brand === "Zolex") {
+    return "/images/products/qualitech/cat-dsub-connector.jpg";
+  }
+
+  return "/images/products/qualitech/cat-wire-to-board.jpg";
+}
 
 /**
  * Ensures that all products returned have consistent e-commerce pricing & inventory
@@ -25,7 +52,7 @@ function normalizeProduct(p: any): Product {
     specs: typeof p.specs === "object" && p.specs !== null ? p.specs : { Manufacturer: brand },
     industries: Array.isArray(p.industries) && p.industries.length > 0 ? p.industries : ["Industrial Automation", "Telecommunications"],
     featured: Boolean(p.featured),
-    image: p.image || "",
+    image: resolveDefaultImage({ ...p, brand }),
     inStock: p.inStock !== undefined ? Boolean(p.inStock) : true,
     externalUrl: p.externalUrl || "",
     isEnquiry: Boolean(p.isEnquiry),

@@ -46,7 +46,7 @@ export default function App() {
 
 /* ─── Hero ─── */
 
-function Hero() {
+function Hero({ onNavigate }: { onNavigate?: (target: string) => void }) {
   return (
     <section id="top" className="relative overflow-hidden bg-background pt-32 sm:pt-36 lg:pt-40">
       <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-5 pb-16 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16 lg:pb-24">
@@ -87,7 +87,11 @@ function Hero() {
                 <span className="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
               </a>
               <a
-                href="#contact"
+                href="#contact-page"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onNavigate?.("#contact-page");
+                }}
                 className="group inline-flex items-center justify-center gap-3 rounded-xl border border-graphite/20 px-7 py-4 font-display text-[0.72rem] font-bold uppercase tracking-[0.2em] text-graphite transition-all duration-300 hover:border-graphite hover:bg-graphite/5"
               >
                 Request a Quote
@@ -680,7 +684,7 @@ function ProductsOverview({ onNavigate }: ProductsOverviewProps) {
 
 /* ─── Final CTA ─── */
 
-function FinalCTA() {
+function FinalCTA({ onNavigate }: { onNavigate?: (target: string) => void }) {
   return (
     <section id="contact" className="border-t border-border bg-white py-20 lg:py-28">
       <div className="relative mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
@@ -697,14 +701,22 @@ function FinalCTA() {
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
-              href="mailto:info@qualitechindia.in"
+              href="#contact-page"
+              onClick={(e) => {
+                e.preventDefault();
+                onNavigate?.("#contact-page");
+              }}
               className="group inline-flex items-center justify-center gap-3 rounded-xl bg-graphite px-7 py-4 font-display text-[0.72rem] font-bold uppercase tracking-[0.2em] text-white transition-all duration-300 hover:bg-brand-blue shadow-sm"
             >
               Request a Quote
               <span className="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
             </a>
             <a
-              href="tel:+919849001484"
+              href="#contact-page"
+              onClick={(e) => {
+                e.preventDefault();
+                onNavigate?.("#contact-page");
+              }}
               className="group inline-flex items-center justify-center gap-3 rounded-xl border border-graphite/20 px-7 py-4 font-display text-[0.72rem] font-bold uppercase tracking-[0.2em] text-graphite transition-all duration-300 hover:border-graphite hover:bg-graphite/5"
             >
               Contact Us
@@ -897,7 +909,7 @@ function HomeContent() {
     <div className="min-h-screen bg-background text-foreground">
       <Header onNavigate={handleNavigate} currentPage="home" />
       <main>
-        <Hero />
+        <Hero onNavigate={handleNavigate} />
         <Stats />
         <BusinessStructure onNavigate={handleNavigate} />
         <About />
@@ -905,7 +917,7 @@ function HomeContent() {
         <Why />
         <FacilitiesPreview />
         <ProductsOverview onNavigate={handleNavigate} />
-        <FinalCTA />
+        <FinalCTA onNavigate={handleNavigate} />
       </main>
       <Footer onNavigate={handleNavigate} />
     </div>

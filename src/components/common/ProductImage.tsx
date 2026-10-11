@@ -22,16 +22,13 @@ export const ProductImage: React.FC<ProductImageProps> = ({
   showText = true,
 }) => {
   const [imageError, setImageError] = useState(false);
+  const [fallbackAttempted, setFallbackAttempted] = useState(false);
 
-  // Check if image is missing, empty, or fallback logo
-  const isInvalid =
-    !src ||
-    src.trim() === "" ||
-    src === "/logo.png" ||
-    src.endsWith("/logo.png") ||
-    imageError;
+  // If initial src is invalid, missing, or /logo.png, default to category image
+  const isInvalid = !src || src.trim() === "" || src === "/logo.png" || src.endsWith("/logo.png");
+  const effectiveSrc = isInvalid ? "/images/products/qualitech/cat-wire-to-board.jpg" : src;
 
-  if (isInvalid) {
+  if (imageError && fallbackAttempted) {
     return (
       <div
         className={`flex h-full w-full flex-col items-center justify-center bg-slate-50/90 p-2 text-center select-none ${containerClassName}`}
@@ -60,10 +57,16 @@ export const ProductImage: React.FC<ProductImageProps> = ({
 
   return (
     <img
-      src={src}
+      src={fallbackAttempted ? "/images/products/qualitech/cat-dsub-connector.jpg" : effectiveSrc}
       alt={alt}
       className={className}
-      onError={() => setImageError(true)}
+      onError={() => {
+        if (!fallbackAttempted) {
+          setFallbackAttempted(true);
+        } else {
+          setImageError(true);
+        }
+      }}
     />
   );
 };
