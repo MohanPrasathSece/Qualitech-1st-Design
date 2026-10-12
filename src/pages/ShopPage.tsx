@@ -6,7 +6,7 @@ import {
   Product,
 } from "@/data/products";
 import { useECommerce } from "@/context/ECommerceContext";
-import { formatINR, getProductDefaultPrice, getProductExternalLink } from "@/lib/ecommerceStore";
+import { formatINR, getProductDefaultPrice } from "@/lib/ecommerceStore";
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
 import { ProductImage } from "@/components/common/ProductImage";
@@ -607,23 +607,7 @@ export function ShopPage({ onNavigateHome, initialBrand = "All Brands" }: ShopPa
                           )}
                         </div>
 
-                        {/* Manufacturer Direct Link Strip */}
-                        {product.brand !== "Qualitech" && (
-                          <div className="mb-2.5">
-                            <a
-                              href={getProductExternalLink(product).url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className={`flex items-center justify-between rounded-lg border px-2.5 py-1.5 text-[0.65rem] font-bold transition-colors ${getProductExternalLink(product).brandColor}`}
-                              title={`View ${product.sku} on official ${product.brand} catalog`}
-                            >
-                              <span>{getProductExternalLink(product).badgeText}</span>
-                              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                              </svg>
-                            </a>
-                          </div>
-                        )}
+
 
                         <div className="grid grid-cols-2 gap-2">
                           <button
@@ -687,17 +671,7 @@ export function ShopPage({ onNavigateHome, initialBrand = "All Brands" }: ShopPa
                             {product.sku && product.sku !== product.name && (
                               <span className="font-mono text-xs text-muted-foreground">{product.sku}</span>
                             )}
-                            {product.brand !== "Qualitech" && (
-                              <a
-                                href={getProductExternalLink(product).url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                onClick={(e) => e.stopPropagation()}
-                                className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-[0.6rem] font-bold text-brand-blue hover:underline"
-                              >
-                                <span>{getProductExternalLink(product).badgeText}</span>
-                              </a>
-                            )}
+
                           </div>
                           <h3 className="font-display text-sm font-bold text-graphite hover:text-brand-blue transition-colors mt-0.5">
                             {product.name}
@@ -720,20 +694,7 @@ export function ShopPage({ onNavigateHome, initialBrand = "All Brands" }: ShopPa
                         </div>
 
                         <div className="flex items-center gap-2">
-                          {product.brand !== "Qualitech" && (
-                            <a
-                              href={getProductExternalLink(product).url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="hidden md:inline-flex items-center gap-1 rounded-xl border border-border px-3 py-2 text-xs font-bold text-muted-foreground hover:text-brand-blue hover:border-brand-blue transition-colors"
-                              title={`View ${product.name} on manufacturer catalog`}
-                            >
-                              <span>Official</span>
-                              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                              </svg>
-                            </a>
-                          )}
+
                           <button
                             onClick={() => openQuickView(product)}
                             className="rounded-xl border border-border px-3.5 py-2 text-xs font-bold text-graphite hover:bg-steel-light transition-colors cursor-pointer"

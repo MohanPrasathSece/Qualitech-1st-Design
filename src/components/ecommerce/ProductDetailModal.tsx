@@ -3,7 +3,6 @@ import { Product } from "@/data/products";
 import { useECommerce } from "@/context/ECommerceContext";
 import {
   formatINR,
-  getProductExternalLink,
 } from "@/lib/ecommerceStore";
 import { ProductImage } from "@/components/common/ProductImage";
 
@@ -145,20 +144,7 @@ Email: info@qualitechindia.in | Tel: +91 98490 01484
           </div>
 
           <div className="flex items-center gap-2">
-            {product.brand !== "Qualitech" && (
-              <a
-                href={getProductExternalLink(product).url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hidden sm:inline-flex h-8 items-center gap-1.5 rounded-lg border border-brand-blue/30 bg-blue-50/60 px-2.5 text-xs font-bold text-brand-blue hover:bg-brand-blue hover:text-white transition-colors"
-                title={`Open official ${product.brand} catalog in new tab`}
-              >
-                <span>{getProductExternalLink(product).label}</span>
-                <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-              </a>
-            )}
+
 
             <button
               onClick={handleShareProduct}
@@ -241,27 +227,7 @@ Email: info@qualitechindia.in | Tel: +91 98490 01484
                 Download Technical Datasheet (.TXT / PDF)
               </button>
 
-              {/* View on Amphenol / Zolex External Catalog */}
-              {product.brand !== "Qualitech" && (
-                <a
-                  href={getProductExternalLink(product).url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`flex w-full items-center justify-center gap-2 rounded-xl border py-2.5 text-xs font-bold transition-all shadow-2xs ${
-                    product.brand === "Amphenol"
-                      ? "border-blue-200 bg-blue-50/70 text-brand-blue hover:bg-brand-blue hover:text-white"
-                      : "border-emerald-200 bg-emerald-50/70 text-emerald-800 hover:bg-emerald-700 hover:text-white"
-                  }`}
-                >
-                  <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-                  </svg>
-                  <span>{getProductExternalLink(product).label} Official Portal</span>
-                  <svg className="h-3.5 w-3.5 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </a>
-              )}
+
             </div>
 
             {/* Right: Product Purchase Controls */}
