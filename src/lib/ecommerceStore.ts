@@ -241,7 +241,8 @@ export function updateStoredCartQty(productId: string, quantity: number): CartIt
   }
 
   const updated = current.map((item) => {
-    if (item.product.id === productId) {
+    const isMatch = item.id === productId || item.product.id === productId || item.product.sku === productId;
+    if (isMatch) {
       const unitPrice = getEffectiveUnitPrice(item.product, quantity);
       return { ...item, quantity, unitPrice };
     }
@@ -254,7 +255,7 @@ export function updateStoredCartQty(productId: string, quantity: number): CartIt
 
 export function removeStoredCartItem(productId: string): CartItem[] {
   const current = getStoredCart();
-  const updated = current.filter((item) => item.product.id !== productId);
+  const updated = current.filter((item) => !(item.id === productId || item.product.id === productId || item.product.sku === productId));
   saveStoredCart(updated);
   return updated;
 }

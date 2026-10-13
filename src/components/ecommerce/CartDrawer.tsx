@@ -27,8 +27,20 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToShop }) => {
   } = useECommerce();
 
   const [copiedQuote, setCopiedQuote] = useState(false);
+  const [downloadingQuote, setDownloadingQuote] = useState(false);
 
   if (!isCartOpen) return null;
+
+  const handleDownloadPDF = () => {
+    setDownloadingQuote(true);
+    try {
+      downloadQuotationFromCart(cart);
+    } catch (err) {
+      console.error("Failed to generate PDF quotation", err);
+    } finally {
+      setTimeout(() => setDownloadingQuote(false), 2000);
+    }
+  };
 
   const handleGenerateQuoteSummary = () => {
     const text = [
@@ -313,7 +325,16 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToShop }) => {
                 <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
               </button>
 
-
+              <button
+                type="button"
+                onClick={handleDownloadPDF}
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-brand-blue/30 bg-blue-50/70 py-2.5 font-display text-[0.7rem] font-bold uppercase tracking-wider text-brand-blue hover:bg-brand-blue hover:text-white transition-all cursor-pointer shadow-2xs"
+              >
+                <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <span>{downloadingQuote ? "Generating Official PDF..." : "Download Formal RFQ (PDF)"}</span>
+              </button>
 
               <button
                 type="button"

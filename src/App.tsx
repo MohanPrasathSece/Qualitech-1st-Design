@@ -783,7 +783,8 @@ type PageType = "home" | "products" | "about" | "manufacturing" | "qualitech" | 
 function HomeContent() {
   const getPageFromHash = (): PageType => {
     if (typeof window === "undefined") return "home";
-    const hash = window.location.hash.toLowerCase();
+    const rawHash = window.location.hash.toLowerCase();
+    const hash = rawHash.split("?")[0] || "";
     if (hash === "#admin" || hash === "#/admin" || hash === "#admin-panel") return "admin";
     if (hash === "#products" || hash === "#shop" || hash === "#catalog" || hash === "#catalogue") return "products";
     if (hash === "#about-page" || hash === "#about-us") return "about";
@@ -812,7 +813,7 @@ function HomeContent() {
   }, []);
 
   const handleNavigate = (target: string = "", isPage?: boolean | undefined) => {
-    const cleanTarget = (target || "").toLowerCase();
+    const cleanTarget = (target || "").toLowerCase().split("?")[0] || "";
 
     // Home / Top navigation
     if (cleanTarget === "#top" || cleanTarget === "" || cleanTarget === "#" || cleanTarget === "#home") {
@@ -833,7 +834,7 @@ function HomeContent() {
 
     if (cleanTarget === "#products" || cleanTarget === "#shop" || cleanTarget === "#catalog" || cleanTarget === "#catalogue") {
       setCurrentPage("products");
-      window.history.pushState(null, "", "#products");
+      window.history.pushState(null, "", cleanTarget === "#shop" ? "#shop" : "#products");
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }

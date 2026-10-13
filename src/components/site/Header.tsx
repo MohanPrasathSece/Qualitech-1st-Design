@@ -31,7 +31,7 @@ export const NAV: NavItem[] = [
   { label: "Home", href: "#top" },
   { label: "About Us", href: "#about-page", isPage: true },
   { label: "Products & Services", href: "#products", isPage: true, dropdown: true },
-  { label: "Shop", href: "#products", isPage: true },
+  { label: "Shop", href: "#shop", isPage: true },
   { label: "Facilities", href: "#facilities", isPage: true },
   { label: "Contact Us", href: "#contact-page", isPage: true },
 ];
@@ -143,10 +143,10 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
   };
 
   const isProductsActive =
-    currentPage === "products" ||
+    productsDropdown ||
+    currentPage === "qualitech" ||
     currentPage === "amphenol" ||
-    currentPage === "zolex" ||
-    currentPage === "manufacturing";
+    currentPage === "zolex";
 
   return (
     <header
@@ -332,11 +332,11 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
             }
 
             const isActive =
-              (item.href === "#top" && currentPage === "home") ||
-              (item.href === "#about-page" && currentPage === "about") ||
-              (item.label === "Shop" && currentPage === "products") ||
-              (item.label === "Facilities" && currentPage === "manufacturing") ||
-              (item.href === "#contact-page" && currentPage === "contact");
+              (item.label === "Home" && (currentPage === "home" || !currentPage)) ||
+              (item.label === "About Us" && currentPage === "about") ||
+              (item.label === "Shop" && (currentPage === "products" || currentPage === "shop")) ||
+              (item.label === "Facilities" && (currentPage === "manufacturing" || currentPage === "facilities")) ||
+              (item.label === "Contact Us" && currentPage === "contact");
 
             return (
               <button
@@ -438,7 +438,11 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
               setOpen(false);
               onNavigate("#top");
             }}
-            className="border-b border-border/70 py-2.5 text-left font-display text-sm font-semibold uppercase tracking-[0.14em] text-foreground"
+            className={`border-b border-border/70 py-2.5 px-3 rounded-xl text-left font-display text-sm uppercase tracking-[0.14em] transition-colors ${
+              currentPage === "home" || !currentPage
+                ? "bg-brand-blue/10 text-brand-blue font-bold"
+                : "text-foreground font-semibold"
+            }`}
           >
             Home
           </button>
@@ -447,7 +451,11 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
               setOpen(false);
               onNavigate("#about-page", true);
             }}
-            className="border-b border-border/70 py-2.5 text-left font-display text-sm font-semibold uppercase tracking-[0.14em] text-foreground"
+            className={`border-b border-border/70 py-2.5 px-3 rounded-xl text-left font-display text-sm uppercase tracking-[0.14em] transition-colors ${
+              currentPage === "about"
+                ? "bg-brand-blue/10 text-brand-blue font-bold"
+                : "text-foreground font-semibold"
+            }`}
           >
             About Us
           </button>
@@ -456,7 +464,11 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
           <div className="border-b border-border/70 py-1">
             <button
               onClick={() => setMobileProductsOpen((v) => !v)}
-              className="flex w-full items-center justify-between py-2 text-left font-display text-sm font-semibold uppercase tracking-[0.14em] text-foreground cursor-pointer"
+              className={`flex w-full items-center justify-between py-2 px-3 rounded-xl text-left font-display text-sm uppercase tracking-[0.14em] cursor-pointer transition-colors ${
+                isProductsActive
+                  ? "bg-brand-blue/10 text-brand-blue font-bold"
+                  : "text-foreground font-semibold"
+              }`}
             >
               <span>Products &amp; Services</span>
               <svg
@@ -504,7 +516,9 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
                           setMobileProductsOpen(false);
                           onNavigate("#qualitech", true);
                         }}
-                        className="block w-full py-1 text-left text-[0.8rem] font-medium text-foreground hover:text-brand-blue cursor-pointer"
+                        className={`block w-full py-1 text-left text-[0.8rem] transition-colors cursor-pointer ${
+                          currentPage === "qualitech" ? "text-brand-blue font-bold" : "font-medium text-foreground hover:text-brand-blue"
+                        }`}
                       >
                         • Qualitech Products (401+ Components)
                       </button>
@@ -514,7 +528,9 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
                           setMobileProductsOpen(false);
                           onNavigate("#amphenol", true);
                         }}
-                        className="block w-full py-1 text-left text-[0.8rem] font-medium text-foreground hover:text-brand-blue cursor-pointer"
+                        className={`block w-full py-1 text-left text-[0.8rem] transition-colors cursor-pointer ${
+                          currentPage === "amphenol" ? "text-brand-blue font-bold" : "font-medium text-foreground hover:text-brand-blue"
+                        }`}
                       >
                         • Amphenol (Connectors &amp; Antennas)
                       </button>
@@ -524,7 +540,9 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
                           setMobileProductsOpen(false);
                           onNavigate("#zolex", true);
                         }}
-                        className="block w-full py-1 text-left text-[0.8rem] font-medium text-foreground hover:text-brand-blue cursor-pointer"
+                        className={`block w-full py-1 text-left text-[0.8rem] transition-colors cursor-pointer ${
+                          currentPage === "zolex" ? "text-brand-blue font-bold" : "font-medium text-foreground hover:text-brand-blue"
+                        }`}
                       >
                         • Zolex (Lugs, Glands &amp; Ties)
                       </button>
@@ -562,7 +580,11 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
                           setMobileProductsOpen(false);
                           onNavigate("#manufacturing", true);
                         }}
-                        className="block w-full py-1 text-left text-[0.8rem] font-medium text-foreground hover:text-brand-blue"
+                        className={`block w-full py-1 text-left text-[0.8rem] transition-colors cursor-pointer ${
+                          currentPage === "manufacturing" || currentPage === "facilities"
+                            ? "text-brand-blue font-bold"
+                            : "font-medium text-foreground hover:text-brand-blue"
+                        }`}
                       >
                         • Custom Cable Assemblies &amp; Wire Harnesses
                       </button>
@@ -589,7 +611,11 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
               setOpen(false);
               onNavigate("#products", true);
             }}
-            className="border-b border-border/70 py-2.5 text-left font-display text-sm font-semibold uppercase tracking-[0.14em] text-foreground flex items-center justify-between"
+            className={`border-b border-border/70 py-2.5 px-3 rounded-xl text-left font-display text-sm uppercase tracking-[0.14em] transition-colors flex items-center justify-between ${
+              currentPage === "products" || currentPage === "shop"
+                ? "bg-brand-blue/10 text-brand-blue font-bold"
+                : "text-foreground font-semibold"
+            }`}
           >
             <span>Shop (All Products)</span>
             <span className="rounded-full bg-brand-blue/10 text-brand-blue px-2 py-0.5 text-[0.6rem] font-bold">550+ Items</span>
@@ -600,7 +626,11 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
               setOpen(false);
               onNavigate("#facilities", true);
             }}
-            className="border-b border-border/70 py-2.5 text-left font-display text-sm font-semibold uppercase tracking-[0.14em] text-foreground"
+            className={`border-b border-border/70 py-2.5 px-3 rounded-xl text-left font-display text-sm uppercase tracking-[0.14em] transition-colors ${
+              currentPage === "manufacturing" || currentPage === "facilities"
+                ? "bg-brand-blue/10 text-brand-blue font-bold"
+                : "text-foreground font-semibold"
+            }`}
           >
             Facilities
           </button>
@@ -610,7 +640,11 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
               setOpen(false);
               onNavigate("#contact-page", true);
             }}
-            className="py-2.5 text-left font-display text-sm font-semibold uppercase tracking-[0.14em] text-foreground"
+            className={`py-2.5 px-3 rounded-xl text-left font-display text-sm uppercase tracking-[0.14em] transition-colors ${
+              currentPage === "contact"
+                ? "bg-brand-blue/10 text-brand-blue font-bold"
+                : "text-foreground font-semibold"
+            }`}
           >
             Contact Us
           </button>

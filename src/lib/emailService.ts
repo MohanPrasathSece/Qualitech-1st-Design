@@ -27,10 +27,12 @@ export interface RFQFormData {
   drawingUrl?: string | undefined;
 }
 
-// Configurable Admin Email
-export const ADMIN_EMAIL =
-  (import.meta.env["VITE_ADMIN_NOTIFICATION_EMAIL"] as string) ||
-  "zyradigitalsofficial@gmail.com";
+// Configurable Admin Email(s) - dispatches to primary admin and official corporate desk
+const envAdminEmails = (import.meta.env["VITE_ADMIN_NOTIFICATION_EMAIL"] as string) || "";
+export const ADMIN_EMAILS: string[] = envAdminEmails
+  ? envAdminEmails.split(",").map((s) => s.trim()).filter(Boolean)
+  : ["zyradigitalsofficial@gmail.com", "info@qualitechindia.in"];
+export const ADMIN_EMAIL = ADMIN_EMAILS[0] || "zyradigitalsofficial@gmail.com";
 
 // Configurable SMTP / Resend / Webhook credentials
 const RESEND_API_KEY = (import.meta.env["VITE_RESEND_API_KEY"] as string) || "";
@@ -231,7 +233,7 @@ export async function sendOrderConfirmationEmail(order: Order): Promise<boolean>
   `;
 
   await dispatchEmail({
-    to: ADMIN_EMAIL,
+    to: ADMIN_EMAILS,
     subject: `[NEW ORDER ALERT] #${order.orderNumber} - ₹${order.total.toLocaleString("en-IN")} from ${order.customer.fullName}`,
     html: adminHtml,
   });
@@ -267,7 +269,7 @@ export async function sendContactFormEmail(formData: ContactFormData): Promise<b
 
   // Notify Admin
   await dispatchEmail({
-    to: ADMIN_EMAIL,
+    to: ADMIN_EMAILS,
     subject: `[Contact Form] ${formData.subject} - ${formData.fullName}`,
     html: adminHtml,
   });
@@ -313,7 +315,7 @@ export async function sendRFQQuoteEmail(rfq: RFQFormData): Promise<boolean> {
   `;
 
   await dispatchEmail({
-    to: ADMIN_EMAIL,
+    to: ADMIN_EMAILS,
     subject: `[RFQ Request #${rfq.rfqNumber}] ${rfq.productCategory} (${rfq.estimatedQty} pcs) from ${rfq.fullName}`,
     html: adminHtml,
   });
@@ -461,7 +463,7 @@ export async function sendOrderStatusEmail(
 
   // 2. Also inform admin team
   await dispatchEmail({
-    to: ADMIN_EMAIL,
+    to: ADMIN_EMAILS,
     subject: `[STATUS CHANGED: ${status.toUpperCase()}] Order #${order.orderNumber} (${order.customer.fullName})`,
     html: `<p>Admin status update applied to <strong>#${order.orderNumber}</strong>:</p><p>New Status: <strong>${status}</strong></p><p>Tracking ID: <strong>${trackingNumber}</strong></p><p>Tracking URL: <a href="${trackingLink}">${trackingLink}</a></p>`,
   });
@@ -560,7 +562,7 @@ export async function send30DayOrderCleanupEmail(
 
   return (
     await dispatchEmail({
-      to: ADMIN_EMAIL,
+      to: ADMIN_EMAILS,
       subject: `[30-DAY RETENTION REPORT] ${archivedOrders.length} Orders Archived (₹${totalAmountArchived.toLocaleString("en-IN")})`,
       html: emailHtml,
       text: `30-Day Order Cleanup Report:\n${archivedOrders.length} orders archived.\nTotal value: ₹${totalAmountArchived}\n\nCSV Data:\n${csvContent}`,
@@ -665,7 +667,7 @@ export async function sendLowStockAlertEmail(
 
   return (
     await dispatchEmail({
-      to: ADMIN_EMAIL,
+      to: ADMIN_EMAILS,
       subject: `[CRITICAL LOW STOCK ALERT] ${depletedItems.length} Product(s) Below Minimum Threshold`,
       html: emailHtml,
       text: `Low Stock Alert:\n${depletedItems.map((it) => `${it.sku}: ${it.name} - Qty: ${it.stockCount} (Threshold: ${it.lowStockThreshold})`).join("\n")}`,

@@ -21,7 +21,7 @@ export const ProductDetailModal: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"specs" | "features" | "industries" | "compliance">("specs");
   const [copiedLink, setCopiedLink] = useState(false);
   const [addedToast, setAddedToast] = useState(false);
-
+  const [downloadSuccess, setDownloadSuccess] = useState(false);
   const [imageError, setImageError] = useState(false);
 
   // Reset quantity and error state on product change
@@ -30,6 +30,7 @@ export const ProductDetailModal: React.FC = () => {
       setQuantity(quickViewProduct.minOrderQty || 1);
       setActiveTab("specs");
       setImageError(false);
+      setDownloadSuccess(false);
     }
   }, [quickViewProduct]);
 
@@ -60,13 +61,11 @@ export const ProductDetailModal: React.FC = () => {
   };
 
   const handleShareProduct = () => {
-    const url = window.location.origin + window.location.pathname + "#products";
+    const url = `${window.location.origin}${window.location.pathname}#products?sku=${encodeURIComponent(product.sku)}`;
     navigator.clipboard?.writeText(url);
     setCopiedLink(true);
     setTimeout(() => setCopiedLink(false), 2500);
   };
-
-  const [downloadSuccess, setDownloadSuccess] = useState(false);
 
   const handleDownloadDatasheet = () => {
     const success = downloadProductDatasheet(product);
@@ -260,17 +259,17 @@ export const ProductDetailModal: React.FC = () => {
                       <div className="flex items-center gap-3">
                         <div className="flex items-center rounded-xl border border-border bg-steel-light/30 shadow-2xs">
                           <button
-                            onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                            onClick={() => setQuantity(Math.max(product.minOrderQty || 1, quantity - 1))}
                             className="flex h-10 w-10 items-center justify-center text-base font-bold text-muted-foreground hover:text-foreground hover:bg-steel-light transition-colors rounded-l-xl cursor-pointer"
                           >
                             -
                           </button>
                           <input
                             type="number"
-                            min="1"
+                            min={product.minOrderQty || 1}
                             max="10000"
                             value={quantity}
-                            onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value, 10) || 1))}
+                            onChange={(e) => setQuantity(Math.max(product.minOrderQty || 1, parseInt(e.target.value, 10) || product.minOrderQty || 1))}
                             className="w-16 text-center text-sm font-bold text-graphite bg-transparent focus:outline-hidden"
                           />
                           <button
