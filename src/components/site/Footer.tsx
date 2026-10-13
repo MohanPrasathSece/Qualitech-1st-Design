@@ -9,10 +9,12 @@ export const FOOTER_COMPANY: NavItem[] = [
   { label: "Home", href: "#top" },
   { label: "About Us", href: "#about-page", isPage: true },
   { label: "Products & Services", href: "#products", isPage: true },
+  { label: "Manufacturing", href: "#manufacturing", isPage: true },
   { label: "Contact Us", href: "#contact-page", isPage: true },
 ];
 
 export const FOOTER_PRODUCTS: NavItem[] = [
+  { label: "Qualitech Components", href: "#qualitech", isPage: true },
   { label: "Amphenol", href: "#amphenol", isPage: true },
   { label: "Zolex", href: "#zolex", isPage: true },
   { label: "Custom Cable Assemblies", href: "#manufacturing", isPage: true },
@@ -126,7 +128,7 @@ export function Footer({ onNavigate }: FooterProps) {
               <li className="text-[0.62rem] font-bold uppercase tracking-wider text-steel/60 mt-1">
                 Electronics Components
               </li>
-              {FOOTER_PRODUCTS.filter(p => p.label === "Amphenol" || p.label === "Zolex").map((item) => (
+              {FOOTER_PRODUCTS.filter(p => p.label === "Amphenol" || p.label === "Zolex" || p.label === "Qualitech Components").map((item) => (
                 <li key={item.label}>
                   {item.external ? (
                     <a
@@ -153,7 +155,7 @@ export function Footer({ onNavigate }: FooterProps) {
               <li className="text-[0.62rem] font-bold uppercase tracking-wider text-steel/60 mt-3 pt-2 border-t border-background/10">
                 Cable Assemblies
               </li>
-              {FOOTER_PRODUCTS.filter(p => p.label !== "Amphenol" && p.label !== "Zolex").map((item) => (
+              {FOOTER_PRODUCTS.filter(p => p.label !== "Amphenol" && p.label !== "Zolex" && p.label !== "Qualitech Components").map((item) => (
                 <li key={item.label}>
                   <button
                     onClick={() => (onNavigate ? onNavigate(item.href, item.isPage) : undefined)}
@@ -181,7 +183,7 @@ export function Footer({ onNavigate }: FooterProps) {
             <div className="mt-6 sm:mt-8 border-t border-background/10 pt-5">
               <p className="text-xs sm:text-sm font-medium text-steel">Need a custom cable solution?</p>
               <button
-                onClick={() => (onNavigate ? onNavigate("#contact") : undefined)}
+                onClick={() => (onNavigate ? onNavigate("#contact-page", true) : undefined)}
                 className="mt-2.5 inline-flex font-display text-[0.72rem] font-bold uppercase tracking-[0.18em] text-brand-blue-soft transition-colors duration-300 hover:text-background cursor-pointer text-left"
               >
                 Discuss Your Requirement →
@@ -191,10 +193,35 @@ export function Footer({ onNavigate }: FooterProps) {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-12 flex flex-col gap-3 border-t border-background/10 pt-6 sm:flex-row sm:items-center sm:justify-between text-xs text-steel">
+        <div className="mt-12 flex flex-col gap-4 border-t border-background/10 pt-6 sm:flex-row sm:items-center sm:justify-between text-xs text-steel">
           <p>
             © {new Date().getFullYear()} Qualitech Connectronics Private Limited. All rights reserved.
           </p>
+
+          <div className="flex flex-wrap items-center gap-4 text-xs">
+            <button
+              onClick={() => onNavigate?.("#privacy", true)}
+              className="text-steel hover:text-background transition-colors cursor-pointer"
+            >
+              Privacy Policy
+            </button>
+            <span className="text-steel/40">•</span>
+            <button
+              onClick={() => onNavigate?.("#terms", true)}
+              className="text-steel hover:text-background transition-colors cursor-pointer"
+            >
+              Terms of Service
+            </button>
+            <span className="text-steel/40">•</span>
+            <button
+              onClick={() => onNavigate?.("#admin", true)}
+              className="text-steel/60 hover:text-brand-blue-soft transition-colors cursor-pointer"
+              title="Staff / Admin Console"
+            >
+              Admin Portal
+            </button>
+          </div>
+
           <p className="font-display text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-steel/80">
             Est. 1995 · Hyderabad, India
           </p>

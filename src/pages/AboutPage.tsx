@@ -376,7 +376,7 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
                     Explore Manufacturing →
                   </button>
                   <button
-                    onClick={() => onNavigate("#contact", true)}
+                    onClick={() => onNavigate("#contact-page", true)}
                     className="rounded-xl border border-border px-6 py-3 font-display text-xs font-bold uppercase tracking-wider text-graphite hover:bg-steel-light transition-colors cursor-pointer"
                   >
                     Contact Us

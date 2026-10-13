@@ -15,12 +15,13 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedData, setSubmittedData] = useState<any>(null);
+  const [attachedFile, setAttachedFile] = useState<File | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     company: "",
-    interest: "Custom Cable Assemblies",
+    interest: "Direct RFQ Requirement",
     message: "",
   });
 
@@ -28,10 +29,18 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setAttachedFile(e.target.files[0]);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    const dataSnapshot = { ...formData };
+    const fileInfo = attachedFile ? ` [Attached File: ${attachedFile.name} (${(attachedFile.size / 1024).toFixed(1)} KB)]` : "";
+    const fullMessage = `${formData.message}${fileInfo}`;
+    const dataSnapshot = { ...formData, message: fullMessage, fileName: attachedFile?.name };
     setSubmittedData(dataSnapshot);
 
     try {
@@ -42,7 +51,7 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
         phone: formData.phone,
         companyName: formData.company,
         productCategory: formData.interest,
-        technicalSpecs: formData.message,
+        technicalSpecs: fullMessage,
         estimatedQty: 100,
       });
 
@@ -52,8 +61,8 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
         email: formData.email,
         phone: formData.phone,
         companyName: formData.company,
-        subject: formData.interest,
-        message: formData.message,
+        subject: `RFQ Enquiry from ${formData.name} - ${formData.company || "General OEM"}`,
+        message: fullMessage,
       });
     } catch (err) {
       console.warn("Contact form notification send note:", err);
@@ -227,20 +236,53 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
 
                     <div>
                       <label className="block text-xs font-semibold text-graphite mb-1.5">
-                        Product / Service Requirement *
+                        Attach File (Datasheet, Technical Drawing or BOM)
                       </label>
-                      <select
-                        value={formData.interest}
-                        onChange={(e) => setFormData({ ...formData, interest: e.target.value })}
-                        className="w-full rounded-xl border border-border bg-white px-3.5 py-2.5 text-xs sm:text-sm text-graphite focus:border-brand-blue focus:outline-none"
-                      >
-                        <option value="Custom Cable Assemblies">Manufacturing - Custom Cable Assemblies</option>
-                        <option value="Wire Harnesses">Manufacturing - Wire Harnesses</option>
-                        <option value="Amphenol Distribution">Distribution - Amphenol Components</option>
-                        <option value="Zolex Distribution">Distribution - Zolex Components</option>
-                        <option value="OEM Turnkey Solution">Turnkey OEM Project Enquiry</option>
-                        <option value="General Enquiry">General / Other Enquiries</option>
-                      </select>
+                      <div className="relative">
+                        <input
+                          type="file"
+                          id="rfq-file-upload"
+                          onChange={handleFileChange}
+                          className="hidden"
+                          accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg,.zip,.csv"
+                        />
+                        <label
+                          htmlFor="rfq-file-upload"
+                          className="flex items-center justify-between rounded-xl border border-dashed border-border bg-white px-3.5 py-3 text-xs text-muted-foreground hover:border-brand-blue hover:bg-brand-blue/5 transition-all cursor-pointer"
+                        >
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <svg className="h-5 w-5 text-brand-blue shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                            </svg>
+                            {attachedFile ? (
+                              <span className="font-semibold text-graphite truncate">
+                                {attachedFile.name} ({(attachedFile.size / 1024).toFixed(1)} KB)
+                              </span>
+                            ) : (
+                              <span className="text-muted-foreground truncate">
+                                Click to attach drawing, BOM or spec (PDF, CAD, Images, Excel)
+                              </span>
+                            )}
+                          </div>
+                          {attachedFile ? (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setAttachedFile(null);
+                              }}
+                              className="ml-2 text-xs font-bold text-red-500 hover:text-red-700 shrink-0"
+                            >
+                              Remove
+                            </button>
+                          ) : (
+                            <span className="ml-2 rounded-lg bg-steel-light px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-wider text-graphite shrink-0">
+                              + Add File
+                            </span>
+                          )}
+                        </label>
+                      </div>
                     </div>
 
                     <div>
@@ -265,7 +307,7 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                       {isSubmitting ? (
                         <>
                           <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth={4} />
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
                           </svg>
                           <span>Sending Notification...</span>
@@ -290,7 +332,7 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                     Qualitech Connectronics Private Limited
                   </h3>
                   <div className="mt-4 space-y-2 text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                    <p className="font-semibold text-graphite">Manufacturing Unit:</p>
+                    <p className="font-semibold text-graphite">Corporate Office &amp; Works:</p>
                     <p>Plot No. 37/B, Phase-V, IDA, Cherlapally,</p>
                     <p>Hyderabad, Medchal-Malkajgiri,</p>
                     <p>Telangana - 500051, India</p>
@@ -332,26 +374,32 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                   <p className="mt-2 text-xs text-steel leading-relaxed">
                     Check our dedicated product sections or visit the official portals for Amphenol and Zolex.
                   </p>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    <button
-                      onClick={() => onNavigate("#amphenol", true)}
-                      className="rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/20 transition-colors cursor-pointer"
-                    >
-                      Amphenol Page →
-                    </button>
-                    <button
-                      onClick={() => onNavigate("#zolex", true)}
-                      className="rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/20 transition-colors cursor-pointer"
-                    >
-                      Zolex Page →
-                    </button>
-                    <button
-                      onClick={() => onNavigate("#manufacturing", true)}
-                      className="rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/20 transition-colors cursor-pointer"
-                    >
-                      Manufacturing Page →
-                    </button>
-                  </div>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      <button
+                        onClick={() => onNavigate("#products", true)}
+                        className="rounded-lg bg-brand-yellow px-3 py-1.5 text-xs font-bold text-graphite hover:bg-white transition-colors cursor-pointer"
+                      >
+                        Full Catalogue →
+                      </button>
+                      <button
+                        onClick={() => onNavigate("#amphenol", true)}
+                        className="rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/20 transition-colors cursor-pointer"
+                      >
+                        Amphenol Page →
+                      </button>
+                      <button
+                        onClick={() => onNavigate("#zolex", true)}
+                        className="rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/20 transition-colors cursor-pointer"
+                      >
+                        Zolex Page →
+                      </button>
+                      <button
+                        onClick={() => onNavigate("#manufacturing", true)}
+                        className="rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/20 transition-colors cursor-pointer"
+                      >
+                        Manufacturing Page →
+                      </button>
+                    </div>
                 </div>
               </Reveal>
             </div>

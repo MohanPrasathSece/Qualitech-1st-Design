@@ -232,7 +232,11 @@ export const OrderSuccessModal: React.FC = () => {
           </div>
 
           <button
-            onClick={closeOrderSuccess}
+            onClick={() => {
+              closeOrderSuccess();
+              window.location.hash = "#products";
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
             className="w-full sm:w-auto rounded-xl bg-brand-blue px-8 py-2.5 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-graphite transition-all cursor-pointer shadow-sm text-center"
           >
             Continue Shopping →

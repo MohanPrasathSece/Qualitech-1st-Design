@@ -22,6 +22,8 @@ import { ZolexPage } from "@/pages/ZolexPage";
 import { QualitechPage } from "@/pages/QualitechPage";
 import { ContactPage } from "@/pages/ContactPage";
 import { AdminPage } from "@/pages/AdminPage";
+import { PrivacyPolicyPage } from "@/pages/PrivacyPolicyPage";
+import { TermsPage } from "@/pages/TermsPage";
 import { ECommerceProvider } from "@/context/ECommerceContext";
 import { CartDrawer } from "@/components/ecommerce/CartDrawer";
 import { ProductDetailModal } from "@/components/ecommerce/ProductDetailModal";
@@ -35,6 +37,7 @@ export default function App() {
       <HomeContent />
       <CartDrawer onNavigateToShop={() => {
         window.location.hash = "#products";
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }} />
       <ProductDetailModal />
       <CheckoutModal />
@@ -81,6 +84,10 @@ function Hero({ onNavigate }: { onNavigate?: (target: string) => void }) {
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
               <a
                 href="#business"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onNavigate?.("#business");
+                }}
                 className="group inline-flex items-center justify-center gap-3 rounded-xl bg-graphite px-7 py-4 font-display text-[0.72rem] font-bold uppercase tracking-[0.2em] text-white transition-all duration-300 hover:bg-brand-blue shadow-sm"
               >
                 Explore Our Solutions
@@ -123,7 +130,7 @@ const STATS = [
   { value: 1995, label: "Established", plain: true },
   { value: 30, suffix: "+", label: "Years of Experience" },
   { text: "OEM", label: "Focused Solutions" },
-  { value: 2, label: "Business Verticals" },
+  { text: "100%", label: "Tested & Certified" },
   { value: 4, label: "Key Industries" },
 ];
 
@@ -173,10 +180,10 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
             <span className="label-eyebrow">What We Do</span>
           </div>
           <h2 className="mt-7 max-w-3xl font-display text-3xl font-bold leading-tight text-graphite sm:text-4xl lg:text-[2.75rem]">
-            Two Focused Business Areas
+            Core Solutions &amp; Capabilities
           </h2>
           <p className="mt-4 max-w-2xl text-[0.95rem] leading-relaxed text-muted-foreground">
-            Qualitech Connectronics operates in two core verticals - delivering both world-class electronics components and custom-engineered cable assembly solutions.
+            Qualitech Connectronics delivers world-class electronics components distribution and custom-engineered cable assembly solutions for leading OEMs.
           </p>
         </Reveal>
 
@@ -267,7 +274,7 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
               <div className="px-8 pb-8 sm:px-10 sm:pb-10 pt-0">
                 <button
                   type="button"
-                  onClick={() => onNavigate("#amphenol", true)}
+                  onClick={() => onNavigate("#products", true)}
                   className="group/btn inline-flex items-center gap-3 font-display text-[0.72rem] font-bold uppercase tracking-[0.2em] text-brand-blue cursor-pointer"
                 >
                   Explore Distribution Lines
@@ -321,7 +328,7 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
 
                   <div className="mt-6 p-3.5 rounded-xl bg-steel-light/30 border border-border">
                     <p className="text-xs font-semibold text-graphite">
-                      In-House Production &amp; 100% Automated Electrical Testing
+                       In-House Production &amp; Custom Assembly Floor
                     </p>
                     <p className="text-[0.68rem] text-muted-foreground mt-0.5">
                       ISO 9001 certified assembly floor in Hyderabad
@@ -336,7 +343,7 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                   onClick={() => onNavigate("#manufacturing", true)}
                   className="group/btn inline-flex items-center gap-3 font-display text-[0.72rem] font-bold uppercase tracking-[0.2em] text-graphite cursor-pointer"
                 >
-                  Discuss Your Requirement
+                  Explore Manufacturing Capabilities
                   <span className="h-px w-8 bg-graphite transition-all duration-300 group-hover/btn:w-14" />
                 </button>
               </div>
@@ -350,7 +357,7 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
 
 /* ─── About ─── */
 
-function About() {
+function About({ onNavigate }: { onNavigate?: (target: string) => void }) {
   return (
     <section id="about" className="mx-auto max-w-7xl px-5 py-24 sm:px-8 lg:py-32">
       <div className="grid gap-14 lg:grid-cols-[0.95fr_1.05fr] lg:gap-20">
@@ -385,6 +392,10 @@ function About() {
           <Reveal delay={260}>
             <a
               href="#business"
+              onClick={(e) => {
+                e.preventDefault();
+                onNavigate?.("#business");
+              }}
               className="group mt-9 inline-flex items-center gap-3 font-display text-[0.72rem] font-bold uppercase tracking-[0.2em] text-graphite"
             >
               Discover Our Solutions
@@ -517,7 +528,7 @@ function Why() {
 
 /* ─── Facilities Preview ─── */
 
-function FacilitiesPreview() {
+function FacilitiesPreview({ onNavigate }: { onNavigate?: (target: string, isPage?: boolean) => void }) {
   const [offset, setOffset] = useState(0);
 
   useEffect(() => {
@@ -560,7 +571,11 @@ function FacilitiesPreview() {
             craftsmanship to deliver precision-engineered connectivity solutions.
           </p>
           <a
-            href="#contact"
+            href="#manufacturing"
+            onClick={(e) => {
+              e.preventDefault();
+              onNavigate?.("#manufacturing", true);
+            }}
             className="group mt-10 inline-flex items-center gap-3 rounded-xl border border-background/35 px-7 py-4 font-display text-[0.72rem] font-bold uppercase tracking-[0.2em] text-background transition-colors duration-300 hover:border-background"
           >
             Explore Our Facilities
@@ -670,7 +685,13 @@ function ProductsOverview({ onNavigate }: ProductsOverviewProps) {
                     onClick={() => onNavigate("#manufacturing", true)}
                     className="inline-flex items-center gap-1.5 rounded-lg bg-brand-yellow px-3.5 py-1.5 font-display text-[0.68rem] font-bold uppercase tracking-wider text-graphite hover:bg-white transition-colors cursor-pointer"
                   >
-                    Discuss Your Requirement →
+                    Explore Capabilities →
+                  </button>
+                  <button
+                    onClick={() => onNavigate("#contact-page", true)}
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-white/20 px-3 py-1.5 font-display text-[0.68rem] font-bold uppercase tracking-wider text-white hover:bg-white hover:text-graphite transition-colors cursor-pointer"
+                  >
+                    Request a Quote →
                   </button>
                 </div>
               </div>
@@ -757,20 +778,22 @@ function FinalCTA({ onNavigate }: { onNavigate?: (target: string) => void }) {
 
 /* ─── Root App Component & Multi-Page Router ─── */
 
-type PageType = "home" | "products" | "about" | "manufacturing" | "qualitech" | "amphenol" | "zolex" | "contact" | "admin";
+type PageType = "home" | "products" | "about" | "manufacturing" | "qualitech" | "amphenol" | "zolex" | "contact" | "admin" | "privacy" | "terms";
 
 function HomeContent() {
   const getPageFromHash = (): PageType => {
     if (typeof window === "undefined") return "home";
     const hash = window.location.hash.toLowerCase();
     if (hash === "#admin" || hash === "#/admin" || hash === "#admin-panel") return "admin";
-    if (hash === "#products" || hash === "#shop") return "products";
+    if (hash === "#products" || hash === "#shop" || hash === "#catalog" || hash === "#catalogue") return "products";
     if (hash === "#about-page" || hash === "#about-us") return "about";
-    if (hash === "#manufacturing" || hash === "#cable-assemblies") return "manufacturing";
+    if (hash === "#manufacturing" || hash === "#cable-assemblies" || hash === "#facilities") return "manufacturing";
     if (hash === "#qualitech") return "qualitech";
     if (hash === "#amphenol") return "amphenol";
     if (hash === "#zolex") return "zolex";
-    if (hash === "#contact-page" || hash === "#contact-us") return "contact";
+    if (hash === "#contact-page" || hash === "#contact-us" || hash === "#contact") return "contact";
+    if (hash === "#privacy" || hash === "#privacy-policy") return "privacy";
+    if (hash === "#terms" || hash === "#terms-of-service" || hash === "#terms-and-conditions") return "terms";
     return "home";
   };
 
@@ -791,6 +814,16 @@ function HomeContent() {
   const handleNavigate = (target: string = "", isPage?: boolean | undefined) => {
     const cleanTarget = (target || "").toLowerCase();
 
+    // Home / Top navigation
+    if (cleanTarget === "#top" || cleanTarget === "" || cleanTarget === "#" || cleanTarget === "#home") {
+      if (currentPage !== "home") {
+        setCurrentPage("home");
+      }
+      window.history.pushState(null, "", window.location.pathname);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
     if (cleanTarget === "#admin" || cleanTarget === "#/admin" || cleanTarget === "#admin-panel") {
       setCurrentPage("admin");
       window.history.pushState(null, "", "#admin");
@@ -798,7 +831,7 @@ function HomeContent() {
       return;
     }
 
-    if (cleanTarget === "#products" || cleanTarget === "#shop") {
+    if (cleanTarget === "#products" || cleanTarget === "#shop" || cleanTarget === "#catalog" || cleanTarget === "#catalogue") {
       setCurrentPage("products");
       window.history.pushState(null, "", "#products");
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -812,9 +845,9 @@ function HomeContent() {
       return;
     }
 
-    if (cleanTarget === "#manufacturing" || cleanTarget === "#cable-assemblies") {
+    if (cleanTarget === "#manufacturing" || cleanTarget === "#cable-assemblies" || cleanTarget === "#facilities") {
       setCurrentPage("manufacturing");
-      window.history.pushState(null, "", "#manufacturing");
+      window.history.pushState(null, "", "#facilities");
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
@@ -840,9 +873,23 @@ function HomeContent() {
       return;
     }
 
-    if (cleanTarget === "#contact-page" || cleanTarget === "#contact-us") {
+    if (cleanTarget === "#contact-page" || cleanTarget === "#contact-us" || cleanTarget === "#contact") {
       setCurrentPage("contact");
       window.history.pushState(null, "", "#contact-page");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    if (cleanTarget === "#privacy" || cleanTarget === "#privacy-policy") {
+      setCurrentPage("privacy");
+      window.history.pushState(null, "", "#privacy");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    if (cleanTarget === "#terms" || cleanTarget === "#terms-of-service" || cleanTarget === "#terms-and-conditions") {
+      setCurrentPage("terms");
+      window.history.pushState(null, "", "#terms");
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
@@ -905,6 +952,14 @@ function HomeContent() {
     return <ContactPage onNavigate={handleNavigate} />;
   }
 
+  if (currentPage === "privacy") {
+    return <PrivacyPolicyPage onNavigate={handleNavigate} />;
+  }
+
+  if (currentPage === "terms") {
+    return <TermsPage onNavigate={handleNavigate} />;
+  }
+
   // Home Page
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -913,10 +968,10 @@ function HomeContent() {
         <Hero onNavigate={handleNavigate} />
         <Stats />
         <BusinessStructure onNavigate={handleNavigate} />
-        <About />
+        <About onNavigate={handleNavigate} />
         <Industries />
         <Why />
-        <FacilitiesPreview />
+        <FacilitiesPreview onNavigate={handleNavigate} />
         <ProductsOverview onNavigate={handleNavigate} />
         <FinalCTA onNavigate={handleNavigate} />
       </main>

@@ -31,7 +31,8 @@ export const NAV: NavItem[] = [
   { label: "Home", href: "#top" },
   { label: "About Us", href: "#about-page", isPage: true },
   { label: "Products & Services", href: "#products", isPage: true, dropdown: true },
-  { label: "Manufacturing", href: "#manufacturing", isPage: true },
+  { label: "Shop", href: "#products", isPage: true },
+  { label: "Facilities", href: "#facilities", isPage: true },
   { label: "Contact Us", href: "#contact-page", isPage: true },
 ];
 
@@ -75,16 +76,16 @@ export const DROPDOWN_VERTICALS: NavMainOption[] = [
   },
   {
     id: "manufacturing",
-    label: "Manufacturing",
+    label: "Facilities & Manufacturing",
     badge: "In-House",
     badgeColor: "bg-brand-yellow text-graphite",
-    description: "Manufacturing of Cable Assemblies",
+    description: "Factory Plant & Machinery Infrastructure",
     children: [
       {
-        label: "Cable Assemblies & Harnesses",
-        href: "#manufacturing",
+        label: "Facilities & Plant Machinery",
+        href: "#facilities",
         isPage: true,
-        description: "Custom Wire Harnesses & OEM Capabilities",
+        description: "Automated Cut/Strip, Cirris Testers & Crimp Presses",
         badge: "100% Tested",
       },
     ],
@@ -333,7 +334,8 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
             const isActive =
               (item.href === "#top" && currentPage === "home") ||
               (item.href === "#about-page" && currentPage === "about") ||
-              (item.href === "#manufacturing" && currentPage === "manufacturing") ||
+              (item.label === "Shop" && currentPage === "products") ||
+              (item.label === "Facilities" && currentPage === "manufacturing") ||
               (item.href === "#contact-page" && currentPage === "contact");
 
             return (
@@ -500,9 +502,19 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
                         onClick={() => {
                           setOpen(false);
                           setMobileProductsOpen(false);
+                          onNavigate("#qualitech", true);
+                        }}
+                        className="block w-full py-1 text-left text-[0.8rem] font-medium text-foreground hover:text-brand-blue cursor-pointer"
+                      >
+                        • Qualitech Products (401+ Components)
+                      </button>
+                      <button
+                        onClick={() => {
+                          setOpen(false);
+                          setMobileProductsOpen(false);
                           onNavigate("#amphenol", true);
                         }}
-                        className="block w-full py-1 text-left text-[0.8rem] font-medium text-foreground hover:text-brand-blue"
+                        className="block w-full py-1 text-left text-[0.8rem] font-medium text-foreground hover:text-brand-blue cursor-pointer"
                       >
                         • Amphenol (Connectors &amp; Antennas)
                       </button>
@@ -512,7 +524,7 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
                           setMobileProductsOpen(false);
                           onNavigate("#zolex", true);
                         }}
-                        className="block w-full py-1 text-left text-[0.8rem] font-medium text-foreground hover:text-brand-blue"
+                        className="block w-full py-1 text-left text-[0.8rem] font-medium text-foreground hover:text-brand-blue cursor-pointer"
                       >
                         • Zolex (Lugs, Glands &amp; Ties)
                       </button>
@@ -575,11 +587,22 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
           <button
             onClick={() => {
               setOpen(false);
-              onNavigate("#manufacturing", true);
+              onNavigate("#products", true);
+            }}
+            className="border-b border-border/70 py-2.5 text-left font-display text-sm font-semibold uppercase tracking-[0.14em] text-foreground flex items-center justify-between"
+          >
+            <span>Shop (All Products)</span>
+            <span className="rounded-full bg-brand-blue/10 text-brand-blue px-2 py-0.5 text-[0.6rem] font-bold">550+ Items</span>
+          </button>
+
+          <button
+            onClick={() => {
+              setOpen(false);
+              onNavigate("#facilities", true);
             }}
             className="border-b border-border/70 py-2.5 text-left font-display text-sm font-semibold uppercase tracking-[0.14em] text-foreground"
           >
-            Manufacturing
+            Facilities
           </button>
 
           <button

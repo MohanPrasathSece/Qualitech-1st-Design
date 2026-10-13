@@ -5,6 +5,7 @@ import {
   formatINR,
 } from "@/lib/ecommerceStore";
 import { ProductImage } from "@/components/common/ProductImage";
+import { downloadProductDatasheet } from "@/lib/datasheetService";
 
 export const ProductDetailModal: React.FC = () => {
   const {
@@ -59,56 +60,20 @@ export const ProductDetailModal: React.FC = () => {
   };
 
   const handleShareProduct = () => {
-    const url = window.location.origin + window.location.pathname + "#shop";
+    const url = window.location.origin + window.location.pathname + "#products";
     navigator.clipboard?.writeText(url);
     setCopiedLink(true);
     setTimeout(() => setCopiedLink(false), 2500);
   };
 
+  const [downloadSuccess, setDownloadSuccess] = useState(false);
+
   const handleDownloadDatasheet = () => {
-    const content = `QUALITECH CONNECTRONICS PRIVATE LIMITED
-TECHNICAL DATASHEET SPECIFICATION
-==================================================
-Product: ${product.name}
-SKU: ${product.sku}
-Brand: ${product.brand}
-Category: ${product.category} ${product.subCategory ? `> ${product.subCategory}` : ""}
-Unit Price: ${formatINR(unitPrice)} (Excl. 18% GST)
-
-DESCRIPTION:
-${product.description}
-
-KEY FEATURES:
-${product.features.map((f, i) => `${i + 1}. ${f}`).join("\n")}
-
-TECHNICAL SPECIFICATIONS:
-${Object.entries(product.specs)
-  .map(([k, v]) => `- ${k}: ${v}`)
-  .join("\n")}
-
-TARGET INDUSTRIES:
-${product.industries.join(", ")}
-
-QUALITY & CERTIFICATION:
-- ISO 9001:2015 Certified Manufacturing
-- IPC/WHMA-A-620 Workmanship Standards
-- RoHS & REACH Compliant
-- 100% Automated Electrical Continuity & Hipot Tested
-
-Qualitech Connectronics Pvt Ltd
-Plot No. 37/B, Phase-V, IDA, Cherlapally, Hyderabad - 500051
-Email: info@qualitechindia.in | Tel: +91 98490 01484
-==================================================`;
-
-    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `Qualitech-Datasheet-${product.sku}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    const success = downloadProductDatasheet(product);
+    if (success) {
+      setDownloadSuccess(true);
+      setTimeout(() => setDownloadSuccess(false), 3000);
+    }
   };
 
   return (
@@ -219,12 +184,12 @@ Email: info@qualitechindia.in | Tel: +91 98490 01484
               {/* Download Datasheet Button */}
               <button
                 onClick={handleDownloadDatasheet}
-                className="flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-steel-light/40 py-2.5 text-xs font-bold text-graphite hover:border-brand-blue hover:text-brand-blue transition-colors cursor-pointer"
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-brand-blue/30 bg-blue-50/70 py-2.5 text-xs font-bold text-brand-blue hover:bg-brand-blue hover:text-white transition-all cursor-pointer shadow-2xs"
               >
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                Download Technical Datasheet (.TXT / PDF)
+                <span>{downloadSuccess ? "Datasheet Downloaded!" : "Download Technical Datasheet (PDF)"}</span>
               </button>
 
 

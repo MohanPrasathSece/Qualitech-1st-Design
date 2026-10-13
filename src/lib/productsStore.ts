@@ -1,5 +1,6 @@
 import { PRODUCTS, Product } from "@/data/products";
 import { getProductDefaultPrice, getProductTieredPricing } from "./ecommerceStore";
+import * as XLSX from "xlsx";
 
 const STORAGE_KEY = "qualitech_products_catalogue_v15";
 
@@ -398,3 +399,259 @@ export function importProductsFromJson(jsonStr: string): { success: boolean; cou
     return { success: false, count: 0, error: err?.message || "Invalid JSON syntax." };
   }
 }
+
+/**
+ * Imports products from an Excel (.xlsx or .xls) file binary buffer or string.
+ * Automatically maps standard industrial product columns and synchronizes with localStorage and the catalog.
+ */
+export function importProductsFromExcel(
+  data: ArrayBuffer | Uint8Array | string
+): { success: boolean; count: number; added: number; updated: number; error?: string } {
+  try {
+    const workbook =
+      typeof data === "string"
+        ? XLSX.read(data, { type: "binary" })
+        : XLSX.read(data, { type: "array" });
+
+    const firstSheetName = workbook.SheetNames[0];
+    if (!firstSheetName) {
+      return { success: false, count: 0, added: 0, updated: 0, error: "Excel spreadsheet has no worksheets." };
+    }
+
+    const worksheet = workbook.Sheets[firstSheetName];
+    const rawRows = XLSX.utils.sheet_to_json<Record<string, any>>(worksheet, { defval: "" });
+
+    if (rawRows.length === 0) {
+      return { success: false, count: 0, added: 0, updated: 0, error: "The selected Excel sheet contains no product rows." };
+    }
+
+    const current = getStoredProducts();
+    const existingSkuMap = new Map(current.map((p, idx) => [p.sku.toLowerCase(), idx]));
+    let addedCount = 0;
+    let updatedCount = 0;
+    const workingList = [...current];
+
+    for (const row of rawRows) {
+      const keys = Object.keys(row);
+      const getKey = (possibleNames: string[]) => {
+        const found = keys.find((k) =>
+          possibleNames.some((pn) => k.trim().toLowerCase() === pn.toLowerCase())
+        );
+        return found ? String(row[found]).trim() : "";
+      };
+
+      const name = getKey(["Name", "Product Name", "Title", "Part Name", "Item Name"]);
+      if (!name) continue;
+
+      const sku =
+        getKey(["SKU", "Part Number", "Part No", "Model", "P/N", "Code"]) ||
+        `QT-${Math.floor(1000 + Math.random() * 9000)}`;
+
+      const rawBrand = getKey(["Brand", "Manufacturer", "Make", "Brands"]) || "Qualitech";
+      let brand: Product["brand"] = "Qualitech";
+      if (rawBrand.toLowerCase().includes("amphenol")) brand = "Amphenol";
+      else if (rawBrand.toLowerCase().includes("zolex")) brand = "Zolex";
+
+      const category = getKey(["Category", "Categories", "Type", "Product Category"]) || "Electronic Components";
+      const subCategory = getKey(["SubCategory", "Sub Category", "Series"]) || "";
+      const rawPrice = getKey(["Price", "Regular Price", "Unit Price", "Rate", "Price (INR)"]);
+      const rawSalePrice = getKey(["Sale Price", "SalePrice", "Discount Price"]);
+      const price = parseFloat(rawPrice) > 0 ? parseFloat(rawPrice) : undefined;
+      const salePrice = parseFloat(rawSalePrice) > 0 ? parseFloat(rawSalePrice) : undefined;
+
+      const rawStock = getKey(["Stock", "Stock Count", "StockCount", "Qty", "Quantity"]);
+      const stockCount = parseInt(rawStock, 10) || 120;
+      const rawInStock = getKey(["In Stock", "InStock", "In stock?", "Availability"]);
+      const inStock = rawInStock ? ["yes", "true", "1", "available"].includes(rawInStock.toLowerCase()) : stockCount > 0;
+
+      const unit = getKey(["Unit", "UOM", "Unit of Measure"]) || "pcs";
+      const leadTime = getKey(["Lead Time", "LeadTime", "Delivery", "Dispatch"]) || "Ships in 24-48 Hours";
+      const description = getKey(["Description", "Short Description", "Details"]) || `${brand} industrial precision component.`;
+      const datasheetUrl = getKey(["Datasheet", "Datasheet URL", "DatasheetURL", "PDF", "PDF URL", "Spec Sheet"]);
+      const image = getKey(["Image", "Image URL", "ImageURL", "Photo"]);
+      const externalUrl = getKey(["External URL", "Link", "URL"]);
+
+      const rawFeatures = getKey(["Features", "Key Features"]);
+      const features = rawFeatures
+        ? rawFeatures.split(/[;|,]/).map((s) => s.trim()).filter(Boolean)
+        : ["Precision industrial quality", "100% Quality Inspected"];
+
+      const rawIndustries = getKey(["Industries", "Industry", "Applications", "Tags"]);
+      const industries = rawIndustries
+        ? rawIndustries.split(/[;|,]/).map((s) => s.trim()).filter(Boolean)
+        : ["Industrial Automation", "Telecommunications"];
+
+      const productPayload: Product = normalizeProduct({
+        id: `xl-${sku.toLowerCase().replace(/[^a-z0-9]/g, "-")}`,
+        sku,
+        name,
+        brand,
+        category,
+        subCategory,
+        price,
+        salePrice,
+        stockCount,
+        inStock,
+        unit,
+        leadTime,
+        description,
+        datasheetUrl,
+        image,
+        externalUrl,
+        features,
+        industries,
+        specs: { Manufacturer: brand, SKU: sku },
+      });
+
+      const existingIdx = existingSkuMap.get(sku.toLowerCase());
+      if (existingIdx !== undefined) {
+        workingList[existingIdx] = { ...workingList[existingIdx], ...productPayload, id: workingList[existingIdx].id };
+        updatedCount++;
+      } else {
+        workingList.unshift(productPayload);
+        existingSkuMap.set(sku.toLowerCase(), 0);
+        addedCount++;
+      }
+    }
+
+    if (addedCount === 0 && updatedCount === 0) {
+      return { success: false, count: 0, added: 0, updated: 0, error: "No valid product entries could be parsed from the Excel file." };
+    }
+
+    saveStoredProducts(workingList);
+    return { success: true, count: addedCount + updatedCount, added: addedCount, updated: updatedCount };
+  } catch (err: any) {
+    return { success: false, count: 0, added: 0, updated: 0, error: err?.message || "Failed to parse Excel spreadsheet." };
+  }
+}
+
+/**
+ * Generates an Excel template (.xlsx) with pre-filled sample products
+ * for admin to download, edit, and re-upload.
+ */
+export function generateProductExcelTemplate(): Uint8Array {
+  const headers = [
+    "SKU",
+    "Name",
+    "Brand",
+    "Category",
+    "SubCategory",
+    "Price",
+    "SalePrice",
+    "Stock",
+    "Unit",
+    "InStock",
+    "DatasheetURL",
+    "LeadTime",
+    "Description",
+    "Features",
+    "Industries",
+  ];
+
+  const sampleRows = [
+    [
+      "QT-HDR-254",
+      "2.54mm Dual Row Pin Header 40-Pin",
+      "Qualitech",
+      "PCB Connectors",
+      "Pin Headers",
+      "45.00",
+      "39.00",
+      "500",
+      "pcs",
+      "Yes",
+      "https://example.com/datasheets/QT-HDR-254.pdf",
+      "Ships in 24 Hours",
+      "High temperature nylon pin header with gold plated contacts.",
+      "Gold plated contacts; UL94V-0 rated; High mating cycles",
+      "Industrial Automation; Telecommunications",
+    ],
+    [
+      "AMP-BNC-75R",
+      "Amphenol 75 Ohm BNC Straight Plug",
+      "Amphenol",
+      "RF & Coaxial Connectors",
+      "BNC Connectors",
+      "185.00",
+      "",
+      "250",
+      "pcs",
+      "Yes",
+      "https://www.amphenol-cs.com/datasheet/bnc75.pdf",
+      "Ships in 24-48 Hours",
+      "Precision RF coaxial connector engineered for broadcast and high-speed video signals.",
+      "75 Ohm impedance; 3 GHz bandwidth; Bayonet coupling",
+      "Broadcasting; Defense; Telecom",
+    ],
+    [
+      "ZLX-LUG-35",
+      "Zolex Heavy-Duty Copper Cable Lug 35 sq mm",
+      "Zolex",
+      "Cable Lugs & Terminals",
+      "Copper Lugs",
+      "72.00",
+      "",
+      "1000",
+      "pcs",
+      "Yes",
+      "",
+      "Ships in 24 Hours",
+      "Pure electrolytic copper tube lug with tin plating for optimal conductivity and corrosion resistance.",
+      "Electrolytic copper; Electro-tinned; Inspection hole",
+      "Power Distribution; Switchgear; Railways",
+    ],
+  ];
+
+  const ws = XLSX.utils.aoa_to_sheet([headers, ...sampleRows]);
+  ws["!cols"] = [
+    { wch: 16 },
+    { wch: 38 },
+    { wch: 14 },
+    { wch: 24 },
+    { wch: 18 },
+    { wch: 12 },
+    { wch: 12 },
+    { wch: 10 },
+    { wch: 8 },
+    { wch: 10 },
+    { wch: 35 },
+    { wch: 20 },
+    { wch: 45 },
+    { wch: 35 },
+    { wch: 30 },
+  ];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Products_Template");
+  const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+  return new Uint8Array(wbout);
+}
+
+/**
+ * Exports all active catalogue products to an Excel (.xlsx) file.
+ */
+export function exportProductsToExcel(): Uint8Array {
+  const products = getStoredProducts();
+  const rows = products.map((p) => ({
+    SKU: p.sku,
+    Name: p.name,
+    Brand: p.brand,
+    Category: p.category,
+    SubCategory: p.subCategory || "",
+    Price: p.price || 0,
+    SalePrice: p.salePrice || "",
+    Stock: p.stockCount || 100,
+    Unit: p.unit || "pcs",
+    InStock: p.inStock ? "Yes" : "No",
+    DatasheetURL: p.datasheetUrl || "",
+    LeadTime: p.leadTime || "",
+    Description: p.description,
+    Features: (p.features || []).join("; "),
+    Industries: (p.industries || []).join("; "),
+  }));
+  const ws = XLSX.utils.json_to_sheet(rows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Catalogue");
+  const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+  return new Uint8Array(wbout);
+}
+

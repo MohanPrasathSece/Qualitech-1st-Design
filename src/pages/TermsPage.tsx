@@ -1,4 +1,4 @@
-﻿import { useEffect } from "react";
+import { useEffect } from "react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 
@@ -149,12 +149,12 @@ export function TermsPage({ onNavigate }: TermsPageProps) {
 
         <div className="mt-16 rounded-2xl border border-border bg-steel-light/30 p-8 text-center">
           <p className="text-sm font-semibold text-graphite">Questions about our Terms of Service?</p>
-          <a
-            href="mailto:info@qualitechindia.in"
-            className="mt-5 inline-flex items-center gap-2 rounded-xl bg-graphite px-6 py-3 font-display text-[0.72rem] font-bold uppercase tracking-[0.2em] text-white transition-all duration-300 hover:bg-brand-blue"
+          <button
+            onClick={() => onNavigate("#contact-page", true)}
+            className="mt-5 inline-flex items-center gap-2 rounded-xl bg-graphite px-6 py-3 font-display text-[0.72rem] font-bold uppercase tracking-[0.2em] text-white transition-all duration-300 hover:bg-brand-blue cursor-pointer"
           >
             Contact Us
-          </a>
+          </button>
         </div>
       </main>
 

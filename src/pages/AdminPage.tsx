@@ -10,7 +10,12 @@ import {
   exportProductsToCsv,
   importProductsFromJson,
   importProductsFromCsv,
+  importProductsFromExcel,
+  generateProductExcelTemplate,
+  exportProductsToExcel,
 } from "@/lib/productsStore";
+import { downloadProductDatasheet, readFileAsDataUrl } from "@/lib/datasheetService";
+import * as XLSX from "xlsx";
 import { useECommerce } from "@/context/ECommerceContext";
 import { formatINR, Order, OrderStatus, getProductDefaultPrice, getProductExternalLink } from "@/lib/ecommerceStore";
 import { downloadQuotationFromOrder } from "@/lib/pdfQuotationService";
@@ -136,6 +141,15 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
   const [importFormat, setImportFormat] = useState<"csv" | "json">("csv");
   const [toastMessage, setToastMessage] = useState<{ title: string; type: "success" | "error" | "info" } | null>(null);
 
+  // Excel Bulk Import State
+  const [isExcelModalOpen, setIsExcelModalOpen] = useState(false);
+  const [excelFile, setExcelFile] = useState<File | null>(null);
+  const [excelPreviewRows, setExcelPreviewRows] = useState<any[]>([]);
+  const [excelTotalCount, setExcelTotalCount] = useState(0);
+  const [isProcessingExcel, setIsProcessingExcel] = useState(false);
+  const excelFileInputRef = useRef<HTMLInputElement>(null);
+  const datasheetInputRef = useRef<HTMLInputElement>(null);
+
   // Product Form Data State
   const [formData, setFormData] = useState<Partial<Product>>({
     sku: "",
@@ -157,6 +171,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
     image: p1,
     externalUrl: "",
     isEnquiry: false,
+    datasheetUrl: "",
   });
 
   const [activeFormTab, setActiveFormTab] = useState<"basic" | "pricing" | "features" | "specs" | "media">("basic");
@@ -673,6 +688,123 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
     } else {
       showToast(res.error || "Failed to upload image.", "error");
     }
+  };
+
+  const handleDatasheetFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      showToast(`Processing datasheet file "${file.name}"...`, "info");
+      const dataUrl = await readFileAsDataUrl(file);
+      setFormData((prev) => ({ ...prev, datasheetUrl: dataUrl }));
+      showToast(`Datasheet "${file.name}" attached successfully!`, "success");
+    } catch (err: any) {
+      showToast("Failed to read datasheet file.", "error");
+    }
+  };
+
+  const handleQuickUploadDatasheet = async (prod: Product, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      showToast(`Attaching datasheet for ${prod.sku}...`, "info");
+      const dataUrl = await readFileAsDataUrl(file);
+      const prodId = prod.id || prod.sku;
+      const updated = updateStoredProduct(prodId, { datasheetUrl: dataUrl });
+      setProducts(updated);
+      const updatedProd = updated.find((p) => (p.id || p.sku) === prodId);
+      if (updatedProd) saveProductToSupabase(updatedProd).catch(console.warn);
+      showToast(`Datasheet attached to ${prod.sku} (${file.name})!`, "success");
+    } catch (err: any) {
+      showToast("Failed to attach datasheet.", "error");
+    }
+  };
+
+  const handleExcelFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setExcelFile(file);
+    try {
+      const buffer = await file.arrayBuffer();
+      const wb = XLSX.read(buffer, { type: "array" });
+      const sheetName = wb.SheetNames[0];
+      if (!sheetName) {
+        showToast("Excel spreadsheet contains no sheets.", "error");
+        return;
+      }
+      const sheet = wb.Sheets[sheetName];
+      const rows = XLSX.utils.sheet_to_json<any>(sheet, { defval: "" });
+      setExcelTotalCount(rows.length);
+      setExcelPreviewRows(rows.slice(0, 5));
+      showToast(`Read ${rows.length} rows from Excel sheet "${sheetName}".`, "info");
+    } catch (err) {
+      console.error("Failed to parse Excel preview", err);
+      showToast("Failed to parse Excel spreadsheet preview.", "error");
+    }
+  };
+
+  const handleConfirmExcelImport = async () => {
+    if (!excelFile) {
+      showToast("Please choose an Excel file first.", "error");
+      return;
+    }
+    setIsProcessingExcel(true);
+    try {
+      const buffer = await excelFile.arrayBuffer();
+      const result = importProductsFromExcel(buffer);
+      if (result.success) {
+        const refreshed = getStoredProducts();
+        setProducts(refreshed);
+        if (isSupabaseConfigured) {
+          syncAllProductsToSupabase(refreshed).catch(console.warn);
+        }
+        showToast(
+          `Success: Imported ${result.count} products (${result.added} added, ${result.updated} updated)!`,
+          "success"
+        );
+        setIsExcelModalOpen(false);
+        setExcelFile(null);
+        setExcelPreviewRows([]);
+        setExcelTotalCount(0);
+      } else {
+        showToast(result.error || "Failed to import Excel file.", "error");
+      }
+    } catch (err: any) {
+      showToast(err?.message || "Failed to process Excel spreadsheet.", "error");
+    } finally {
+      setIsProcessingExcel(false);
+    }
+  };
+
+  const handleDownloadExcelTemplate = () => {
+    const binary = generateProductExcelTemplate();
+    const blob = new Blob([binary as any], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "qualitech_products_import_template.xlsx";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    showToast("Downloaded sample Excel import template (.xlsx)!", "success");
+  };
+
+  const handleExportExcel = () => {
+    const binary = exportProductsToExcel();
+    const blob = new Blob([binary as any], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `qualitech_products_export_${new Date().toISOString().slice(0, 10)}.xlsx`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    showToast("Exported all products to Excel (.xlsx)!", "success");
   };
 
   const handleResetDefaults = () => {
@@ -1386,13 +1518,43 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                 {/* Secondary Actions */}
                 <div className="flex flex-wrap items-center gap-2">
                   <button
-                    onClick={handleExportCsv}
-                    className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                    onClick={() => setIsExcelModalOpen(true)}
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-300 bg-emerald-50 px-3.5 py-2 text-xs font-bold text-emerald-800 hover:bg-emerald-100 transition-colors cursor-pointer shadow-2xs"
+                    title="Upload multiple products at once via Excel spreadsheet (.xlsx, .xls)"
                   >
-                    <svg className="h-4 w-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <svg className="h-4 w-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span>Import Excel (.xlsx)</span>
+                  </button>
+
+                  <button
+                    onClick={handleDownloadExcelTemplate}
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                    title="Download pre-formatted Excel template with sample products"
+                  >
+                    <svg className="h-3.5 w-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                     </svg>
-                    Export CSV
+                    <span>Template</span>
+                  </button>
+
+                  <button
+                    onClick={handleExportExcel}
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                    title="Export full catalog to Excel spreadsheet (.xlsx)"
+                  >
+                    <svg className="h-3.5 w-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span>Export Excel</span>
+                  </button>
+
+                  <button
+                    onClick={handleOpenAddForm}
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-brand-blue px-3.5 py-2 text-xs font-bold text-white hover:bg-slate-900 transition-colors cursor-pointer shadow-xs"
+                  >
+                    <span>+ Add Product</span>
                   </button>
                 </div>
               </div>
@@ -1407,6 +1569,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                       <th className="py-3.5 px-4">Category</th>
                       <th className="py-3.5 px-4 text-right">Unit Price</th>
                       <th className="py-3.5 px-4 text-center">Stock Count</th>
+                      <th className="py-3.5 px-4 text-center">Datasheet</th>
                       <th className="py-3.5 px-4 text-center">Status</th>
                       <th className="py-3.5 px-4 text-right">Actions</th>
                     </tr>
@@ -1495,6 +1658,55 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                                 +10
                               </button>
                             </div>
+                          </td>
+
+                          {/* Datasheet Column */}
+                          <td className="py-3.5 px-4 text-center">
+                            {p.datasheetUrl ? (
+                              <div className="flex items-center justify-center gap-1.5">
+                                <button
+                                  type="button"
+                                  onClick={() => downloadProductDatasheet(p)}
+                                  className="inline-flex items-center gap-1 rounded-md bg-blue-50 border border-blue-200 px-2 py-1 text-[0.7rem] font-bold text-[#004f9e] hover:bg-[#004f9e] hover:text-white transition-all cursor-pointer shadow-2xs"
+                                  title="Download / View Technical Datasheet"
+                                >
+                                  <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                  </svg>
+                                  <span>PDF</span>
+                                </button>
+                                <label
+                                  className="p-1 text-slate-400 hover:text-[#004f9e] cursor-pointer rounded hover:bg-slate-100"
+                                  title="Replace Datasheet"
+                                >
+                                  <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                                  </svg>
+                                  <input
+                                    type="file"
+                                    accept=".pdf,.doc,.docx"
+                                    className="hidden"
+                                    onChange={(e) => handleQuickUploadDatasheet(p, e)}
+                                  />
+                                </label>
+                              </div>
+                            ) : (
+                              <label
+                                className="inline-flex items-center gap-1 rounded-md border border-dashed border-slate-300 px-2.5 py-1 text-[0.68rem] font-semibold text-slate-500 hover:border-[#004f9e] hover:text-[#004f9e] hover:bg-blue-50/50 transition-all cursor-pointer"
+                                title="Attach PDF Datasheet for this product"
+                              >
+                                <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                                </svg>
+                                <span>+ PDF</span>
+                                <input
+                                  type="file"
+                                  accept=".pdf,.doc,.docx"
+                                  className="hidden"
+                                  onChange={(e) => handleQuickUploadDatasheet(p, e)}
+                                />
+                              </label>
+                            )}
                           </td>
 
                           <td className="py-3.5 px-4 text-center">
@@ -2462,6 +2674,75 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                       ))}
                     </div>
                   </div>
+
+                  {/* Technical Datasheet Upload Section */}
+                  <div className="border-t border-slate-200 pt-5 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-sm font-bold text-slate-900">Technical Datasheet (PDF / Spec Sheet)</h4>
+                        <p className="text-xs text-slate-500">
+                          Upload a technical datasheet PDF for customers to download from the website.
+                        </p>
+                      </div>
+                      {formData.datasheetUrl && (
+                        <span className="rounded-full bg-emerald-100 border border-emerald-300 px-3 py-1 text-xs font-bold text-emerald-800">
+                          ✓ PDF Attached
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => datasheetInputRef.current?.click()}
+                        className="inline-flex items-center gap-2 rounded-xl bg-[#004f9e] px-4 py-2.5 text-xs font-bold text-white hover:bg-slate-900 transition-all cursor-pointer shadow-xs"
+                      >
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
+                        <span>Upload Datasheet File (PDF, DOC)</span>
+                      </button>
+                      <input
+                        type="file"
+                        ref={datasheetInputRef}
+                        accept=".pdf,.doc,.docx"
+                        onChange={handleDatasheetFileUpload}
+                        className="hidden"
+                      />
+
+                      {formData.datasheetUrl && (
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => downloadProductDatasheet(formData as Product)}
+                            className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-bold text-[#004f9e] hover:bg-blue-100 transition-colors cursor-pointer"
+                          >
+                            Preview / Download PDF ↗
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setFormData({ ...formData, datasheetUrl: "" })}
+                            className="rounded-xl border border-rose-200 bg-white px-3 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-600 mb-1">
+                        Or enter direct Datasheet Web URL:
+                      </label>
+                      <input
+                        type="url"
+                        value={formData.datasheetUrl || ""}
+                        onChange={(e) => setFormData({ ...formData, datasheetUrl: e.target.value })}
+                        placeholder="https://example.com/datasheet.pdf"
+                        className="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-xs text-slate-800 placeholder:text-slate-400 focus:border-[#004f9e] focus:outline-hidden"
+                      />
+                    </div>
+                  </div>
                 </div>
               )}
 
@@ -2847,6 +3128,166 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                     Import Now
                   </button>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ───────────────────────────────────────────────────────────── */}
+      {/* MODAL: BULK IMPORT EXCEL (.xlsx / .xls)                       */}
+      {/* ───────────────────────────────────────────────────────────── */}
+      {isExcelModalOpen && (
+        <div className="fixed inset-0 z-[160] flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-slate-950/75 backdrop-blur-sm" onClick={() => setIsExcelModalOpen(false)} />
+          <div className="relative z-10 w-full max-w-2xl rounded-2xl bg-white p-6 sm:p-7 shadow-2xl border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3 mb-4">
+              <div className="flex items-center gap-2.5">
+                <div className="h-9 w-9 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-700">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="font-display text-lg font-bold text-slate-900">Upload Products via Excel</h4>
+                  <p className="text-xs text-slate-500">Bulk add or update multiple products directly into the database &amp; live catalogue</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsExcelModalOpen(false)}
+                className="text-slate-400 hover:text-slate-700 p-1.5 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+                title="Close"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Template Help Banner */}
+            <div className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl bg-slate-50 border border-slate-200 p-3.5">
+              <div>
+                <p className="text-xs font-bold text-slate-800">Need the standard spreadsheet format?</p>
+                <p className="text-[0.72rem] text-slate-500">Download our sample template with pre-filled columns and example products.</p>
+              </div>
+              <button
+                type="button"
+                onClick={handleDownloadExcelTemplate}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-[#004f9e] hover:bg-slate-50 transition-colors shrink-0 shadow-2xs cursor-pointer"
+              >
+                <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                <span>Download Template (.xlsx)</span>
+              </button>
+            </div>
+
+            {/* File Dropzone */}
+            <div className="space-y-4">
+              <div
+                onClick={() => excelFileInputRef.current?.click()}
+                className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50/60 p-6 text-center hover:border-emerald-500 hover:bg-emerald-50/30 transition-all cursor-pointer"
+              >
+                <div className="h-12 w-12 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mb-2">
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                  </svg>
+                </div>
+                <p className="text-sm font-bold text-slate-800">
+                  {excelFile ? excelFile.name : "Click to select or drop your Excel file here"}
+                </p>
+                <p className="text-xs text-slate-500 mt-1">
+                  Supports Microsoft Excel (.xlsx, .xls) and CSV files
+                </p>
+                {excelFile && (
+                  <span className="mt-2 rounded-full bg-emerald-100 text-emerald-800 px-3 py-0.5 text-xs font-bold">
+                    {(excelFile.size / 1024).toFixed(1)} KB • {excelTotalCount} rows detected
+                  </span>
+                )}
+                <input
+                  type="file"
+                  ref={excelFileInputRef}
+                  accept=".xlsx,.xls,.csv"
+                  onChange={handleExcelFileSelect}
+                  className="hidden"
+                />
+              </div>
+
+              {/* Preview Table if rows loaded */}
+              {excelPreviewRows.length > 0 && (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                      Preview (First {excelPreviewRows.length} of {excelTotalCount} products)
+                    </p>
+                  </div>
+                  <div className="overflow-x-auto max-h-48 rounded-xl border border-slate-200">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-slate-100 font-bold text-slate-600">
+                        <tr>
+                          <th className="p-2">SKU</th>
+                          <th className="p-2">Name</th>
+                          <th className="p-2">Brand</th>
+                          <th className="p-2">Price</th>
+                          <th className="p-2">Stock</th>
+                          <th className="p-2">Datasheet</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {excelPreviewRows.map((row, idx) => (
+                          <tr key={idx} className="hover:bg-slate-50">
+                            <td className="p-2 font-mono font-semibold text-slate-800">
+                              {row.SKU || row["Part Number"] || row["Part No"] || "Auto-generated"}
+                            </td>
+                            <td className="p-2 font-medium text-slate-900 max-w-xs truncate">
+                              {row.Name || row["Product Name"] || row.Title || "N/A"}
+                            </td>
+                            <td className="p-2 text-slate-600">{row.Brand || row.Manufacturer || "Qualitech"}</td>
+                            <td className="p-2 font-bold text-slate-900">₹{row.Price || row["Regular Price"] || "0"}</td>
+                            <td className="p-2 text-slate-700">{row.Stock || row.Qty || "100"}</td>
+                            <td className="p-2 text-slate-500 truncate max-w-[120px]">
+                              {row.Datasheet || row.DatasheetURL || row["Datasheet URL"] ? "✓ PDF Link" : "-"}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* Modal Footer Buttons */}
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-200">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsExcelModalOpen(false);
+                    setExcelFile(null);
+                    setExcelPreviewRows([]);
+                  }}
+                  className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-bold text-slate-700 hover:bg-slate-50 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  disabled={!excelFile || isProcessingExcel}
+                  onClick={handleConfirmExcelImport}
+                  className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-6 py-2 text-sm font-bold text-white hover:bg-emerald-700 transition-colors shadow-sm disabled:opacity-50 cursor-pointer"
+                >
+                  {isProcessingExcel ? (
+                    <>
+                      <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                      </svg>
+                      <span>Importing Products...</span>
+                    </>
+                  ) : (
+                    <span>Confirm &amp; Import to Database</span>
+                  )}
+                </button>
               </div>
             </div>
           </div>
