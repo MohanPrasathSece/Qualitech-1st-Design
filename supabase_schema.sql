@@ -209,7 +209,7 @@ CREATE POLICY "Public Read Quote Requests" ON public.quote_requests
 CREATE POLICY "Public Read Active Coupons" ON public.coupons
   FOR SELECT USING (is_active = true);
 
--- Storage Policies: Public read for product images & cad drawings
+-- Storage Policies: Public read for product images, datasheets & cad drawings
 CREATE POLICY "Public Read Product Images" ON storage.objects
   FOR SELECT USING (bucket_id = 'product-images');
 
@@ -221,6 +221,12 @@ CREATE POLICY "Public Read CAD Drawings" ON storage.objects
 
 CREATE POLICY "Public Upload CAD Drawings" ON storage.objects
   FOR INSERT WITH CHECK (bucket_id = 'cad-drawings');
+
+CREATE POLICY "Public Read Product Datasheets" ON storage.objects
+  FOR SELECT USING (bucket_id = 'product-datasheets');
+
+CREATE POLICY "Public Upload Product Datasheets" ON storage.objects
+  FOR INSERT WITH CHECK (bucket_id = 'product-datasheets');
 
 -- ------------------------------------------------------------------------------
 -- 8. AUTO-UPDATE TIMESTAMPS TRIGGER
