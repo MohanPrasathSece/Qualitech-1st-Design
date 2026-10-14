@@ -235,38 +235,40 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                     ))}
                   </ul>
 
-                  {/* Partner Brand Cards */}
-                  <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                    {/* Amphenol */}
-                    <button
-                      type="button"
-                      onClick={() => onNavigate("#amphenol", true)}
-                      className="group/card flex items-center gap-3 rounded-xl border border-border bg-steel-light/30 p-3.5 transition-all duration-300 hover:border-[#004f9e]/60 hover:bg-white hover:shadow-sm cursor-pointer text-left"
-                    >
-                      <svg className="h-7 w-7 text-[#004f9e] shrink-0" viewBox="0 0 32 32" fill="currentColor">
-                        <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" strokeWidth="2" />
-                        <path d="M8 16c2-6 6-6 8 0s6 6 8 0" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                      </svg>
-                      <div className="min-w-0 flex-1">
-                        <span className="font-display text-sm font-extrabold text-[#004f9e]">Amphenol</span>
-                        <p className="text-[0.65rem] text-muted-foreground">Connectors &amp; Antennas →</p>
-                      </div>
-                    </button>
-
-                    {/* Zolex */}
-                    <button
-                      type="button"
-                      onClick={() => onNavigate("#zolex", true)}
-                      className="group/card flex items-center gap-3 rounded-xl border border-border bg-steel-light/30 p-3.5 transition-all duration-300 hover:border-brand-blue/60 hover:bg-white hover:shadow-sm cursor-pointer text-left"
-                    >
-                      <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-brand-blue text-white font-display font-extrabold text-xs shrink-0">
-                        Z
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <span className="font-display text-sm font-extrabold text-graphite">Zolex</span>
-                        <p className="text-[0.65rem] text-muted-foreground">Industrial Components →</p>
-                      </div>
-                    </button>
+                  {/* Partner Brand Scrolling Logos */}
+                  <div className="mt-6 overflow-hidden rounded-xl border border-border bg-steel-light/20 py-4">
+                    <div className="flex marquee-track" style={{ width: "max-content" }}>
+                      {[...Array(2)].map((_, setIdx) => (
+                        <div key={setIdx} className="flex items-center gap-8 px-4 shrink-0">
+                          {/* Amphenol - text/icon badge */}
+                          <div className="flex items-center gap-2 shrink-0 transition-all duration-300 hover:scale-105">
+                            <svg className="h-6 w-6 text-[#004f9e]" viewBox="0 0 32 32" fill="currentColor">
+                              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" strokeWidth="2" />
+                              <path d="M8 16c2-6 6-6 8 0s6 6 8 0" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                            </svg>
+                            <span className="font-display text-sm font-extrabold text-[#004f9e]">Amphenol</span>
+                          </div>
+                          {/* Zolex - text/icon badge */}
+                          <div className="flex items-center gap-2 shrink-0 transition-all duration-300 hover:scale-105">
+                            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-brand-blue text-white font-display font-extrabold text-[0.6rem]">
+                              Z
+                            </div>
+                            <span className="font-display text-sm font-extrabold text-graphite">Zolex</span>
+                          </div>
+                          {/* Individual brand logos in full color */}
+                          {["BOYU", "EDGE_CONNECT", "ESSEN", "HDZ", "HXXH", "NINKO", "OmTen", "SFA", "SUNCHU", "WEICH", "XHF", "XINYA"].map((logo) => (
+                            <div key={logo} className="shrink-0 transition-all duration-300 hover:scale-105">
+                              <img
+                                src={`/images/products/individual_logos_transparent/${logo}.png`}
+                                alt={logo.replace(/_/g, " ")}
+                                className="h-8 w-auto max-w-[100px] object-contain drop-shadow-xs"
+                                loading="lazy"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>

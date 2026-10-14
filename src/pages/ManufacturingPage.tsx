@@ -3,79 +3,24 @@ import { Reveal } from "@/components/site/reveal";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 
-import cardCable from "@/assets/card-cable-assemblies.jpg";
-import heroHarness from "@/assets/hero-harness.jpg";
-import cardFacilities from "@/assets/card-facilities.jpg";
-import cardConnectors from "@/assets/card-connectors.jpg";
-import indDefense from "@/assets/ind-defense.jpg";
-import indPower from "@/assets/ind-power.jpg";
 import p4 from "@/assets/p4.jpg";
 
 interface ManufacturingPageProps {
   onNavigate: (href: string, isPage?: boolean) => void;
 }
 
-const MACHINERY_LIST = [
-  {
-    name: "Automated Wire Cut & Strip Machines",
-    category: "Wire Processing",
-    specs: "Microprocessor-controlled high-speed wire cutting and stripping from 0.05 mm² to 35 mm² with ultra-tight length tolerance.",
-    tag: "High-Speed Automated",
-  },
-  {
-    name: "Precision Terminal Crimping Presses",
-    category: "Terminal Crimping",
-    specs: "Motorized & pneumatic benchtop crimping presses with quick-change mini-applicators and micro-calibrated crimp force monitoring.",
-    tag: "Calibrated Applicators",
-  },
-  {
-    name: "Computerized Cable Harness Circuit Testers",
-    category: "Electrical Testing",
-    specs: "Multi-point programmable continuity, short-circuit, and pinout verification with automatic test report and batch serialization.",
-    tag: "100% Circuit Tested",
-  },
-  {
-    name: "High Voltage Hipot & Dielectric Breakdown Test Stations",
-    category: "Safety Assurance",
-    specs: "AC/DC Hipot insulation resistance testing up to 5 kV ensuring zero dielectric breakdown for defense and railway harness specs.",
-    tag: "Up to 5 kV Dielectric Test",
-  },
-  {
-    name: "Ultrasonic Metal Wire Splicing Systems",
-    category: "Wire Bonding",
-    specs: "Solid-state ultrasonic metal bonding producing zero-resistance, flux-free metallurgical welds for automotive and power feeds.",
-    tag: "Solid-State Splicing",
-  },
-  {
-    name: "Thermal Heat-Shrink Tunnels & Hot Air Stations",
-    category: "Insulation & Sealing",
-    specs: "Infrared conveyor ovens and digital hot air stations for 360° uniform adhesive flow and IP67/IP68 submersible sealing.",
-    tag: "Uniform 360° Sealing",
-  },
-  {
-    name: "Motorized Digital Pull-Force Tensile Testers",
-    category: "Mechanical Verification",
-    specs: "Calibrated digital pull gauges up to 2000 N ensuring terminal crimp pull-off strength strictly complies with IPC/WHMA-A-620.",
-    tag: "IPC/WHMA-A-620 Class 3",
-  },
-  {
-    name: "Optical Micrographic Crimp Inspection Station",
-    category: "Quality Inspection",
-    specs: "High-magnification video inspection and cutting fixture to audit terminal crimp height, compaction, and strand distribution.",
-    tag: "Crimp Height Audited",
-  },
-  {
-    name: "Heavy-Duty Loom Braiding & Shielding Machines",
-    category: "Abrasion & EMI Shielding",
-    specs: "Multi-spindle braiding machines applying tight-pitch nylon, Nomex, and tin-plated copper braid for rugged defense looms.",
-    tag: "Rugged Braided Harnesses",
-  },
-  {
-    name: "ESD-Protected Workstations & Plant Infrastructure",
-    category: "Plant Environment",
-    specs: "Static-dissipative workstations with continuous wrist-strap monitors, ionizing blowers, and grounded flooring conforming to ANSI/ESD S20.20.",
-    tag: "ESD Safe Floor",
-  },
+const FACILITY_IMAGES = [
+  { file: "Fully-Automatic-Crimping-Machines.jpg", name: "Fully Automatic Crimping Machines" },
+  { file: "Fully-Automatic-Cutting-Machines.jpg", name: "Fully Automatic Cutting Machines" },
+  { file: "Semi-Automatic-Crimping-Machines.jpg", name: "Semi-Automatic Crimping Machines" },
+  { file: "Hydraulic-Crimping-Machines.jpg", name: "Hydraulic Crimping Machines" },
+  { file: "Pneumatic-Automatin-Tools.jpg", name: "Pneumatic Automation Tools" },
+  { file: "Automated-Testing-Eq.-and-Jigs.jpg", name: "Automated Testing Eq. and Jigs" },
+  { file: "Motorised-Pull-Testing-Eq.jpg", name: "Motorised Pull Testing Eq." },
+  { file: "Crimp-Cross-Section-Analysys-Lab.jpg", name: "Crimp Cross Section Analysis Lab" },
+  { file: "Software-Aided-Job-Tracking.jpg", name: "Software Aided Job Tracking" },
+  { file: "Twisting Machine.jpg", name: "Twisting Machine" },
+  { file: "Tinning-Pot.jpg", name: "Tinning Pot" },
 ];
 
 export function ManufacturingPage({ onNavigate }: ManufacturingPageProps) {
@@ -177,7 +122,7 @@ export function ManufacturingPage({ onNavigate }: ManufacturingPageProps) {
         </div>
       </section>
 
-      {/* ─── Live Plant Machinery Section ─── */}
+      {/* ─── Facility Images Gallery ─── */}
       <section className="py-20 lg:py-24 bg-[#fafbfc] border-b border-border">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
           <Reveal>
@@ -199,28 +144,24 @@ export function ManufacturingPage({ onNavigate }: ManufacturingPageProps) {
           </Reveal>
 
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {MACHINERY_LIST.map((mach, idx) => (
-              <Reveal key={mach.name} delay={idx * 60}>
-                <div className="rounded-2xl border border-border bg-white p-6 shadow-xs hover:border-brand-blue/50 hover:shadow-md transition-all flex flex-col justify-between h-full">
-                  <div>
-                    <div className="flex items-center justify-between gap-2 mb-3">
-                      <span className="rounded-lg bg-brand-blue/10 px-2.5 py-1 text-[0.62rem] font-bold uppercase tracking-wider text-brand-blue">
-                        {mach.category}
-                      </span>
-                      <span className="text-[0.65rem] font-bold text-emerald-600 font-mono">
-                        {mach.tag}
-                      </span>
-                    </div>
-                    <h3 className="font-display text-base font-bold text-graphite leading-snug">
-                      {mach.name}
-                    </h3>
-                    <p className="mt-2.5 text-xs text-muted-foreground leading-relaxed">
-                      {mach.specs}
-                    </p>
+            {FACILITY_IMAGES.map((item, idx) => (
+              <Reveal key={item.file} delay={idx * 60}>
+                <div className="group rounded-2xl border border-border bg-white overflow-hidden shadow-xs hover:border-brand-blue/50 hover:shadow-md transition-all h-full flex flex-col">
+                  <div className="overflow-hidden aspect-[4/3] bg-steel-light/30">
+                    <img
+                      src={`/images/products/facilities/${item.file}`}
+                      alt={item.name}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
+                    />
                   </div>
-                  <div className="mt-4 pt-3 border-t border-border/70 flex items-center justify-between text-[0.68rem] text-graphite/70 font-semibold">
-                    <span>Cherlapally Plant Unit</span>
-                    <span className="text-brand-blue">Operational &bull;</span>
+                  <div className="p-5 flex items-center gap-3">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-blue/10 font-display text-xs font-bold text-brand-blue shrink-0">
+                      {String(idx + 1).padStart(2, "0")}
+                    </span>
+                    <h3 className="font-display text-sm font-bold text-graphite leading-snug">
+                      {item.name}
+                    </h3>
                   </div>
                 </div>
               </Reveal>
