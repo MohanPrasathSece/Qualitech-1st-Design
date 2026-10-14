@@ -290,7 +290,8 @@ export const ALL_INDUSTRIES = [
   "Railways",
   "Industrial Automation",
   "Automotive",
-  "EV Charging",
+  "Electric Vehicles (EV)",
+  "White Goods",
   "Consumer Electronics",
 ];
 

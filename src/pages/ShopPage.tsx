@@ -1,11 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-} from "lucide-react";
-import {
   BRAND_CATALOGUE_TREE,
   ALL_INDUSTRIES,
   BRANDS,
@@ -53,9 +47,7 @@ export function ShopPage({
     }
   }, [initialBrand]);
 
-  // Pagination states
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(24);
+
 
   // Dropdown menu toggle states
   const [categoryMenuOpen, setCategoryMenuOpen] = useState(false);
@@ -84,10 +76,7 @@ export function ShopPage({
     } catch (_) {}
   }, [products]);
 
-  // Reset to page 1 whenever filters change
-  useEffect(() => {
-    setPage(1);
-  }, [selectedBrand, selectedCategory, selectedSubCategory, selectedIndustry, searchQuery, inStockOnly, maxPrice, sortBy, pageSize]);
+
 
   // Filter & sort logic
   const filteredProducts = useMemo(() => {
@@ -153,37 +142,8 @@ export function ShopPage({
     return result;
   }, [products, selectedBrand, selectedCategory, selectedSubCategory, selectedIndustry, inStockOnly, maxPrice, searchQuery, sortBy]);
 
-  // Paginated slice
-  const totalPages = Math.ceil(filteredProducts.length / pageSize) || 1;
-  const startIndex = (page - 1) * pageSize;
-  const endIndex = Math.min(startIndex + pageSize, filteredProducts.length);
-  const paginatedProducts = useMemo(() => {
-    return filteredProducts.slice(startIndex, startIndex + pageSize);
-  }, [filteredProducts, startIndex, pageSize]);
-
-  // Generate numbered pagination items with smart ellipses
-  const paginationItems = useMemo<(number | string)[]>(() => {
-    if (totalPages <= 7) {
-      return Array.from({ length: totalPages }, (_, i) => i + 1);
-    }
-    if (page <= 4) {
-      return [1, 2, 3, 4, 5, "...", totalPages];
-    }
-    if (page >= totalPages - 3) {
-      return [1, "...", totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
-    }
-    return [1, "...", page - 1, page, page + 1, "...", totalPages];
-  }, [page, totalPages]);
-
-  const handlePageChange = (newPage: number) => {
-    if (newPage < 1 || newPage > totalPages) return;
-    setPage(newPage);
-    if (gridTopRef.current) {
-      gridTopRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-    } else {
-      window.scrollTo({ top: 380, behavior: "smooth" });
-    }
-  };
+  // Single page: display all filtered products directly (no pagination)
+  const paginatedProducts = filteredProducts;
 
   const clearAllFilters = () => {
     setSelectedBrand("All Brands");
@@ -966,140 +926,32 @@ export function ShopPage({
               </div>
             )}
 
-            {/* Numbered Pagination & Page Size Controls */}
+            {/* Single Page Footer & Back to Top */}
             {filteredProducts.length > 0 && (
-              <div className="mt-12 flex flex-col md:flex-row items-center justify-between gap-4 border-t border-border pt-6 pb-2">
-                {/* Products Count & Per Page Selector */}
-                <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 text-xs text-graphite-light order-2 md:order-1">
+              <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-border pt-6 pb-2">
+                <div className="flex items-center gap-2 text-xs text-graphite-light">
+                  <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
                   <span>
-                    Showing{" "}
-                    <strong className="text-graphite font-semibold">
-                      {filteredProducts.length === 0 ? 0 : startIndex + 1}
-                    </strong>
-                    {" "}-{" "}
-                    <strong className="text-graphite font-semibold">{endIndex}</strong>
-                    {" "}of{" "}
-                    <strong className="text-graphite font-semibold">{filteredProducts.length}</strong>
-                    {" "}products
+                    Showing all <strong className="text-graphite font-semibold">{filteredProducts.length}</strong> products
                   </span>
-
-                  <div className="h-3.5 w-px bg-border hidden sm:block" />
-
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-muted-foreground">Show:</span>
-                    <select
-                      value={pageSize}
-                      onChange={(e) => {
-                        setPageSize(Number(e.target.value));
-                        setPage(1);
-                      }}
-                      className="rounded-lg border border-border bg-white px-2 py-1 text-xs font-semibold text-graphite focus:border-brand-blue focus:outline-hidden cursor-pointer shadow-2xs"
-                      title="Products per page"
-                    >
-                      <option value={12}>12 / page</option>
-                      <option value={24}>24 / page</option>
-                      <option value={48}>48 / page</option>
-                      <option value={96}>96 / page</option>
-                    </select>
-                  </div>
                 </div>
 
-                {/* Numbered Pagination Buttons */}
-                {totalPages > 1 && (
-                  <nav
-                    role="navigation"
-                    aria-label="Pagination Navigation"
-                    className="flex flex-wrap items-center justify-center gap-1 sm:gap-1.5 order-1 md:order-2 pr-0 sm:pr-8"
-                  >
-                    {/* First Page */}
-                    <button
-                      disabled={page === 1}
-                      onClick={() => handlePageChange(1)}
-                      className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-white text-graphite disabled:opacity-30 disabled:cursor-not-allowed hover:bg-steel-light hover:text-brand-blue hover:border-brand-blue/30 transition-all cursor-pointer shadow-2xs"
-                      title="First Page"
-                      aria-label="Go to first page"
-                    >
-                      <ChevronsLeft className="h-4 w-4" />
-                    </button>
-
-                    {/* Previous Page */}
-                    <button
-                      disabled={page === 1}
-                      onClick={() => handlePageChange(page - 1)}
-                      className="inline-flex h-9 items-center gap-1 px-2.5 rounded-lg border border-border bg-white text-xs font-semibold text-graphite disabled:opacity-30 disabled:cursor-not-allowed hover:bg-steel-light hover:text-brand-blue hover:border-brand-blue/30 transition-all cursor-pointer shadow-2xs"
-                      title="Previous Page"
-                      aria-label="Go to previous page"
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                      <span className="hidden sm:inline">Prev</span>
-                    </button>
-
-                    {/* Numbered Page Buttons */}
-                    <div className="flex items-center gap-1">
-                      {paginationItems.map((item, idx) => {
-                        if (typeof item === "number") {
-                          const isActive = item === page;
-                          return (
-                            <button
-                              key={`page-${item}`}
-                              onClick={() => handlePageChange(item)}
-                              aria-current={isActive ? "page" : undefined}
-                              className={`inline-flex h-9 min-w-9 px-2.5 items-center justify-center rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                                isActive
-                                  ? "bg-brand-blue text-white shadow-sm ring-2 ring-brand-blue/25 scale-105"
-                                  : "border border-border bg-white text-graphite hover:border-brand-blue/40 hover:text-brand-blue hover:bg-brand-blue/5 shadow-2xs"
-                              }`}
-                            >
-                              {item}
-                            </button>
-                          );
-                        }
-
-                        // Ellipsis - allows quick jump!
-                        const isLeftEllipsis = idx === 1;
-                        const jumpTarget = isLeftEllipsis ? Math.max(1, page - 4) : Math.min(totalPages, page + 4);
-
-                        return (
-                          <button
-                            key={`ellipsis-${idx}`}
-                            onClick={() => handlePageChange(jumpTarget)}
-                            title={`Jump ${isLeftEllipsis ? "backward" : "forward"} 4 pages (to page ${jumpTarget})`}
-                            className="inline-flex h-9 w-8 items-center justify-center rounded-lg text-muted-foreground hover:text-brand-blue hover:bg-steel-light text-xs font-bold transition-colors cursor-pointer group"
-                            aria-label={`Jump ${isLeftEllipsis ? "backward" : "forward"} to page ${jumpTarget}`}
-                          >
-                            <span className="group-hover:hidden">...</span>
-                            <span className="hidden group-hover:inline text-[10px] font-mono">
-                              {isLeftEllipsis ? "««" : "»»"}
-                            </span>
-                          </button>
-                        );
-                      })}
-                    </div>
-
-                    {/* Next Page */}
-                    <button
-                      disabled={page === totalPages}
-                      onClick={() => handlePageChange(page + 1)}
-                      className="inline-flex h-9 items-center gap-1 px-2.5 rounded-lg border border-border bg-white text-xs font-semibold text-graphite disabled:opacity-30 disabled:cursor-not-allowed hover:bg-steel-light hover:text-brand-blue hover:border-brand-blue/30 transition-all cursor-pointer shadow-2xs"
-                      title="Next Page"
-                      aria-label="Go to next page"
-                    >
-                      <span className="hidden sm:inline">Next</span>
-                      <ChevronRight className="h-4 w-4" />
-                    </button>
-
-                    {/* Last Page */}
-                    <button
-                      disabled={page === totalPages}
-                      onClick={() => handlePageChange(totalPages)}
-                      className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-white text-graphite disabled:opacity-30 disabled:cursor-not-allowed hover:bg-steel-light hover:text-brand-blue hover:border-brand-blue/30 transition-all cursor-pointer shadow-2xs"
-                      title="Last Page"
-                      aria-label="Go to last page"
-                    >
-                      <ChevronsRight className="h-4 w-4" />
-                    </button>
-                  </nav>
-                )}
+                <button
+                  onClick={() => {
+                    if (gridTopRef.current) {
+                      gridTopRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+                    } else {
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }
+                  }}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-white px-4 py-2 text-xs font-bold text-graphite hover:border-brand-blue hover:text-brand-blue hover:bg-brand-blue/5 transition-all cursor-pointer shadow-2xs"
+                  title="Scroll to top of product list"
+                >
+                  <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                  </svg>
+                  <span>Back to Top</span>
+                </button>
               </div>
             )}
           </div>

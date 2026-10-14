@@ -9,6 +9,9 @@ import indTelecom from "@/assets/ind-telecom.jpg";
 import indPower from "@/assets/ind-power.jpg";
 import indDefense from "@/assets/ind-defense.jpg";
 import indRailways from "@/assets/ind-railways.jpg";
+import indEV from "@/assets/ind-ev.jpg";
+import indWhiteGoods from "@/assets/ind-white-goods.jpg";
+import indConsumerElectronics from "@/assets/ind-consumer-electronics.jpg";
 import facilitiesWide from "@/assets/facilities-wide.jpg";
 
 import { Counter, Reveal } from "@/components/site/reveal";
@@ -131,7 +134,7 @@ const STATS = [
   { value: 30, suffix: "+", label: "Years of Experience" },
   { text: "OEM", label: "Focused Solutions" },
   { text: "100%", label: "Tested & Certified" },
-  { value: 4, label: "Key Industries" },
+  { value: 7, suffix: "+", label: "Key Industries" },
 ];
 
 function Stats() {
@@ -434,10 +437,41 @@ function About({ onNavigate }: { onNavigate?: (target: string) => void }) {
 /* ─── Industries ─── */
 
 const INDUSTRIES = [
-  { name: "Telecommunications", desc: "Reliable connectivity for telecom infrastructure and equipment.", image: indTelecom },
-  { name: "Power", desc: "High-reliability wiring solutions for power distribution and generation.", image: indPower },
-  { name: "Defence", desc: "Ruggedized, high-specification cable assemblies for defence applications.", image: indDefense },
-  { name: "Railways", desc: "Robust wiring systems for railway signalling and rolling stock.", image: indRailways },
+  {
+    name: "Electric Vehicles (EV)",
+    desc: "High-voltage battery harnesses, BMS interconnects, and charging solutions.",
+    image: indEV,
+  },
+  {
+    name: "White Goods",
+    desc: "Custom wiring assemblies and motor/control harnesses for major home appliances.",
+    image: indWhiteGoods,
+  },
+  {
+    name: "Consumer Electronics",
+    desc: "High-density micro connectors and flexible flat cabling for smart devices.",
+    image: indConsumerElectronics,
+  },
+  {
+    name: "Telecommunications",
+    desc: "Reliable connectivity for telecom infrastructure and network equipment.",
+    image: indTelecom,
+  },
+  {
+    name: "Power",
+    desc: "High-reliability wiring solutions for power distribution and generation.",
+    image: indPower,
+  },
+  {
+    name: "Defence",
+    desc: "Ruggedized, high-specification cable assemblies for defence applications.",
+    image: indDefense,
+  },
+  {
+    name: "Railways",
+    desc: "Robust wiring systems for railway signalling and rolling stock.",
+    image: indRailways,
+  },
 ];
 
 function Industries() {
@@ -457,26 +491,26 @@ function Industries() {
         </p>
       </Reveal>
 
-      <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {INDUSTRIES.map((item, i) => (
-          <Reveal key={item.name} delay={i * 100}>
-            <div className="group relative overflow-hidden rounded-2xl bg-graphite">
+          <Reveal key={item.name} delay={i * 80}>
+            <div className="group relative overflow-hidden rounded-2xl bg-graphite shadow-md hover:shadow-xl transition-all duration-500">
               <img
                 src={item.image}
                 alt={item.name}
                 loading="lazy"
                 width={800}
                 height={1000}
-                className="h-[340px] w-full object-cover opacity-85 transition-all duration-[1200ms] ease-[var(--ease-precise)] group-hover:scale-110 group-hover:opacity-100 lg:h-[420px]"
+                className="h-[340px] w-full object-cover opacity-85 transition-all duration-[1200ms] ease-[var(--ease-precise)] group-hover:scale-110 group-hover:opacity-100 sm:h-[360px] lg:h-[380px]"
               />
               <div
-                className="absolute inset-0 bg-gradient-to-t from-graphite-deep/85 via-graphite-deep/10 to-transparent"
+                className="absolute inset-0 bg-gradient-to-t from-graphite-deep/90 via-graphite-deep/30 to-transparent"
                 aria-hidden="true"
               />
               <div className="absolute inset-x-0 bottom-0 p-6">
                 <span className="block h-px w-8 bg-brand-yellow transition-all duration-500 group-hover:w-16" />
-                <h3 className="mt-4 font-display text-lg font-bold text-background">{item.name}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-steel-light/80">{item.desc}</p>
+                <h3 className="mt-4 font-display text-lg font-bold text-white">{item.name}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-steel-light/85">{item.desc}</p>
               </div>
             </div>
           </Reveal>

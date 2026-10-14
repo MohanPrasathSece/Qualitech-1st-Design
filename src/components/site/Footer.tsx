@@ -22,12 +22,14 @@ export const FOOTER_PRODUCTS: NavItem[] = [
 ];
 
 export const FOOTER_INDUSTRIES = [
+  "Electric Vehicles (EV)",
+  "White Goods",
+  "Consumer Electronics",
   "Telecommunications",
   "Power & Energy",
   "Defense",
   "Railways",
   "Industrial Automation",
-  "Automotive",
 ];
 
 export interface FooterProps {
