@@ -8,6 +8,125 @@ interface CartDrawerProps {
   onNavigateToShop?: () => void;
 }
 
+interface CartQuantityInputProps {
+  quantity: number;
+  minOrderQty?: number;
+  maxQty?: number;
+  onUpdate: (qty: number) => void;
+}
+
+const CartQuantityInput: React.FC<CartQuantityInputProps> = ({
+  quantity,
+  minOrderQty = 1,
+  maxQty = 99999,
+  onUpdate,
+}) => {
+  const [inputValue, setInputValue] = useState<string>(String(quantity));
+  const [isEditing, setIsEditing] = useState(false);
+
+  // Synchronize when the external quantity updates, unless user is actively typing
+  React.useEffect(() => {
+    if (!isEditing) {
+      setInputValue(String(quantity));
+    }
+  }, [quantity, isEditing]);
+
+  const commitValue = (text: string) => {
+    const parsed = parseInt(text, 10);
+    if (isNaN(parsed) || parsed < minOrderQty) {
+      setInputValue(String(minOrderQty));
+      onUpdate(minOrderQty);
+    } else if (parsed > maxQty) {
+      setInputValue(String(maxQty));
+      onUpdate(maxQty);
+    } else {
+      setInputValue(String(parsed));
+      onUpdate(parsed);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Digits only
+    const clean = e.target.value.replace(/[^0-9]/g, "");
+    setInputValue(clean);
+
+    if (clean !== "") {
+      const parsed = parseInt(clean, 10);
+      if (!isNaN(parsed) && parsed >= minOrderQty) {
+        onUpdate(Math.min(parsed, maxQty));
+      }
+    }
+  };
+
+  const handleBlur = () => {
+    setIsEditing(false);
+    commitValue(inputValue);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.currentTarget.blur();
+    }
+  };
+
+  const handleDecrease = () => {
+    const current = parseInt(inputValue, 10) || quantity;
+    const next = Math.max(minOrderQty, current - 1);
+    setInputValue(String(next));
+    onUpdate(next);
+  };
+
+  const handleIncrease = () => {
+    const current = parseInt(inputValue, 10) || quantity;
+    const next = Math.min(maxQty, current + 1);
+    setInputValue(String(next));
+    onUpdate(next);
+  };
+
+  return (
+    <div className="flex items-center rounded-lg border border-border bg-white shadow-2xs hover:border-brand-blue/50 focus-within:border-brand-blue focus-within:ring-2 focus-within:ring-brand-blue/20 transition-all">
+      <button
+        type="button"
+        onClick={handleDecrease}
+        disabled={quantity <= minOrderQty}
+        className="flex h-7 w-7 items-center justify-center text-xs font-bold text-muted-foreground hover:text-foreground hover:bg-steel-light transition-colors rounded-l-lg cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed select-none"
+        aria-label="Decrease quantity"
+        title={quantity <= minOrderQty ? `Minimum order quantity is ${minOrderQty}` : "Decrease quantity by 1"}
+      >
+        -
+      </button>
+
+      <input
+        type="text"
+        inputMode="numeric"
+        pattern="[0-9]*"
+        value={inputValue}
+        onFocus={(e) => {
+          setIsEditing(true);
+          e.target.select();
+        }}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
+        className="w-12 text-center text-xs font-bold text-graphite bg-transparent focus:outline-hidden py-1 px-0.5 selection:bg-brand-blue selection:text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        aria-label="Item quantity"
+        title="Type quantity directly (e.g. 10, 50, 100)"
+      />
+
+      <button
+        type="button"
+        onClick={handleIncrease}
+        disabled={quantity >= maxQty}
+        className="flex h-7 w-7 items-center justify-center text-xs font-bold text-muted-foreground hover:text-foreground hover:bg-steel-light transition-colors rounded-r-lg cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed select-none"
+        aria-label="Increase quantity"
+        title="Increase quantity by 1"
+      >
+        +
+      </button>
+    </div>
+  );
+};
+
 export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToShop }) => {
   const {
     cart,
@@ -227,26 +346,14 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToShop }) => {
                     </div>
 
                     <div className="mt-3 flex items-center justify-between">
-                      {/* Quantity Stepper */}
-                      <div className="flex items-center rounded-lg border border-border bg-white shadow-2xs">
-                        <button
-                          onClick={() => updateCartQty(item.id || item.product.id || item.product.sku, item.quantity - 1)}
-                          className="flex h-7 w-7 items-center justify-center text-muted-foreground hover:text-foreground hover:bg-steel-light transition-colors rounded-l-lg cursor-pointer"
-                          aria-label="Decrease quantity"
-                        >
-                          -
-                        </button>
-                        <span className="w-8 text-center text-xs font-bold text-graphite">
-                          {item.quantity}
-                        </span>
-                        <button
-                          onClick={() => updateCartQty(item.id || item.product.id || item.product.sku, item.quantity + 1)}
-                          className="flex h-7 w-7 items-center justify-center text-muted-foreground hover:text-foreground hover:bg-steel-light transition-colors rounded-r-lg cursor-pointer"
-                          aria-label="Increase quantity"
-                        >
-                          +
-                        </button>
-                      </div>
+                      {/* Quantity Input & Stepper */}
+                      <CartQuantityInput
+                        quantity={item.quantity}
+                        minOrderQty={item.product.minOrderQty || 1}
+                        onUpdate={(newQty) =>
+                          updateCartQty(item.id || item.product.id || item.product.sku, newQty)
+                        }
+                      />
 
                       {/* Pricing */}
                       <div className="text-right">

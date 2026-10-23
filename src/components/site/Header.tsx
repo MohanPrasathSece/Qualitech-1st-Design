@@ -1,6 +1,4 @@
 import { useEffect, useState, useRef } from "react";
-import { useECommerce } from "@/context/ECommerceContext";
-import { formatINR } from "@/lib/ecommerceStore";
 
 export interface NavChild {
   label: string;
@@ -30,8 +28,6 @@ export interface NavItem {
 export const NAV: NavItem[] = [
   { label: "Home", href: "#top" },
   { label: "About Us", href: "#about-page", isPage: true },
-  { label: "Products & Services", href: "#products", isPage: true, dropdown: true },
-  { label: "Shop", href: "#shop", isPage: true },
   { label: "Facilities", href: "#facilities", isPage: true },
   { label: "Contact Us", href: "#contact-page", isPage: true },
 ];
@@ -65,13 +61,6 @@ export const DROPDOWN_VERTICALS: NavMainOption[] = [
         description: "Copper Lugs, Crimp Terminals, SS Ties & Glands",
         badge: "Official Line",
       },
-      {
-        label: "View All Products Catalogue",
-        href: "#products",
-        isPage: true,
-        description: "Explore Complete 550+ E-Commerce Catalogue",
-        badge: "550+ Items",
-      },
     ],
   },
   {
@@ -98,8 +87,6 @@ export interface HeaderProps {
 }
 
 export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
-  const { cartCount, cartSubtotal, openCart } = useECommerce();
-
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [productsDropdown, setProductsDropdown] = useState(false);
@@ -310,19 +297,6 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
                               ))}
                             </div>
                           </div>
-
-                          <div className="mt-3 pt-2.5 border-t border-border/70">
-                            <button
-                              onClick={() => {
-                                setProductsDropdown(false);
-                                onNavigate("#products", true);
-                              }}
-                              className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-graphite/5 px-3 py-1.5 text-center text-[0.68rem] font-bold uppercase tracking-wider text-brand-blue transition-colors hover:bg-brand-blue hover:text-white cursor-pointer"
-                            >
-                              <span>Explore Full Catalogue</span>
-                              <span>→</span>
-                            </button>
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -334,7 +308,6 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
             const isActive =
               (item.label === "Home" && (currentPage === "home" || !currentPage)) ||
               (item.label === "About Us" && currentPage === "about") ||
-              (item.label === "Shop" && (currentPage === "products" || currentPage === "shop")) ||
               (item.label === "Facilities" && (currentPage === "manufacturing" || currentPage === "facilities")) ||
               (item.label === "Contact Us" && currentPage === "contact");
 
@@ -354,29 +327,13 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
           })}
         </nav>
 
-        {/* Right: Actions (Cart, Orders, Admin) */}
+        {/* Right: Actions */}
         <div className="flex items-center flex-nowrap gap-2 shrink-0">
-          {/* Cart Button */}
           <button
-            onClick={openCart}
-            className="h-8.5 inline-flex items-center justify-center gap-1.5 rounded-xl bg-brand-blue px-3 font-display text-[0.7rem] font-bold uppercase tracking-wider text-white shadow-xs hover:bg-graphite transition-all cursor-pointer shrink-0"
-            title="Shopping Cart"
-            aria-label="Shopping Cart"
+            onClick={() => onNavigate("#contact-page", true)}
+            className="hidden sm:inline-flex h-8.5 items-center justify-center gap-1.5 rounded-xl bg-brand-blue px-3.5 font-display text-[0.7rem] font-bold uppercase tracking-wider text-white shadow-xs hover:bg-graphite transition-all cursor-pointer shrink-0"
           >
-            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-            </svg>
-            <span>Cart</span>
-            {cartCount > 0 && (
-              <span className="flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-brand-yellow px-1 font-mono text-[0.6rem] font-extrabold text-graphite ring-1 ring-brand-blue">
-                {cartCount}
-              </span>
-            )}
-            {cartSubtotal > 0 && (
-              <span className="hidden xl:inline text-white/90 font-mono text-[0.68rem] border-l border-white/20 pl-1.5">
-                {formatINR(cartSubtotal)}
-              </span>
-            )}
+            Request Quote
           </button>
 
           {/* Mobile Menu Toggle Button */}
@@ -407,32 +364,6 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
         }`}
       >
         <nav className="flex flex-col px-5 py-3 sm:px-8 space-y-1">
-          {/* Quick Action Strip for Mobile */}
-          <div className="pb-3 mb-2 border-b border-border/80">
-            <button
-              onClick={() => {
-                setOpen(false);
-                openCart();
-              }}
-              className="flex w-full items-center justify-between rounded-xl bg-blue-50/80 p-3 text-brand-blue border border-brand-blue/20"
-            >
-              <div className="flex items-center gap-2">
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                </svg>
-                <span className="font-bold text-xs">View Shopping Cart</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-brand-yellow px-1.5 font-mono text-[0.65rem] font-bold text-graphite">
-                  {cartCount} items
-                </span>
-                {cartSubtotal > 0 && (
-                  <span className="text-xs font-bold font-mono text-graphite">{formatINR(cartSubtotal)}</span>
-                )}
-              </div>
-            </button>
-          </div>
-
           <button
             onClick={() => {
               setOpen(false);
@@ -458,167 +389,6 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
             }`}
           >
             About Us
-          </button>
-
-          {/* Expandable Products */}
-          <div className="border-b border-border/70 py-1">
-            <button
-              onClick={() => setMobileProductsOpen((v) => !v)}
-              className={`flex w-full items-center justify-between py-2 px-3 rounded-xl text-left font-display text-sm uppercase tracking-[0.14em] cursor-pointer transition-colors ${
-                isProductsActive
-                  ? "bg-brand-blue/10 text-brand-blue font-bold"
-                  : "text-foreground font-semibold"
-              }`}
-            >
-              <span>Products &amp; Services</span>
-              <svg
-                className={`h-3.5 w-3.5 transition-transform duration-200 ${
-                  mobileProductsOpen ? "rotate-180" : ""
-                }`}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2.5}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-
-            {mobileProductsOpen && (
-              <div className="pb-3 pl-3 space-y-2.5">
-                <div className="rounded-xl border border-border bg-steel-light/30 p-2.5">
-                  <button
-                    onClick={() => setMobileDistOpen((v) => !v)}
-                    className="flex w-full items-center justify-between text-left font-display text-xs font-bold uppercase tracking-wider text-graphite cursor-pointer"
-                  >
-                    <span className="flex items-center gap-2">
-                      <span className="rounded-full bg-brand-blue px-2 py-0.5 text-[0.55rem] font-bold text-white uppercase">
-                        Distribution
-                      </span>
-                      <span>Electronic Components</span>
-                    </span>
-                    <svg
-                      className={`h-3 w-3 transition-transform ${mobileDistOpen ? "rotate-180" : ""}`}
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-
-                  {mobileDistOpen && (
-                    <div className="mt-2 space-y-1.5 pl-2 border-l border-brand-blue/30 ml-1">
-                      <button
-                        onClick={() => {
-                          setOpen(false);
-                          setMobileProductsOpen(false);
-                          onNavigate("#qualitech", true);
-                        }}
-                        className={`block w-full py-1 text-left text-[0.8rem] transition-colors cursor-pointer ${
-                          currentPage === "qualitech" ? "text-brand-blue font-bold" : "font-medium text-foreground hover:text-brand-blue"
-                        }`}
-                      >
-                        • Qualitech Products (401+ Components)
-                      </button>
-                      <button
-                        onClick={() => {
-                          setOpen(false);
-                          setMobileProductsOpen(false);
-                          onNavigate("#amphenol", true);
-                        }}
-                        className={`block w-full py-1 text-left text-[0.8rem] transition-colors cursor-pointer ${
-                          currentPage === "amphenol" ? "text-brand-blue font-bold" : "font-medium text-foreground hover:text-brand-blue"
-                        }`}
-                      >
-                        • Amphenol (Connectors &amp; Antennas)
-                      </button>
-                      <button
-                        onClick={() => {
-                          setOpen(false);
-                          setMobileProductsOpen(false);
-                          onNavigate("#zolex", true);
-                        }}
-                        className={`block w-full py-1 text-left text-[0.8rem] transition-colors cursor-pointer ${
-                          currentPage === "zolex" ? "text-brand-blue font-bold" : "font-medium text-foreground hover:text-brand-blue"
-                        }`}
-                      >
-                        • Zolex (Lugs, Glands &amp; Ties)
-                      </button>
-                    </div>
-                  )}
-                </div>
-
-                <div className="rounded-xl border border-border bg-steel-light/30 p-2.5">
-                  <button
-                    onClick={() => setMobileMfgOpen((v) => !v)}
-                    className="flex w-full items-center justify-between text-left font-display text-xs font-bold uppercase tracking-wider text-graphite cursor-pointer"
-                  >
-                    <span className="flex items-center gap-2">
-                      <span className="rounded-full bg-brand-yellow px-2 py-0.5 text-[0.55rem] font-bold text-graphite uppercase">
-                        Manufacturing
-                      </span>
-                      <span>Cable Assemblies</span>
-                    </span>
-                    <svg
-                      className={`h-3 w-3 transition-transform ${mobileMfgOpen ? "rotate-180" : ""}`}
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-
-                  {mobileMfgOpen && (
-                    <div className="mt-2 space-y-1.5 pl-2 border-l border-brand-yellow/50 ml-1">
-                      <button
-                        onClick={() => {
-                          setOpen(false);
-                          setMobileProductsOpen(false);
-                          onNavigate("#manufacturing", true);
-                        }}
-                        className={`block w-full py-1 text-left text-[0.8rem] transition-colors cursor-pointer ${
-                          currentPage === "manufacturing" || currentPage === "facilities"
-                            ? "text-brand-blue font-bold"
-                            : "font-medium text-foreground hover:text-brand-blue"
-                        }`}
-                      >
-                        • Custom Cable Assemblies &amp; Wire Harnesses
-                      </button>
-                    </div>
-                  )}
-                </div>
-
-                <button
-                  onClick={() => {
-                    setOpen(false);
-                    setMobileProductsOpen(false);
-                    onNavigate("#products", true);
-                  }}
-                  className="block w-full py-2 text-left text-[0.82rem] font-bold text-brand-blue pl-2"
-                >
-                  Explore Full E-Commerce Shop →
-                </button>
-              </div>
-            )}
-          </div>
-
-          <button
-            onClick={() => {
-              setOpen(false);
-              onNavigate("#products", true);
-            }}
-            className={`border-b border-border/70 py-2.5 px-3 rounded-xl text-left font-display text-sm uppercase tracking-[0.14em] transition-colors flex items-center justify-between ${
-              currentPage === "products" || currentPage === "shop"
-                ? "bg-brand-blue/10 text-brand-blue font-bold"
-                : "text-foreground font-semibold"
-            }`}
-          >
-            <span>Shop (All Products)</span>
-            <span className="rounded-full bg-brand-blue/10 text-brand-blue px-2 py-0.5 text-[0.6rem] font-bold">550+ Items</span>
           </button>
 
           <button

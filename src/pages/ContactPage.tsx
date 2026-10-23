@@ -376,12 +376,6 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                   </p>
                     <div className="mt-4 flex flex-wrap gap-2">
                       <button
-                        onClick={() => onNavigate("#products", true)}
-                        className="rounded-lg bg-brand-yellow px-3 py-1.5 text-xs font-bold text-graphite hover:bg-white transition-colors cursor-pointer"
-                      >
-                        Full Catalogue →
-                      </button>
-                      <button
                         onClick={() => onNavigate("#amphenol", true)}
                         className="rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/20 transition-colors cursor-pointer"
                       >

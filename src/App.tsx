@@ -279,7 +279,7 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
               <div className="px-8 pb-8 sm:px-10 sm:pb-10 pt-0">
                 <button
                   type="button"
-                  onClick={() => onNavigate("#products", true)}
+                  onClick={() => onNavigate("#amphenol", true)}
                   className="group/btn inline-flex items-center gap-3 font-display text-[0.72rem] font-bold uppercase tracking-[0.2em] text-brand-blue cursor-pointer"
                 >
                   Explore Distribution Lines
@@ -647,12 +647,6 @@ function ProductsOverview({ onNavigate }: ProductsOverviewProps) {
                 From globally trusted electronics component brands to custom-engineered cable assemblies - explore our complete product and service offerings.
               </p>
             </div>
-            <button
-              onClick={() => onNavigate("#products", true)}
-              className="self-start sm:self-auto rounded-xl bg-graphite px-6 py-3 font-display text-[0.72rem] font-bold uppercase tracking-[0.2em] text-white transition-all duration-300 hover:bg-brand-blue shadow-sm inline-flex items-center gap-2 shrink-0 cursor-pointer"
-            >
-              View All Products &amp; Services →
-            </button>
           </div>
         </Reveal>
 

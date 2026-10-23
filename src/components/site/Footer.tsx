@@ -8,17 +8,16 @@ export interface NavItem {
 export const FOOTER_COMPANY: NavItem[] = [
   { label: "Home", href: "#top" },
   { label: "About Us", href: "#about-page", isPage: true },
-  { label: "Products & Services", href: "#products", isPage: true },
-  { label: "Manufacturing", href: "#manufacturing", isPage: true },
+  { label: "Facilities & Infrastructure", href: "#facilities", isPage: true },
   { label: "Contact Us", href: "#contact-page", isPage: true },
 ];
 
-export const FOOTER_PRODUCTS: NavItem[] = [
-  { label: "Qualitech Components", href: "#qualitech", isPage: true },
-  { label: "Amphenol", href: "#amphenol", isPage: true },
-  { label: "Zolex", href: "#zolex", isPage: true },
-  { label: "Custom Cable Assemblies", href: "#manufacturing", isPage: true },
-  { label: "Wire Harnesses", href: "#manufacturing", isPage: true },
+export const FOOTER_CAPABILITIES: NavItem[] = [
+  { label: "Custom Cable Assemblies", href: "#facilities", isPage: true },
+  { label: "Wire Harnesses", href: "#facilities", isPage: true },
+  { label: "Automated Cut & Strip", href: "#facilities", isPage: true },
+  { label: "Cirris Electrical Testing", href: "#facilities", isPage: true },
+  { label: "Plant Machinery Infrastructure", href: "#facilities", isPage: true },
 ];
 
 export const FOOTER_INDUSTRIES = [
@@ -121,43 +120,13 @@ export function Footer({ onNavigate }: FooterProps) {
             </ul>
           </div>
 
-          {/* Products */}
+          {/* Capabilities */}
           <div>
             <h3 className="font-display text-[0.7rem] font-bold uppercase tracking-[0.2em] text-background">
-              Products & Services
+              Capabilities
             </h3>
             <ul className="mt-4 sm:mt-5 space-y-2.5 sm:space-y-3">
-              <li className="text-[0.62rem] font-bold uppercase tracking-wider text-steel/60 mt-1">
-                Electronics Components
-              </li>
-              {FOOTER_PRODUCTS.filter(p => p.label === "Amphenol" || p.label === "Zolex" || p.label === "Qualitech Components").map((item) => (
-                <li key={item.label}>
-                  {item.external ? (
-                    <a
-                      href={item.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs sm:text-sm text-steel transition-colors duration-300 hover:text-background inline-flex items-center gap-1"
-                    >
-                      {item.label}
-                      <svg className="h-3 w-3 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                      </svg>
-                    </a>
-                  ) : (
-                    <button
-                      onClick={() => (onNavigate ? onNavigate(item.href, item.isPage) : undefined)}
-                      className="text-xs sm:text-sm text-steel transition-colors duration-300 hover:text-background cursor-pointer text-left"
-                    >
-                      {item.label}
-                    </button>
-                  )}
-                </li>
-              ))}
-              <li className="text-[0.62rem] font-bold uppercase tracking-wider text-steel/60 mt-3 pt-2 border-t border-background/10">
-                Cable Assemblies
-              </li>
-              {FOOTER_PRODUCTS.filter(p => p.label !== "Amphenol" && p.label !== "Zolex" && p.label !== "Qualitech Components").map((item) => (
+              {FOOTER_CAPABILITIES.map((item) => (
                 <li key={item.label}>
                   <button
                     onClick={() => (onNavigate ? onNavigate(item.href, item.isPage) : undefined)}

@@ -3,6 +3,7 @@ import { Product } from "@/data/products";
 import { useECommerce } from "@/context/ECommerceContext";
 import {
   formatINR,
+  getEffectiveUnitPrice,
 } from "@/lib/ecommerceStore";
 import { ProductImage } from "@/components/common/ProductImage";
 import { downloadProductDatasheet } from "@/lib/datasheetService";
@@ -18,6 +19,7 @@ export const ProductDetailModal: React.FC = () => {
   } = useECommerce();
 
   const [quantity, setQuantity] = useState(1);
+  const [quantityInput, setQuantityInput] = useState("1");
   const [activeTab, setActiveTab] = useState<"specs" | "features" | "industries" | "compliance">("specs");
   const [copiedLink, setCopiedLink] = useState(false);
   const [addedToast, setAddedToast] = useState(false);
@@ -27,7 +29,9 @@ export const ProductDetailModal: React.FC = () => {
   // Reset quantity and error state on product change
   React.useEffect(() => {
     if (quickViewProduct) {
-      setQuantity(quickViewProduct.minOrderQty || 1);
+      const initialQty = quickViewProduct.minOrderQty || 1;
+      setQuantity(initialQty);
+      setQuantityInput(String(initialQty));
       setActiveTab("specs");
       setImageError(false);
       setDownloadSuccess(false);
@@ -38,7 +42,7 @@ export const ProductDetailModal: React.FC = () => {
 
   const product = quickViewProduct;
   const isOutOfStock = !product.inStock || (product.stockCount !== undefined && product.stockCount <= 0);
-  const unitPrice = product.price || 0;
+  const unitPrice = getEffectiveUnitPrice(product, quantity);
   const totalItemPrice = unitPrice * quantity;
 
   // Find related products in same category or brand
@@ -257,24 +261,71 @@ export const ProductDetailModal: React.FC = () => {
                   ) : (
                     <>
                       <div className="flex items-center gap-3">
-                        <div className="flex items-center rounded-xl border border-border bg-steel-light/30 shadow-2xs">
+                        <div className="flex items-center rounded-xl border border-border bg-steel-light/30 shadow-2xs hover:border-brand-blue/50 focus-within:border-brand-blue focus-within:ring-2 focus-within:ring-brand-blue/20 transition-all">
                           <button
-                            onClick={() => setQuantity(Math.max(product.minOrderQty || 1, quantity - 1))}
-                            className="flex h-10 w-10 items-center justify-center text-base font-bold text-muted-foreground hover:text-foreground hover:bg-steel-light transition-colors rounded-l-xl cursor-pointer"
+                            type="button"
+                            onClick={() => {
+                              const min = product.minOrderQty || 1;
+                              const next = Math.max(min, quantity - 1);
+                              setQuantity(next);
+                              setQuantityInput(String(next));
+                            }}
+                            disabled={quantity <= (product.minOrderQty || 1)}
+                            className="flex h-10 w-10 items-center justify-center text-base font-bold text-muted-foreground hover:text-foreground hover:bg-steel-light transition-colors rounded-l-xl cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed select-none"
+                            aria-label="Decrease quantity"
+                            title={quantity <= (product.minOrderQty || 1) ? `Minimum order is ${product.minOrderQty || 1}` : "Decrease quantity by 1"}
                           >
                             -
                           </button>
                           <input
-                            type="number"
-                            min={product.minOrderQty || 1}
-                            max="10000"
-                            value={quantity}
-                            onChange={(e) => setQuantity(Math.max(product.minOrderQty || 1, parseInt(e.target.value, 10) || product.minOrderQty || 1))}
-                            className="w-16 text-center text-sm font-bold text-graphite bg-transparent focus:outline-hidden"
+                            type="text"
+                            inputMode="numeric"
+                            pattern="[0-9]*"
+                            value={quantityInput}
+                            onFocus={(e) => e.target.select()}
+                            onChange={(e) => {
+                              const clean = e.target.value.replace(/[^0-9]/g, "");
+                              setQuantityInput(clean);
+                              if (clean !== "") {
+                                const parsed = parseInt(clean, 10);
+                                if (!isNaN(parsed) && parsed >= (product.minOrderQty || 1)) {
+                                  setQuantity(Math.min(parsed, 99999));
+                                }
+                              }
+                            }}
+                            onBlur={() => {
+                              const min = product.minOrderQty || 1;
+                              const parsed = parseInt(quantityInput, 10);
+                              if (isNaN(parsed) || parsed < min) {
+                                setQuantity(min);
+                                setQuantityInput(String(min));
+                              } else if (parsed > 99999) {
+                                setQuantity(99999);
+                                setQuantityInput("99999");
+                              } else {
+                                setQuantity(parsed);
+                                setQuantityInput(String(parsed));
+                              }
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                e.currentTarget.blur();
+                              }
+                            }}
+                            className="w-16 text-center text-sm font-bold text-graphite bg-transparent focus:outline-hidden py-1 px-1 selection:bg-brand-blue selection:text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            aria-label="Item quantity"
+                            title="Type quantity directly (e.g. 50, 100)"
                           />
                           <button
-                            onClick={() => setQuantity(quantity + 1)}
-                            className="flex h-10 w-10 items-center justify-center text-base font-bold text-muted-foreground hover:text-foreground hover:bg-steel-light transition-colors rounded-r-xl cursor-pointer"
+                            type="button"
+                            onClick={() => {
+                              const next = Math.min(99999, quantity + 1);
+                              setQuantity(next);
+                              setQuantityInput(String(next));
+                            }}
+                            className="flex h-10 w-10 items-center justify-center text-base font-bold text-muted-foreground hover:text-foreground hover:bg-steel-light transition-colors rounded-r-xl cursor-pointer select-none"
+                            aria-label="Increase quantity"
+                            title="Increase quantity by 1"
                           >
                             +
                           </button>
