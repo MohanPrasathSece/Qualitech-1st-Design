@@ -200,6 +200,11 @@ html, body {
     opacity: 1;
     transform: none;
   }
+  @media (max-width: 768px) {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
 
 @utility marquee-track {

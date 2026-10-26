@@ -1,10 +1,17 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
-export function useInView<T extends HTMLElement>(threshold = 0.18) {
+export function useInView<T extends HTMLElement>(threshold = 0.05) {
   const ref = useRef<T | null>(null);
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(() => {
+    // Automatically make visible on mobile / small screens to prevent blank spaces
+    if (typeof window !== "undefined" && window.innerWidth <= 768) {
+      return true;
+    }
+    return false;
+  });
 
   useEffect(() => {
+    if (visible) return;
     const node = ref.current;
     if (!node) return;
     const observer = new IntersectionObserver(
@@ -16,11 +23,11 @@ export function useInView<T extends HTMLElement>(threshold = 0.18) {
           }
         });
       },
-      { threshold, rootMargin: "0px 0px -8% 0px" },
+      { threshold, rootMargin: "0px 0px 60px 0px" },
     );
     observer.observe(node);
     return () => observer.disconnect();
-  }, [threshold]);
+  }, [threshold, visible]);
 
   return { ref, visible };
 }

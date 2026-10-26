@@ -175,8 +175,8 @@ interface BusinessStructureProps {
 
 function BusinessStructure({ onNavigate }: BusinessStructureProps) {
   return (
-    <section id="business" className="surface-steel border-b border-border">
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-8 sm:py-24 lg:py-32">
+    <section id="business" className="surface-steel border-b border-border overflow-hidden w-full">
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-8 sm:py-24 lg:py-32 w-full min-w-0">
         <Reveal>
           <div className="flex items-center gap-3">
             <span className="h-px w-10 bg-brand-orange" />
@@ -190,26 +190,26 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
           </p>
         </Reveal>
 
-        <div className="mt-8 grid gap-6 sm:mt-14 sm:gap-8 lg:grid-cols-2">
+        <div className="mt-8 grid grid-cols-1 gap-6 sm:mt-14 sm:gap-8 lg:grid-cols-2 w-full min-w-0">
           {/* Card 01: Distribution */}
-          <Reveal delay={100}>
-            <article className="group relative h-full overflow-hidden rounded-xl sm:rounded-2xl border border-border bg-background transition-all duration-500 ease-[var(--ease-precise)] hover:-translate-y-2 hover:shadow-[var(--shadow-lift)] flex flex-col justify-between">
+          <Reveal delay={100} className="h-full flex flex-col w-full min-w-0 max-w-full">
+            <article className="group relative h-full w-full min-w-0 max-w-full overflow-hidden rounded-xl sm:rounded-2xl border border-border bg-background transition-all duration-500 ease-[var(--ease-precise)] hover:-translate-y-2 hover:shadow-[var(--shadow-lift)] flex flex-col justify-between">
               <span className="absolute inset-x-0 top-0 z-10 h-1 w-0 rounded-t-2xl bg-brand-blue transition-all duration-500 ease-[var(--ease-precise)] group-hover:w-full" />
 
-              <div>
-                <div className="overflow-hidden">
+              <div className="w-full min-w-0">
+                <div className="overflow-hidden w-full">
                   <img
                     src={cardConnectors}
                     alt="Authorized Distribution of Electronics Connectors"
                     loading="lazy"
                     width={900}
                     height={500}
-                    className="h-40 w-full object-cover transition-transform duration-[1200ms] ease-[var(--ease-precise)] group-hover:scale-110 sm:h-52"
+                    className="h-44 w-full object-cover transition-transform duration-[1200ms] ease-[var(--ease-precise)] group-hover:scale-110 sm:h-52"
                   />
                 </div>
 
-                <div className="p-5 sm:p-8 sm:p-10">
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+                <div className="p-5 sm:p-8 w-full min-w-0">
+                  <div className="flex items-center gap-3.5 sm:gap-4">
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand-blue/10 font-display text-base font-bold text-brand-blue sm:h-12 sm:w-12 sm:rounded-xl sm:text-lg">
                       01
                     </span>
@@ -220,18 +220,18 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                     </div>
                   </div>
 
-                  <p className="mt-5 text-[0.95rem] leading-relaxed text-muted-foreground">
+                  <p className="mt-4 text-[0.92rem] leading-relaxed text-muted-foreground sm:mt-5 sm:text-[0.95rem]">
                     Authorized distribution of premium electronics components from trusted global brands for industrial, defence, telecom, and OEM applications.
                   </p>
 
-                  <ul className="mt-5 space-y-2">
+                  <ul className="mt-4 space-y-2 sm:mt-5">
                     {[
                       "Authorized Distribution Partner for Amphenol",
                       "Authorized Distribution Partner for Zolex",
                       "100% Genuine Direct Manufacturer Sourcing",
                       "Volume Stock & Technical Design-In Support",
                     ].map((item) => (
-                      <li key={item} className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                      <li key={item} className="flex items-center gap-2.5 text-xs text-muted-foreground sm:text-sm">
                         <span className="h-1 w-1 rounded-full bg-brand-blue shrink-0" />
                         {item}
                       </li>
@@ -239,24 +239,24 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                   </ul>
 
                   {/* Partner Brand Scrolling Logos */}
-                  <div className="mt-5 overflow-hidden rounded-lg border border-border bg-steel-light/20 py-3 sm:mt-6 sm:rounded-xl sm:py-4">
-                    <div className="flex marquee-track" style={{ width: "max-content" }}>
+                  <div className="mt-5 w-full min-w-0 max-w-full overflow-hidden rounded-lg border border-border bg-steel-light/20 py-3 sm:mt-6 sm:rounded-xl sm:py-4">
+                    <div className="flex marquee-track w-max">
                       {[...Array(2)].map((_, setIdx) => (
-                        <div key={setIdx} className="flex items-center gap-8 px-4 shrink-0">
+                        <div key={setIdx} className="flex items-center gap-6 px-3 shrink-0 sm:gap-8 sm:px-4">
                           {/* Amphenol - text/icon badge */}
                           <div className="flex items-center gap-2 shrink-0 transition-all duration-300 hover:scale-105">
-                            <svg className="h-6 w-6 text-[#004f9e]" viewBox="0 0 32 32" fill="currentColor">
+                            <svg className="h-5 w-5 text-[#004f9e] sm:h-6 sm:w-6" viewBox="0 0 32 32" fill="currentColor">
                               <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" strokeWidth="2" />
                               <path d="M8 16c2-6 6-6 8 0s6 6 8 0" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
                             </svg>
-                            <span className="font-display text-sm font-extrabold text-[#004f9e]">Amphenol</span>
+                            <span className="font-display text-xs font-extrabold text-[#004f9e] sm:text-sm">Amphenol</span>
                           </div>
                           {/* Zolex - official logo */}
                           <div className="shrink-0 transition-all duration-300 hover:scale-105">
                             <img
                               src="/images/products/individual_logos_transparent/ZOLEX.png"
                               alt="Zolex"
-                              className="h-8 w-auto max-w-[100px] object-contain drop-shadow-xs"
+                              className="h-6 w-auto max-w-[80px] object-contain drop-shadow-xs sm:h-8 sm:max-w-[100px]"
                               loading="lazy"
                             />
                           </div>
@@ -266,7 +266,7 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                               <img
                                 src={`/images/products/individual_logos_transparent/${logo}.png`}
                                 alt={logo.replace(/_/g, " ")}
-                                className="h-8 w-auto max-w-[100px] object-contain drop-shadow-xs"
+                                className="h-6 w-auto max-w-[80px] object-contain drop-shadow-xs sm:h-8 sm:max-w-[100px]"
                                 loading="lazy"
                               />
                             </div>
@@ -278,11 +278,11 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                 </div>
               </div>
 
-              <div className="px-5 pb-5 sm:px-8 sm:pb-8 sm:px-10 sm:pb-10 pt-0">
+              <div className="px-5 pb-5 sm:px-8 sm:pb-8 pt-0 w-full">
                 <button
                   type="button"
                   onClick={() => onNavigate("#amphenol", true)}
-                  className="group/btn inline-flex flex-wrap items-center gap-2 font-display text-[0.65rem] font-bold uppercase tracking-[0.12em] text-brand-blue cursor-pointer sm:gap-3 sm:text-[0.72rem] sm:tracking-[0.2em]"
+                  className="group/btn inline-flex items-center gap-2.5 font-display text-[0.68rem] font-bold uppercase tracking-[0.14em] text-brand-blue cursor-pointer sm:text-[0.72rem] sm:tracking-[0.2em]"
                 >
                   Authorised & Supported Lines
                   <span className="h-px w-6 bg-brand-blue transition-all duration-300 group-hover/btn:w-14 sm:w-8" />
@@ -292,24 +292,24 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
           </Reveal>
 
           {/* Card 02: Manufacturing */}
-          <Reveal delay={200}>
-            <article className="group relative h-full overflow-hidden rounded-xl sm:rounded-2xl border border-border bg-background transition-all duration-500 ease-[var(--ease-precise)] hover:-translate-y-2 hover:shadow-[var(--shadow-lift)] flex flex-col justify-between">
+          <Reveal delay={200} className="h-full flex flex-col w-full min-w-0 max-w-full">
+            <article className="group relative h-full w-full min-w-0 max-w-full overflow-hidden rounded-xl sm:rounded-2xl border border-border bg-background transition-all duration-500 ease-[var(--ease-precise)] hover:-translate-y-2 hover:shadow-[var(--shadow-lift)] flex flex-col justify-between">
               <span className="absolute inset-x-0 top-0 z-10 h-1 w-0 rounded-t-2xl bg-brand-yellow transition-all duration-500 ease-[var(--ease-precise)] group-hover:w-full" />
 
-              <div>
-                <div className="overflow-hidden">
+              <div className="w-full min-w-0">
+                <div className="overflow-hidden w-full">
                   <img
                     src={cardCable}
                     alt="Custom cable assembly manufacturing"
                     loading="lazy"
                     width={900}
                     height={500}
-                    className="h-40 w-full object-cover transition-transform duration-[1200ms] ease-[var(--ease-precise)] group-hover:scale-110 sm:h-52"
+                    className="h-44 w-full object-cover transition-transform duration-[1200ms] ease-[var(--ease-precise)] group-hover:scale-110 sm:h-52"
                   />
                 </div>
 
-                <div className="p-5 sm:p-8 sm:p-10">
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+                <div className="p-5 sm:p-8 w-full min-w-0">
+                  <div className="flex items-center gap-3.5 sm:gap-4">
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand-yellow/20 font-display text-base font-bold text-graphite sm:h-12 sm:w-12 sm:rounded-xl sm:text-lg">
                       02
                     </span>
@@ -320,20 +320,20 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                     </div>
                   </div>
 
-                  <p className="mt-5 text-[0.95rem] leading-relaxed text-muted-foreground">
+                  <p className="mt-4 text-[0.92rem] leading-relaxed text-muted-foreground sm:mt-5 sm:text-[0.95rem]">
                     Custom wire and cable harness solutions - designed, manufactured and 100% tested to your exact OEM specifications.
                   </p>
 
-                  <ul className="mt-5 space-y-2">
+                  <ul className="mt-4 space-y-2 sm:mt-5">
                     {["Custom Cable Assemblies", "Wire Harnesses", "Application-specific Assemblies", "OEM Requirements"].map((item) => (
-                      <li key={item} className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                      <li key={item} className="flex items-center gap-2.5 text-xs text-muted-foreground sm:text-sm">
                         <span className="h-1 w-1 rounded-full bg-brand-yellow shrink-0" />
                         {item}
                       </li>
                     ))}
                   </ul>
 
-                  <div className="mt-5 p-3 rounded-lg bg-steel-light/30 border border-border sm:mt-6 sm:p-3.5 sm:rounded-xl">
+                  <div className="mt-5 p-3 rounded-lg bg-steel-light/30 border border-border sm:mt-6 sm:p-3.5 sm:rounded-xl w-full">
                     <p className="text-xs font-semibold text-graphite">
                        In-House Production &amp; Custom Assembly Floor
                     </p>
@@ -344,11 +344,11 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                 </div>
               </div>
 
-              <div className="px-5 pb-5 sm:px-8 sm:pb-8 sm:px-10 sm:pb-10 pt-0">
+              <div className="px-5 pb-5 sm:px-8 sm:pb-8 pt-0 w-full">
                 <button
                   type="button"
                   onClick={() => onNavigate("#manufacturing", true)}
-                  className="group/btn inline-flex flex-wrap items-center gap-2 font-display text-[0.65rem] font-bold uppercase tracking-[0.12em] text-graphite cursor-pointer sm:gap-3 sm:text-[0.72rem] sm:tracking-[0.2em]"
+                  className="group/btn inline-flex items-center gap-2.5 font-display text-[0.68rem] font-bold uppercase tracking-[0.14em] text-graphite cursor-pointer sm:text-[0.72rem] sm:tracking-[0.2em]"
                 >
                   Explore Manufacturing Capabilities
                   <span className="h-px w-6 bg-graphite transition-all duration-300 group-hover/btn:w-14 sm:w-8" />
