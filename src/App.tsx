@@ -73,7 +73,7 @@ function Hero({ onNavigate }: { onNavigate?: (target: string) => void }) {
 
           <Reveal delay={220}>
             <p className="mt-6 max-w-xl font-display text-base font-semibold text-graphite sm:text-lg">
-              Distribution of Electronics Components &amp; Manufacturing of Cable Assemblies
+              Distribution of Electronics Connectors &amp; Manufacturing of Cable Assemblies
             </p>
           </Reveal>
 
@@ -200,7 +200,7 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                 <div className="overflow-hidden">
                   <img
                     src={cardConnectors}
-                    alt="Authorized Distribution of Electronics Components"
+                    alt="Authorized Distribution of Electronics Connectors"
                     loading="lazy"
                     width={900}
                     height={500}
@@ -215,7 +215,7 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                     </span>
                     <div>
                       <h3 className="font-display text-xl font-bold text-graphite sm:text-2xl">
-                        Distribution of Electronics Components
+                        Distribution of Electronics Connectors
                       </h3>
                     </div>
                   </div>
@@ -282,7 +282,7 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                   onClick={() => onNavigate("#amphenol", true)}
                   className="group/btn inline-flex items-center gap-3 font-display text-[0.72rem] font-bold uppercase tracking-[0.2em] text-brand-blue cursor-pointer"
                 >
-                  Explore Distribution Lines
+                  Authorised & Supported Lines
                   <span className="h-px w-8 bg-brand-blue transition-all duration-300 group-hover/btn:w-14" />
                 </button>
               </div>
@@ -657,7 +657,7 @@ function ProductsOverview({ onNavigate }: ProductsOverviewProps) {
             <div className="group relative flex h-72 overflow-hidden rounded-2xl border border-border bg-graphite-deep transition-all duration-500 hover:shadow-[var(--shadow-lift)]">
               <img
                 src={cardConnectors}
-                alt="Distribution of Electronics Components"
+                alt="Distribution of Electronics Connectors"
                 loading="lazy"
                 className="absolute inset-0 h-full w-full object-cover opacity-35 transition-transform duration-[1200ms] group-hover:scale-110"
               />

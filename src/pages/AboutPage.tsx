@@ -64,7 +64,7 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
               </span>
             </div>
             <h1 className="mt-5 max-w-3xl font-display text-3xl font-bold leading-[1.15] text-white sm:text-4xl lg:text-5xl">
-              Precision Engineering &amp; Component Distribution Since 1995
+              Precision Engineering &amp; Connector Distribution Since 1995
             </h1>
             <p className="mt-5 max-w-2xl text-[0.95rem] leading-relaxed text-steel">
               For three decades, Qualitech Connectronics Private Limited has been a trusted partner to OEMs across India - delivering high-precision custom cable assemblies and authorized distribution of world-class electronics components.

@@ -238,7 +238,7 @@ export function ManufacturingPage({ onNavigate }: ManufacturingPageProps) {
             <div className="max-w-xl">
               <span className="text-xs font-bold uppercase tracking-widest text-brand-yellow">Quality Assurance</span>
               <h3 className="mt-3 font-display text-2xl sm:text-3xl font-bold">
-                100% Electrically Tested Before Dispatch
+                100% Tested Before Dispatch
               </h3>
               <p className="mt-3 text-sm text-steel leading-relaxed">
                 Every wire harness and custom assembly produced by Qualitech undergoes automated continuity, pin-out verification, pull-force verification, and high-voltage dielectric tests.

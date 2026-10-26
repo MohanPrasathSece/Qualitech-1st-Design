@@ -54,7 +54,7 @@ export function Footer({ onNavigate }: FooterProps) {
               />
             </div>
             <p className="mt-4 font-display text-base sm:text-lg font-bold text-background leading-snug">
-              Distribution of Electronics Components<br />+ Manufacturing of Cable Assemblies
+              Distribution of Electronics Connectors<br />+ Manufacturing of Cable Assemblies
             </p>
             <div className="mt-5 space-y-3.5 text-sm sm:text-base text-steel">
               <a
