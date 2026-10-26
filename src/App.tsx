@@ -176,13 +176,13 @@ interface BusinessStructureProps {
 function BusinessStructure({ onNavigate }: BusinessStructureProps) {
   return (
     <section id="business" className="surface-steel border-b border-border">
-      <div className="mx-auto max-w-7xl px-5 py-24 sm:px-8 lg:py-32">
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-8 sm:py-24 lg:py-32">
         <Reveal>
           <div className="flex items-center gap-3">
             <span className="h-px w-10 bg-brand-orange" />
             <span className="label-eyebrow">What We Do</span>
           </div>
-          <h2 className="mt-7 max-w-3xl font-display text-3xl font-bold leading-tight text-graphite sm:text-4xl lg:text-[2.75rem]">
+          <h2 className="mt-5 max-w-3xl font-display text-2xl font-bold leading-tight text-graphite sm:mt-7 sm:text-4xl lg:text-[2.75rem]">
             Core Solutions &amp; Capabilities
           </h2>
           <p className="mt-4 max-w-2xl text-[0.95rem] leading-relaxed text-muted-foreground">
@@ -190,10 +190,10 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
           </p>
         </Reveal>
 
-        <div className="mt-14 grid gap-8 lg:grid-cols-2">
+        <div className="mt-8 grid gap-6 sm:mt-14 sm:gap-8 lg:grid-cols-2">
           {/* Card 01: Distribution */}
           <Reveal delay={100}>
-            <article className="group relative h-full overflow-hidden rounded-2xl border border-border bg-background transition-all duration-500 ease-[var(--ease-precise)] hover:-translate-y-2 hover:shadow-[var(--shadow-lift)] flex flex-col justify-between">
+            <article className="group relative h-full overflow-hidden rounded-xl sm:rounded-2xl border border-border bg-background transition-all duration-500 ease-[var(--ease-precise)] hover:-translate-y-2 hover:shadow-[var(--shadow-lift)] flex flex-col justify-between">
               <span className="absolute inset-x-0 top-0 z-10 h-1 w-0 rounded-t-2xl bg-brand-blue transition-all duration-500 ease-[var(--ease-precise)] group-hover:w-full" />
 
               <div>
@@ -204,17 +204,17 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                     loading="lazy"
                     width={900}
                     height={500}
-                    className="h-52 w-full object-cover transition-transform duration-[1200ms] ease-[var(--ease-precise)] group-hover:scale-110"
+                    className="h-40 w-full object-cover transition-transform duration-[1200ms] ease-[var(--ease-precise)] group-hover:scale-110 sm:h-52"
                   />
                 </div>
 
-                <div className="p-8 sm:p-10">
-                  <div className="flex items-center gap-4">
-                    <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-blue/10 font-display text-lg font-bold text-brand-blue">
+                <div className="p-5 sm:p-8 sm:p-10">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand-blue/10 font-display text-base font-bold text-brand-blue sm:h-12 sm:w-12 sm:rounded-xl sm:text-lg">
                       01
                     </span>
                     <div>
-                      <h3 className="font-display text-xl font-bold text-graphite sm:text-2xl">
+                      <h3 className="font-display text-lg font-bold leading-snug text-graphite sm:text-xl sm:text-2xl">
                         Distribution of Electronics Connectors
                       </h3>
                     </div>
@@ -239,7 +239,7 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                   </ul>
 
                   {/* Partner Brand Scrolling Logos */}
-                  <div className="mt-6 overflow-hidden rounded-xl border border-border bg-steel-light/20 py-4">
+                  <div className="mt-5 overflow-hidden rounded-lg border border-border bg-steel-light/20 py-3 sm:mt-6 sm:rounded-xl sm:py-4">
                     <div className="flex marquee-track" style={{ width: "max-content" }}>
                       {[...Array(2)].map((_, setIdx) => (
                         <div key={setIdx} className="flex items-center gap-8 px-4 shrink-0">
@@ -278,14 +278,14 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                 </div>
               </div>
 
-              <div className="px-8 pb-8 sm:px-10 sm:pb-10 pt-0">
+              <div className="px-5 pb-5 sm:px-8 sm:pb-8 sm:px-10 sm:pb-10 pt-0">
                 <button
                   type="button"
                   onClick={() => onNavigate("#amphenol", true)}
-                  className="group/btn inline-flex items-center gap-3 font-display text-[0.72rem] font-bold uppercase tracking-[0.2em] text-brand-blue cursor-pointer"
+                  className="group/btn inline-flex flex-wrap items-center gap-2 font-display text-[0.65rem] font-bold uppercase tracking-[0.12em] text-brand-blue cursor-pointer sm:gap-3 sm:text-[0.72rem] sm:tracking-[0.2em]"
                 >
                   Authorised & Supported Lines
-                  <span className="h-px w-8 bg-brand-blue transition-all duration-300 group-hover/btn:w-14" />
+                  <span className="h-px w-6 bg-brand-blue transition-all duration-300 group-hover/btn:w-14 sm:w-8" />
                 </button>
               </div>
             </article>
@@ -293,7 +293,7 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
 
           {/* Card 02: Manufacturing */}
           <Reveal delay={200}>
-            <article className="group relative h-full overflow-hidden rounded-2xl border border-border bg-background transition-all duration-500 ease-[var(--ease-precise)] hover:-translate-y-2 hover:shadow-[var(--shadow-lift)] flex flex-col justify-between">
+            <article className="group relative h-full overflow-hidden rounded-xl sm:rounded-2xl border border-border bg-background transition-all duration-500 ease-[var(--ease-precise)] hover:-translate-y-2 hover:shadow-[var(--shadow-lift)] flex flex-col justify-between">
               <span className="absolute inset-x-0 top-0 z-10 h-1 w-0 rounded-t-2xl bg-brand-yellow transition-all duration-500 ease-[var(--ease-precise)] group-hover:w-full" />
 
               <div>
@@ -304,17 +304,17 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                     loading="lazy"
                     width={900}
                     height={500}
-                    className="h-52 w-full object-cover transition-transform duration-[1200ms] ease-[var(--ease-precise)] group-hover:scale-110"
+                    className="h-40 w-full object-cover transition-transform duration-[1200ms] ease-[var(--ease-precise)] group-hover:scale-110 sm:h-52"
                   />
                 </div>
 
-                <div className="p-8 sm:p-10">
-                  <div className="flex items-center gap-4">
-                    <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-yellow/20 font-display text-lg font-bold text-graphite">
+                <div className="p-5 sm:p-8 sm:p-10">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand-yellow/20 font-display text-base font-bold text-graphite sm:h-12 sm:w-12 sm:rounded-xl sm:text-lg">
                       02
                     </span>
                     <div>
-                      <h3 className="font-display text-xl font-bold text-graphite sm:text-2xl">
+                      <h3 className="font-display text-lg font-bold leading-snug text-graphite sm:text-xl sm:text-2xl">
                         Manufacturing of Cable Assemblies
                       </h3>
                     </div>
@@ -333,7 +333,7 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                     ))}
                   </ul>
 
-                  <div className="mt-6 p-3.5 rounded-xl bg-steel-light/30 border border-border">
+                  <div className="mt-5 p-3 rounded-lg bg-steel-light/30 border border-border sm:mt-6 sm:p-3.5 sm:rounded-xl">
                     <p className="text-xs font-semibold text-graphite">
                        In-House Production &amp; Custom Assembly Floor
                     </p>
@@ -344,14 +344,14 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                 </div>
               </div>
 
-              <div className="px-8 pb-8 sm:px-10 sm:pb-10 pt-0">
+              <div className="px-5 pb-5 sm:px-8 sm:pb-8 sm:px-10 sm:pb-10 pt-0">
                 <button
                   type="button"
                   onClick={() => onNavigate("#manufacturing", true)}
-                  className="group/btn inline-flex items-center gap-3 font-display text-[0.72rem] font-bold uppercase tracking-[0.2em] text-graphite cursor-pointer"
+                  className="group/btn inline-flex flex-wrap items-center gap-2 font-display text-[0.65rem] font-bold uppercase tracking-[0.12em] text-graphite cursor-pointer sm:gap-3 sm:text-[0.72rem] sm:tracking-[0.2em]"
                 >
                   Explore Manufacturing Capabilities
-                  <span className="h-px w-8 bg-graphite transition-all duration-300 group-hover/btn:w-14" />
+                  <span className="h-px w-6 bg-graphite transition-all duration-300 group-hover/btn:w-14 sm:w-8" />
                 </button>
               </div>
             </article>
