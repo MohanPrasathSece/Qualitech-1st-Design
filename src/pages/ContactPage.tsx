@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Instagram, Facebook, Linkedin } from "lucide-react";
 import { Reveal } from "@/components/site/reveal";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
@@ -361,6 +362,53 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                       >
                         info@qualitechindia.in
                       </a>
+                    </div>
+
+                    <div>
+                      <p className="text-[0.65rem] font-bold uppercase tracking-wider text-muted-foreground">
+                        Official Social Profiles
+                      </p>
+                      <div className="mt-2.5 flex flex-wrap gap-2.5">
+                        <a
+                          href="https://www.linkedin.com/company/144969118/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group inline-flex items-center gap-2.5 rounded-xl border border-sky-200/80 bg-sky-50/70 px-3.5 py-2.5 text-xs font-semibold text-slate-800 transition-all hover:bg-sky-100 hover:border-sky-300 hover:shadow-xs hover:scale-[1.02]"
+                          title="Connect with Qualitech on LinkedIn"
+                        >
+                          <Linkedin className="h-4 w-4 text-[#0a66c2] group-hover:scale-110 transition-transform" />
+                          <div className="flex flex-col text-left">
+                            <span className="leading-tight">LinkedIn</span>
+                            <span className="text-[0.65rem] text-slate-500 font-normal">Qualitech Company</span>
+                          </div>
+                        </a>
+                        <a
+                          href="https://www.instagram.com/qualitechindia/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group inline-flex items-center gap-2.5 rounded-xl border border-pink-200/80 bg-pink-50/70 px-3.5 py-2.5 text-xs font-semibold text-slate-800 transition-all hover:bg-pink-100 hover:border-pink-300 hover:shadow-xs hover:scale-[1.02]"
+                          title="Follow @qualitechindia on Instagram"
+                        >
+                          <Instagram className="h-4 w-4 text-[#e1306c] group-hover:scale-110 transition-transform" />
+                          <div className="flex flex-col text-left">
+                            <span className="leading-tight">Instagram</span>
+                            <span className="text-[0.65rem] text-slate-500 font-normal">@qualitechindia</span>
+                          </div>
+                        </a>
+                        <a
+                          href="https://www.facebook.com/profile.php?id=61594403875090"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group inline-flex items-center gap-2.5 rounded-xl border border-blue-200/80 bg-blue-50/70 px-3.5 py-2.5 text-xs font-semibold text-slate-800 transition-all hover:bg-blue-100 hover:border-blue-300 hover:shadow-xs hover:scale-[1.02]"
+                          title="Connect with Qualitech on Facebook"
+                        >
+                          <Facebook className="h-4 w-4 text-[#1877f2] group-hover:scale-110 transition-transform" />
+                          <div className="flex flex-col text-left">
+                            <span className="leading-tight">Facebook</span>
+                            <span className="text-[0.65rem] text-slate-500 font-normal">Qualitech Profile</span>
+                          </div>
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>

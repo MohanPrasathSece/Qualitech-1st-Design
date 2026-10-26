@@ -1,3 +1,5 @@
+import { Instagram, Facebook, Linkedin } from "lucide-react";
+
 export interface NavItem {
   label: string;
   href: string;
@@ -98,6 +100,48 @@ export function Footer({ onNavigate }: FooterProps) {
                   </a>
                 </p>
               </div>
+
+              {/* Social Profiles */}
+              <div className="pt-2">
+                <p className="font-display text-[0.68rem] font-bold uppercase tracking-[0.18em] text-background/80 mb-2.5">
+                  Follow Us
+                </p>
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <a
+                    href="https://www.linkedin.com/company/144969118/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex items-center gap-2 rounded-lg bg-white/5 border border-white/10 px-3 py-1.5 text-xs font-semibold text-steel transition-all duration-200 hover:border-[#0a66c2]/50 hover:bg-[#0a66c2]/15 hover:text-background"
+                    title="Follow Qualitech on LinkedIn"
+                    aria-label="Qualitech on LinkedIn"
+                  >
+                    <Linkedin className="h-4 w-4 text-[#0a66c2] group-hover:scale-110 transition-transform" />
+                    <span>LinkedIn</span>
+                  </a>
+                  <a
+                    href="https://www.instagram.com/qualitechindia/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex items-center gap-2 rounded-lg bg-white/5 border border-white/10 px-3 py-1.5 text-xs font-semibold text-steel transition-all duration-200 hover:border-pink-500/50 hover:bg-[#e1306c]/15 hover:text-background"
+                    title="Follow Qualitech on Instagram"
+                    aria-label="Instagram @qualitechindia"
+                  >
+                    <Instagram className="h-4 w-4 text-[#e1306c] group-hover:scale-110 transition-transform" />
+                    <span>Instagram</span>
+                  </a>
+                  <a
+                    href="https://www.facebook.com/profile.php?id=61594403875090"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex items-center gap-2 rounded-lg bg-white/5 border border-white/10 px-3 py-1.5 text-xs font-semibold text-steel transition-all duration-200 hover:border-blue-500/50 hover:bg-[#1877f2]/15 hover:text-background"
+                    title="Follow Qualitech on Facebook"
+                    aria-label="Qualitech on Facebook"
+                  >
+                    <Facebook className="h-4 w-4 text-[#1877f2] group-hover:scale-110 transition-transform" />
+                    <span>Facebook</span>
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -193,9 +237,42 @@ export function Footer({ onNavigate }: FooterProps) {
             </button>
           </div>
 
-          <p className="font-display text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-steel/80">
-            Est. 1995 · Hyderabad, India
-          </p>
+          <div className="flex items-center gap-3">
+            <a
+              href="https://www.linkedin.com/company/144969118/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-steel hover:text-[#0a66c2] transition-colors p-1"
+              aria-label="Qualitech on LinkedIn"
+              title="LinkedIn"
+            >
+              <Linkedin className="h-4 w-4" />
+            </a>
+            <a
+              href="https://www.instagram.com/qualitechindia/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-steel hover:text-[#e1306c] transition-colors p-1"
+              aria-label="Instagram @qualitechindia"
+              title="Instagram @qualitechindia"
+            >
+              <Instagram className="h-4 w-4" />
+            </a>
+            <a
+              href="https://www.facebook.com/profile.php?id=61594403875090"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-steel hover:text-[#1877f2] transition-colors p-1"
+              aria-label="Qualitech on Facebook"
+              title="Facebook"
+            >
+              <Facebook className="h-4 w-4" />
+            </a>
+            <span className="text-steel/40 hidden sm:inline">•</span>
+            <p className="font-display text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-steel/80">
+              Est. 1995 · Hyderabad, India
+            </p>
+          </div>
         </div>
       </div>
     </footer>
