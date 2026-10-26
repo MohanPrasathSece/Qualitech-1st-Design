@@ -251,15 +251,17 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                             </svg>
                             <span className="font-display text-sm font-extrabold text-[#004f9e]">Amphenol</span>
                           </div>
-                          {/* Zolex - text/icon badge */}
-                          <div className="flex items-center gap-2 shrink-0 transition-all duration-300 hover:scale-105">
-                            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-brand-blue text-white font-display font-extrabold text-[0.6rem]">
-                              Z
-                            </div>
-                            <span className="font-display text-sm font-extrabold text-graphite">Zolex</span>
+                          {/* Zolex - official logo */}
+                          <div className="shrink-0 transition-all duration-300 hover:scale-105">
+                            <img
+                              src="/images/products/individual_logos_transparent/ZOLEX.png"
+                              alt="Zolex"
+                              className="h-8 w-auto max-w-[100px] object-contain drop-shadow-xs"
+                              loading="lazy"
+                            />
                           </div>
                           {/* Individual brand logos in full color */}
-                          {["BOYU", "EDGE_CONNECT", "ESSEN", "HDZ", "HXXH", "NINKO", "OmTen", "SFA", "SUNCHU", "WEICH", "XHF", "XINYA"].map((logo) => (
+                          {["BOYU", "EDGE_CONNECT", "HDZ", "HXXH", "NINKO", "OmTen", "SFA", "SUNCHU", "WEICH", "XHF", "XINYA"].map((logo) => (
                             <div key={logo} className="shrink-0 transition-all duration-300 hover:scale-105">
                               <img
                                 src={`/images/products/individual_logos_transparent/${logo}.png`}
