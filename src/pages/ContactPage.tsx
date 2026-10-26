@@ -91,20 +91,20 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
       <Header onNavigate={onNavigate} currentPage="contact" />
 
       {/* ─── Hero Banner ─── */}
-      <section className="bg-graphite-deep text-white px-5 sm:px-8 pt-28 sm:pt-36 pb-16 sm:pb-20 border-b border-border/20 relative overflow-hidden">
+      <section className="bg-graphite-deep text-white px-4 sm:px-8 pt-24 sm:pt-36 pb-12 sm:pb-20 border-b border-border/20 relative overflow-hidden w-full">
         <div className="absolute inset-0 hairline-grid opacity-25 pointer-events-none" />
-        <div className="relative mx-auto max-w-7xl">
-          <Reveal>
+        <div className="relative mx-auto max-w-7xl w-full min-w-0">
+          <Reveal className="w-full min-w-0 max-w-full">
             <div className="flex items-center gap-3">
-              <span className="h-px w-10 bg-brand-yellow" />
-              <span className="font-display text-[0.68rem] font-bold uppercase tracking-[0.22em] text-steel">
+              <span className="h-px w-10 bg-brand-yellow shrink-0" />
+              <span className="font-display text-[0.65rem] sm:text-[0.68rem] font-bold uppercase tracking-[0.2em] text-steel">
                 Get In Touch
               </span>
             </div>
-            <h1 className="mt-5 max-w-3xl font-display text-3xl font-bold leading-[1.15] text-white sm:text-4xl lg:text-5xl">
+            <h1 className="mt-4 sm:mt-5 max-w-3xl font-display text-2xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl break-words">
               Contact Qualitech Connectronics
             </h1>
-            <p className="mt-5 max-w-2xl text-[0.95rem] leading-relaxed text-steel">
+            <p className="mt-3 sm:mt-5 max-w-2xl text-[0.88rem] sm:text-[0.95rem] leading-relaxed text-steel">
               Have an enquiry regarding Amphenol or Zolex components, or require a custom cable assembly quote? Our engineering team is ready to assist you.
             </p>
           </Reveal>
@@ -112,46 +112,46 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
       </section>
 
       {/* ─── Contact Form & Information ─── */}
-      <section className="py-20 lg:py-28 bg-white border-b border-border">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8">
-          <div className="grid gap-14 lg:grid-cols-[1.1fr_0.9fr] items-start">
+      <section className="py-12 sm:py-20 lg:py-28 bg-white border-b border-border w-full overflow-hidden">
+        <div className="mx-auto max-w-7xl px-4 sm:px-8 w-full min-w-0">
+          <div className="grid grid-cols-1 gap-10 lg:gap-14 lg:grid-cols-[1.1fr_0.9fr] items-start w-full min-w-0">
             {/* Form */}
-            <Reveal>
-              <div className="rounded-3xl border border-border bg-[#fafbfc] p-6 sm:p-10 shadow-sm">
-                <span className="text-[0.68rem] font-bold uppercase tracking-wider text-brand-blue">
+            <Reveal className="w-full min-w-0 max-w-full">
+              <div className="rounded-2xl sm:rounded-3xl border border-border bg-[#fafbfc] p-4 sm:p-8 lg:p-10 shadow-sm w-full min-w-0">
+                <span className="text-[0.65rem] sm:text-[0.68rem] font-bold uppercase tracking-wider text-brand-blue">
                   Online Enquiry Form
                 </span>
-                <h2 className="mt-2 font-display text-2xl font-bold text-graphite sm:text-3xl">
+                <h2 className="mt-1.5 sm:mt-2 font-display text-xl sm:text-2xl lg:text-3xl font-bold text-graphite">
                   Send Us Your Requirement
                 </h2>
-                <p className="mt-2 text-xs sm:text-sm text-muted-foreground">
+                <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-muted-foreground">
                   Fill in your details and project requirements. We typically respond within 1 business day.
                 </p>
 
                 {formSubmitted ? (
-                  <div className="mt-8 rounded-2xl border border-green-200 bg-green-50 p-8 text-center animate-in fade-in zoom-in-95 duration-300">
-                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-500 text-white shadow-md">
+                  <div className="mt-6 sm:mt-8 rounded-xl sm:rounded-2xl border border-green-200 bg-green-50 p-5 sm:p-8 text-center animate-in fade-in zoom-in-95 duration-300 w-full min-w-0">
+                    <div className="mx-auto flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-green-500 text-white shadow-md">
                       <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
-                    <h3 className="mt-4 font-display text-lg font-bold text-green-900">
+                    <h3 className="mt-4 font-display text-base sm:text-lg font-bold text-green-900">
                       Requirement Received!
                     </h3>
                     <p className="mt-2 text-xs text-green-700 max-w-md mx-auto">
                       Thank you for contacting Qualitech Connectronics. Your enquiry has been registered and routed to our applications engineering desk.
                     </p>
 
-                    <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+                    <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 w-full">
                       <button
                         type="button"
                         onClick={handleDownloadPDF}
-                        className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-blue px-5 py-2.5 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-graphite transition-all shadow-sm cursor-pointer"
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-brand-blue px-4 py-2.5 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-graphite transition-all shadow-sm cursor-pointer"
                       >
-                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
-                        <span>Download Formal RFQ Estimate (PDF)</span>
+                        <span className="truncate">Download Formal Estimate (PDF)</span>
                       </button>
 
                       <button
@@ -167,16 +167,16 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                             message: "",
                           });
                         }}
-                        className="rounded-xl border border-green-300 bg-white px-4 py-2.5 text-xs font-bold text-green-800 hover:bg-green-100/60 transition-colors cursor-pointer"
+                        className="w-full sm:w-auto rounded-xl border border-green-300 bg-white px-4 py-2.5 text-xs font-bold text-green-800 hover:bg-green-100/60 transition-colors cursor-pointer text-center"
                       >
                         Submit Another Requirement
                       </button>
                     </div>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="mt-8 space-y-4">
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <div>
+                  <form onSubmit={handleSubmit} className="mt-6 sm:mt-8 space-y-4 w-full min-w-0">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 w-full min-w-0">
+                      <div className="w-full min-w-0">
                         <label className="block text-xs font-semibold text-graphite mb-1.5">
                           Your Name *
                         </label>
@@ -186,11 +186,11 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                           value={formData.name}
                           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                           placeholder="e.g. Ramesh Kumar"
-                          className="w-full rounded-xl border border-border bg-white px-3.5 py-2.5 text-xs sm:text-sm text-graphite placeholder:text-muted-foreground/60 focus:border-brand-blue focus:outline-none"
+                          className="w-full min-w-0 rounded-xl border border-border bg-white px-3.5 py-2.5 text-xs sm:text-sm text-graphite placeholder:text-muted-foreground/60 focus:border-brand-blue focus:outline-none"
                         />
                       </div>
 
-                      <div>
+                      <div className="w-full min-w-0">
                         <label className="block text-xs font-semibold text-graphite mb-1.5">
                           Email Address *
                         </label>
@@ -200,13 +200,13 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                           value={formData.email}
                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                           placeholder="ramesh@company.com"
-                          className="w-full rounded-xl border border-border bg-white px-3.5 py-2.5 text-xs sm:text-sm text-graphite placeholder:text-muted-foreground/60 focus:border-brand-blue focus:outline-none"
+                          className="w-full min-w-0 rounded-xl border border-border bg-white px-3.5 py-2.5 text-xs sm:text-sm text-graphite placeholder:text-muted-foreground/60 focus:border-brand-blue focus:outline-none"
                         />
                       </div>
                     </div>
 
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <div>
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 w-full min-w-0">
+                      <div className="w-full min-w-0">
                         <label className="block text-xs font-semibold text-graphite mb-1.5">
                           Phone Number *
                         </label>
@@ -216,11 +216,11 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                           value={formData.phone}
                           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                           placeholder="+91 98765 43210"
-                          className="w-full rounded-xl border border-border bg-white px-3.5 py-2.5 text-xs sm:text-sm text-graphite placeholder:text-muted-foreground/60 focus:border-brand-blue focus:outline-none"
+                          className="w-full min-w-0 rounded-xl border border-border bg-white px-3.5 py-2.5 text-xs sm:text-sm text-graphite placeholder:text-muted-foreground/60 focus:border-brand-blue focus:outline-none"
                         />
                       </div>
 
-                      <div>
+                      <div className="w-full min-w-0">
                         <label className="block text-xs font-semibold text-graphite mb-1.5">
                           Company / Organization
                         </label>
@@ -229,16 +229,16 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                           value={formData.company}
                           onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                           placeholder="Company Name"
-                          className="w-full rounded-xl border border-border bg-white px-3.5 py-2.5 text-xs sm:text-sm text-graphite placeholder:text-muted-foreground/60 focus:border-brand-blue focus:outline-none"
+                          className="w-full min-w-0 rounded-xl border border-border bg-white px-3.5 py-2.5 text-xs sm:text-sm text-graphite placeholder:text-muted-foreground/60 focus:border-brand-blue focus:outline-none"
                         />
                       </div>
                     </div>
 
-                    <div>
+                    <div className="w-full min-w-0">
                       <label className="block text-xs font-semibold text-graphite mb-1.5">
                         Attach File (Datasheet, Technical Drawing or BOM)
                       </label>
-                      <div className="relative">
+                      <div className="relative w-full min-w-0">
                         <input
                           type="file"
                           id="rfq-file-upload"
@@ -248,19 +248,19 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                         />
                         <label
                           htmlFor="rfq-file-upload"
-                          className="flex items-center justify-between rounded-xl border border-dashed border-border bg-white px-3.5 py-3 text-xs text-muted-foreground hover:border-brand-blue hover:bg-brand-blue/5 transition-all cursor-pointer"
+                          className="flex items-center justify-between rounded-xl border border-dashed border-border bg-white p-3 text-xs text-muted-foreground hover:border-brand-blue hover:bg-brand-blue/5 transition-all cursor-pointer w-full min-w-0 gap-2"
                         >
-                          <div className="flex items-center gap-2.5 min-w-0">
+                          <div className="flex items-center gap-2 min-w-0 overflow-hidden">
                             <svg className="h-5 w-5 text-brand-blue shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                               <path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                             </svg>
                             {attachedFile ? (
-                              <span className="font-semibold text-graphite truncate">
+                              <span className="font-semibold text-graphite truncate text-xs">
                                 {attachedFile.name} ({(attachedFile.size / 1024).toFixed(1)} KB)
                               </span>
                             ) : (
-                              <span className="text-muted-foreground truncate">
-                                Click to attach drawing, BOM or spec (PDF, CAD, Images, Excel)
+                              <span className="text-muted-foreground truncate text-[0.72rem] sm:text-xs">
+                                Attach drawing, BOM or spec
                               </span>
                             )}
                           </div>
@@ -272,20 +272,20 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                                 e.stopPropagation();
                                 setAttachedFile(null);
                               }}
-                              className="ml-2 text-xs font-bold text-red-500 hover:text-red-700 shrink-0"
+                              className="text-xs font-bold text-red-500 hover:text-red-700 shrink-0"
                             >
                               Remove
                             </button>
                           ) : (
-                            <span className="ml-2 rounded-lg bg-steel-light px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-wider text-graphite shrink-0">
-                              + Add File
+                            <span className="rounded-lg bg-steel-light px-2.5 py-1 text-[0.62rem] sm:text-[0.65rem] font-bold uppercase tracking-wider text-graphite shrink-0">
+                              + Add
                             </span>
                           )}
                         </label>
                       </div>
                     </div>
 
-                    <div>
+                    <div className="w-full min-w-0">
                       <label className="block text-xs font-semibold text-graphite mb-1.5">
                         Message &amp; Technical Specifications
                       </label>
@@ -295,7 +295,7 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                         placeholder="Please describe your application, required part numbers, pin count, estimated quantities, or timeline..."
-                        className="w-full rounded-xl border border-border bg-white px-3.5 py-2.5 text-xs sm:text-sm text-graphite placeholder:text-muted-foreground/60 focus:border-brand-blue focus:outline-none"
+                        className="w-full min-w-0 rounded-xl border border-border bg-white px-3.5 py-2.5 text-xs sm:text-sm text-graphite placeholder:text-muted-foreground/60 focus:border-brand-blue focus:outline-none"
                       />
                     </div>
 
@@ -306,7 +306,7 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                     >
                       {isSubmitting ? (
                         <>
-                          <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                          <svg className="h-4 w-4 animate-spin shrink-0" viewBox="0 0 24 24" fill="none">
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth={4} />
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
                           </svg>
@@ -322,30 +322,30 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
             </Reveal>
 
             {/* Direct Contact Details */}
-            <div className="space-y-6">
-              <Reveal delay={120}>
-                <div className="rounded-3xl border border-border bg-[#fafbfc] p-6 sm:p-8">
-                  <span className="text-[0.68rem] font-bold uppercase tracking-wider text-brand-orange">
+            <div className="space-y-6 w-full min-w-0 max-w-full">
+              <Reveal delay={120} className="w-full min-w-0 max-w-full">
+                <div className="rounded-2xl sm:rounded-3xl border border-border bg-[#fafbfc] p-4 sm:p-8 w-full min-w-0">
+                  <span className="text-[0.65rem] sm:text-[0.68rem] font-bold uppercase tracking-wider text-brand-orange">
                     Corporate Office &amp; Works
                   </span>
-                  <h3 className="mt-2 font-display text-xl font-bold text-graphite">
+                  <h3 className="mt-1.5 sm:mt-2 font-display text-lg sm:text-xl font-bold text-graphite break-words">
                     Qualitech Connectronics Private Limited
                   </h3>
-                  <div className="mt-4 space-y-2 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                  <div className="mt-4 space-y-1.5 text-xs sm:text-sm text-muted-foreground leading-relaxed">
                     <p className="font-semibold text-graphite">Corporate Office &amp; Works:</p>
                     <p>Plot No. 37/B, Phase-V, IDA, Cherlapally,</p>
                     <p>Hyderabad, Medchal-Malkajgiri,</p>
                     <p>Telangana - 500051, India</p>
                   </div>
 
-                  <div className="mt-6 border-t border-border pt-6 space-y-4">
+                  <div className="mt-5 sm:mt-6 border-t border-border pt-5 sm:pt-6 space-y-4">
                     <div>
                       <p className="text-[0.65rem] font-bold uppercase tracking-wider text-muted-foreground">
                         Direct Phone
                       </p>
                       <a
                         href="tel:+919849001484"
-                        className="mt-1 block font-display text-lg font-bold text-graphite hover:text-brand-blue transition-colors"
+                        className="mt-1 block font-display text-base sm:text-lg font-bold text-graphite hover:text-brand-blue transition-colors"
                       >
                         +91 98490 01484
                       </a>
@@ -357,7 +357,7 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                       </p>
                       <a
                         href="mailto:info@qualitechindia.in"
-                        className="mt-1 block font-display text-base font-bold text-brand-blue hover:underline"
+                        className="mt-1 block font-display text-sm sm:text-base font-bold text-brand-blue hover:underline break-all"
                       >
                         info@qualitechindia.in
                       </a>
@@ -366,34 +366,34 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                 </div>
               </Reveal>
 
-              <Reveal delay={200}>
-                <div className="rounded-3xl border border-border bg-graphite-deep text-white p-6 sm:p-8">
-                  <h4 className="font-display text-base font-bold text-white">
+              <Reveal delay={200} className="w-full min-w-0 max-w-full">
+                <div className="rounded-2xl sm:rounded-3xl border border-border bg-graphite-deep text-white p-4 sm:p-8 w-full min-w-0">
+                  <h4 className="font-display text-sm sm:text-base font-bold text-white">
                     Looking for Component Catalogs?
                   </h4>
                   <p className="mt-2 text-xs text-steel leading-relaxed">
                     Check our dedicated product sections or visit the official portals for Amphenol and Zolex.
                   </p>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      <button
-                        onClick={() => onNavigate("#amphenol", true)}
-                        className="rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/20 transition-colors cursor-pointer"
-                      >
-                        Amphenol Page →
-                      </button>
-                      <button
-                        onClick={() => onNavigate("#zolex", true)}
-                        className="rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/20 transition-colors cursor-pointer"
-                      >
-                        Zolex Page →
-                      </button>
-                      <button
-                        onClick={() => onNavigate("#manufacturing", true)}
-                        className="rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/20 transition-colors cursor-pointer"
-                      >
-                        Manufacturing Page →
-                      </button>
-                    </div>
+                  <div className="mt-4 flex flex-wrap gap-2 w-full">
+                    <button
+                      onClick={() => onNavigate("#amphenol", true)}
+                      className="rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/20 transition-colors cursor-pointer"
+                    >
+                      Amphenol Page →
+                    </button>
+                    <button
+                      onClick={() => onNavigate("#zolex", true)}
+                      className="rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/20 transition-colors cursor-pointer"
+                    >
+                      Zolex Page →
+                    </button>
+                    <button
+                      onClick={() => onNavigate("#manufacturing", true)}
+                      className="rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/20 transition-colors cursor-pointer"
+                    >
+                      Manufacturing Page →
+                    </button>
+                  </div>
                 </div>
               </Reveal>
             </div>
