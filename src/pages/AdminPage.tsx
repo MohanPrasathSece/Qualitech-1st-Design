@@ -923,11 +923,34 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
     setModalTrackingLink(ord.trackingLink || "");
   };
 
+  const PROGRESSION_STAGES: OrderStatus[] = [
+    "Confirmed",
+    "Processing",
+    "Quality Check",
+    "Dispatched",
+    "Delivered",
+  ];
+
   const handleModalStatusChange = async (newStatus: OrderStatus) => {
     if (!viewingOrder) return;
 
     if (viewingOrder.orderStatus === "Cancelled") {
       showToast("This order is cancelled and cannot be reverted to any other status.", "warning");
+      return;
+    }
+
+    const currentNormalized = viewingOrder.orderStatus === "Shipped" ? "Dispatched" : viewingOrder.orderStatus;
+    const currentIdx = PROGRESSION_STAGES.indexOf(currentNormalized as OrderStatus);
+    const targetIdx = PROGRESSION_STAGES.indexOf(newStatus);
+
+    // Prevent going backwards in workflow
+    if (newStatus !== "Cancelled" && currentIdx !== -1 && targetIdx !== -1 && targetIdx < currentIdx) {
+      showToast("Order status can only move forward, cannot go backwards.", "warning");
+      return;
+    }
+
+    if (viewingOrder.orderStatus === "Delivered" && newStatus === "Cancelled") {
+      showToast("Delivered orders cannot be cancelled.", "warning");
       return;
     }
 
@@ -4697,58 +4720,127 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
             <div className="sticky bottom-0 z-20 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-t border-slate-100 bg-slate-50/95 px-5 py-3.5 sm:px-7 sm:py-4 backdrop-blur-md shrink-0">
               {/* Status Pills */}
               <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-                {[
-                  { key: "Confirmed" as OrderStatus, label: "Confirmed" },
-                  { key: "Processing" as OrderStatus, label: "Processing" },
-                  { key: "Quality Check" as OrderStatus, label: "Quality Check" },
-                  { key: "Dispatched" as OrderStatus, label: "Dispatched / Shipped" },
-                  { key: "Delivered" as OrderStatus, label: "Delivered" },
-                  { key: "Cancelled" as OrderStatus, label: "Cancelled" },
-                ].map((st) => {
-                  const isCurrentOrderCancelled = viewingOrder.orderStatus === "Cancelled";
-                  const isActive =
-                    viewingOrder.orderStatus === st.key ||
-                    (st.key === "Dispatched" && viewingOrder.orderStatus === "Shipped");
-                  const isBlockedByCancel = isCurrentOrderCancelled && st.key !== "Cancelled";
-                  const isDisabled =
-                    modalStatusSaving ||
-                    isActive ||
-                    isBlockedByCancel ||
-                    (isCurrentOrderCancelled && st.key === "Cancelled");
+                {(() => {
+                  const PROGRESSION_STAGES: OrderStatus[] = [
+                    "Confirmed",
+                    "Processing",
+                    "Quality Check",
+                    "Dispatched",
+                    "Delivered",
+                  ];
+                  const currentNorm =
+                    viewingOrder.orderStatus === "Shipped"
+                      ? "Dispatched"
+                      : viewingOrder.orderStatus;
+                  const currentIdx = PROGRESSION_STAGES.indexOf(currentNorm as OrderStatus);
+                  const isCancelled = viewingOrder.orderStatus === "Cancelled";
+                  const isDelivered = currentNorm === "Delivered";
 
-                  let buttonClass = "";
-                  if (isCurrentOrderCancelled) {
+                  return [
+                    { key: "Confirmed" as OrderStatus, label: "Confirmed" },
+                    { key: "Processing" as OrderStatus, label: "Processing" },
+                    { key: "Quality Check" as OrderStatus, label: "Quality Check" },
+                    { key: "Dispatched" as OrderStatus, label: "Dispatched / Shipped" },
+                    { key: "Delivered" as OrderStatus, label: "Delivered" },
+                    { key: "Cancelled" as OrderStatus, label: "Cancelled" },
+                  ].map((st) => {
+                    const isActive =
+                      viewingOrder.orderStatus === st.key ||
+                      (st.key === "Dispatched" && viewingOrder.orderStatus === "Shipped");
+
                     if (st.key === "Cancelled") {
-                      buttonClass =
-                        "bg-rose-600 text-white font-bold ring-2 ring-rose-200 shadow-xs cursor-default";
-                    } else {
-                      buttonClass =
-                        "border border-slate-200 bg-slate-100 text-slate-400 opacity-25 cursor-not-allowed pointer-events-none line-through";
-                    }
-                  } else if (isActive) {
-                    buttonClass =
-                      "bg-[#004f9e] text-white shadow-xs font-bold ring-2 ring-blue-300 cursor-default";
-                  } else {
-                    buttonClass =
-                      "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 cursor-pointer";
-                  }
-
-                  return (
-                    <button
-                      key={st.key}
-                      disabled={isDisabled}
-                      onClick={() => !isDisabled && handleModalStatusChange(st.key)}
-                      title={
-                        isBlockedByCancel
-                          ? "This order is cancelled and cannot be changed back to any other status."
-                          : undefined
+                      if (isCancelled) {
+                        return (
+                          <button
+                            key={st.key}
+                            disabled
+                            className="rounded-full px-3 sm:px-4 py-1.5 text-[0.7rem] sm:text-xs font-semibold bg-rose-600 text-white font-bold ring-2 ring-rose-200 shadow-xs cursor-default"
+                          >
+                            Cancelled
+                          </button>
+                        );
                       }
-                      className={`rounded-full px-3 sm:px-4 py-1.5 text-[0.7rem] sm:text-xs font-semibold transition-all ${buttonClass}`}
-                    >
-                      {st.label}
-                    </button>
-                  );
-                })}
+                      if (isDelivered) {
+                        return (
+                          <button
+                            key={st.key}
+                            disabled
+                            title="Delivered orders cannot be cancelled"
+                            className="rounded-full px-3 sm:px-4 py-1.5 text-[0.7rem] sm:text-xs font-semibold border border-slate-200 bg-slate-100 text-slate-400 opacity-25 cursor-not-allowed pointer-events-none line-through"
+                          >
+                            Cancelled
+                          </button>
+                        );
+                      }
+                      return (
+                        <button
+                          key={st.key}
+                          disabled={modalStatusSaving}
+                          onClick={() => handleModalStatusChange("Cancelled")}
+                          className="rounded-full px-3 sm:px-4 py-1.5 text-[0.7rem] sm:text-xs font-semibold border border-rose-200 bg-white text-rose-600 hover:bg-rose-50 hover:border-rose-300 transition-all cursor-pointer"
+                        >
+                          Cancel Order
+                        </button>
+                      );
+                    }
+
+                    // For Progression Stages:
+                    const targetIdx = PROGRESSION_STAGES.indexOf(st.key);
+                    const isPast = !isCancelled && currentIdx !== -1 && targetIdx < currentIdx;
+
+                    if (isCancelled) {
+                      return (
+                        <button
+                          key={st.key}
+                          disabled
+                          title="Order is cancelled"
+                          className="rounded-full px-3 sm:px-4 py-1.5 text-[0.7rem] sm:text-xs font-semibold border border-slate-200 bg-slate-100 text-slate-400 opacity-25 cursor-not-allowed pointer-events-none line-through"
+                        >
+                          {st.label}
+                        </button>
+                      );
+                    }
+
+                    if (isActive) {
+                      return (
+                        <button
+                          key={st.key}
+                          disabled
+                          className="rounded-full px-3 sm:px-4 py-1.5 text-[0.7rem] sm:text-xs font-semibold bg-[#004f9e] text-white shadow-xs font-bold ring-2 ring-blue-300 cursor-default"
+                        >
+                          {st.label}
+                        </button>
+                      );
+                    }
+
+                    if (isPast) {
+                      // Previous stage completed: Faded out, disabled, line-through
+                      return (
+                        <button
+                          key={st.key}
+                          disabled
+                          title="Previous stage completed. Status can only move forward."
+                          className="rounded-full px-3 sm:px-4 py-1.5 text-[0.7rem] sm:text-xs font-semibold border border-slate-200 bg-slate-100 text-slate-400 opacity-30 cursor-not-allowed pointer-events-none line-through"
+                        >
+                          {st.label}
+                        </button>
+                      );
+                    }
+
+                    // Future stage: Forward progression allowed!
+                    return (
+                      <button
+                        key={st.key}
+                        disabled={modalStatusSaving}
+                        onClick={() => handleModalStatusChange(st.key)}
+                        title={`Advance order to ${st.label}`}
+                        className="rounded-full px-3 sm:px-4 py-1.5 text-[0.7rem] sm:text-xs font-semibold border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all cursor-pointer"
+                      >
+                        {st.label}
+                      </button>
+                    );
+                  });
+                })()}
 
                 {viewingOrder.orderStatus === "Cancelled" && (
                   <span className="inline-flex items-center gap-1 text-[0.65rem] sm:text-[0.68rem] font-bold text-rose-600 bg-rose-50 border border-rose-200/80 rounded-full px-2.5 py-0.5">
