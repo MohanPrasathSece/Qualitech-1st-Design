@@ -556,32 +556,8 @@ export async function submitQuoteRequestToSupabase(
 
 /** Fetch all RFQ quote requests for admin */
 export async function fetchQuoteRequestsFromSupabase(): Promise<SupabaseQuoteRecord[]> {
-  const getDismissed = (): Set<string> => {
-    try {
-      const saved = localStorage.getItem("qualitech_dismissed_quotes_v1");
-      const list: string[] = saved ? JSON.parse(saved) : [];
-      // Always filter out known initial test quotes
-      list.push(
-        "rfq-574721",
-        "rfq-659916",
-        "66459d00-8a0a-4620-a0f7-9d93cf2ca020",
-        "ee85baf7-11a9-4599-914f-54a76a06a71b"
-      );
-      return new Set(list.map((s) => s.toLowerCase()));
-    } catch (_) {
-      return new Set(["rfq-574721", "rfq-659916"]);
-    }
-  };
-
-  const dismissed = getDismissed();
-
   if (!isSupabaseConfigured || !supabase) {
-    const local = JSON.parse(localStorage.getItem("qualitech_rfq_quotes_v1") || "[]");
-    return local.filter(
-      (q: any) =>
-        !dismissed.has((q.id || "").toLowerCase()) &&
-        !dismissed.has((q.rfq_number || "").toLowerCase())
-    );
+    return JSON.parse(localStorage.getItem("qualitech_rfq_quotes_v1") || "[]");
   }
 
   try {
@@ -591,41 +567,16 @@ export async function fetchQuoteRequestsFromSupabase(): Promise<SupabaseQuoteRec
       .order("created_at", { ascending: false });
 
     if (error || !data) {
-      const local = JSON.parse(localStorage.getItem("qualitech_rfq_quotes_v1") || "[]");
-      return local.filter(
-        (q: any) =>
-          !dismissed.has((q.id || "").toLowerCase()) &&
-          !dismissed.has((q.rfq_number || "").toLowerCase())
-      );
+      return JSON.parse(localStorage.getItem("qualitech_rfq_quotes_v1") || "[]");
     }
-    return data.filter(
-      (q: any) =>
-        !dismissed.has((q.id || "").toLowerCase()) &&
-        !dismissed.has((q.rfq_number || "").toLowerCase())
-    );
+    return data;
   } catch (err) {
-    const local = JSON.parse(localStorage.getItem("qualitech_rfq_quotes_v1") || "[]");
-    return local.filter(
-      (q: any) =>
-        !dismissed.has((q.id || "").toLowerCase()) &&
-        !dismissed.has((q.rfq_number || "").toLowerCase())
-    );
+    return JSON.parse(localStorage.getItem("qualitech_rfq_quotes_v1") || "[]");
   }
 }
 
 /** Delete an RFQ quote enquiry by ID or RFQ Number */
 export async function deleteQuoteRequestFromSupabase(id: string): Promise<boolean> {
-  const cleanId = (id || "").toLowerCase();
-  try {
-    const dismissed: string[] = JSON.parse(
-      localStorage.getItem("qualitech_dismissed_quotes_v1") || "[]"
-    );
-    if (!dismissed.includes(cleanId)) {
-      dismissed.push(cleanId);
-      localStorage.setItem("qualitech_dismissed_quotes_v1", JSON.stringify(dismissed));
-    }
-  } catch (_) {}
-
   if (isSupabaseConfigured && supabase) {
     try {
       await supabase.from("quote_requests").delete().or(`id.eq.${id},rfq_number.eq.${id}`);
@@ -634,9 +585,7 @@ export async function deleteQuoteRequestFromSupabase(id: string): Promise<boolea
     }
   }
   const stored: any[] = JSON.parse(localStorage.getItem("qualitech_rfq_quotes_v1") || "[]");
-  const filtered = stored.filter(
-    (q) => (q.id || "").toLowerCase() !== cleanId && (q.rfq_number || "").toLowerCase() !== cleanId
-  );
+  const filtered = stored.filter((q) => q.id !== id && q.rfq_number !== id);
   localStorage.setItem("qualitech_rfq_quotes_v1", JSON.stringify(filtered));
   return true;
 }

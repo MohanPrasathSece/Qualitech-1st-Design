@@ -20,7 +20,6 @@ import {
   updateStoredOrder,
   updateStoredOrderStatus,
   deleteStoredOrders,
-  clearAllStoredOrders,
   exportOrdersToCsv,
   exportAbandonedCheckoutsToCsv,
   cleanupOrdersOlderThanDays,
@@ -112,7 +111,6 @@ interface ECommerceContextType {
     notifyCustomer?: boolean
   ) => Order | undefined;
   deleteOrders: (orderIds: string[]) => void;
-  clearAllOrders: () => void;
   run30DayCleanup: (days?: number, onlyCancelled?: boolean) => { count: number; totalAmount: number };
   exportOrdersCsv: () => string;
   checkAndTriggerLowStockAlerts: (triggerReason?: string) => Promise<number>;
@@ -632,15 +630,6 @@ export const ECommerceProvider: React.FC<{ children: ReactNode }> = ({ children 
     }
   };
 
-  const clearAllOrders = () => {
-    const allNums = orders.map((o) => o.orderNumber).filter(Boolean);
-    clearAllStoredOrders();
-    setOrders([]);
-    if (allNums.length > 0) {
-      deleteOrdersFromSupabase(allNums).catch(console.warn);
-    }
-  };
-
   const run30DayCleanup = (days = 30, onlyCancelled = false): { count: number; totalAmount: number } => {
     const { archivedOrders, remainingOrders, csvContent } = cleanupOrdersOlderThanDays(days, onlyCancelled);
     setOrders(remainingOrders);
@@ -761,7 +750,6 @@ export const ECommerceProvider: React.FC<{ children: ReactNode }> = ({ children 
         updateOrderStatus,
         updateOrderDetails,
         deleteOrders,
-        clearAllOrders,
         run30DayCleanup,
         exportOrdersCsv,
         checkAndTriggerLowStockAlerts,
