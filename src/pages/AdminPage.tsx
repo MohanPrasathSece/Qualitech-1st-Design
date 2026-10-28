@@ -926,6 +926,17 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
   const handleModalStatusChange = async (newStatus: OrderStatus) => {
     if (!viewingOrder) return;
 
+    if (viewingOrder.orderStatus === "Cancelled") {
+      showToast("This order is cancelled and cannot be reverted to any other status.", "warning");
+      return;
+    }
+
+    if (newStatus === "Cancelled") {
+      if (!confirm(`Are you sure you want to cancel Order #${viewingOrder.orderNumber}? Once cancelled, inventory will be restocked and the order CANNOT be reverted to any other status.`)) {
+        return;
+      }
+    }
+
     setModalStatusSaving(true);
     try {
       const orderKey = viewingOrder.orderNumber || viewingOrder.id;
@@ -4602,20 +4613,27 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                       <span className="text-[0.68rem] font-bold uppercase tracking-widest text-[#64748b]">
                         TRACKING ID
                       </span>
-                      <button
-                        onClick={handleSaveTracking}
-                        className="text-[0.65rem] font-bold text-[#004f9e] hover:underline cursor-pointer"
-                      >
-                        Save ID
-                      </button>
+                      {viewingOrder.orderStatus !== "Cancelled" && (
+                        <button
+                          onClick={handleSaveTracking}
+                          className="text-[0.65rem] font-bold text-[#004f9e] hover:underline cursor-pointer"
+                        >
+                          Save ID
+                        </button>
+                      )}
                     </div>
                     <input
                       type="text"
+                      disabled={viewingOrder.orderStatus === "Cancelled"}
                       value={modalTrackingId}
                       onChange={(e) => setModalTrackingId(e.target.value)}
                       onBlur={handleSaveTracking}
-                      placeholder="e.g. SF-123456789"
-                      className="w-full rounded-xl sm:rounded-2xl border-2 border-sky-400 bg-white px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-200 font-mono"
+                      placeholder={viewingOrder.orderStatus === "Cancelled" ? "Shipment cancelled" : "e.g. SF-123456789"}
+                      className={`w-full rounded-xl sm:rounded-2xl border-2 px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm font-mono focus:outline-none ${
+                        viewingOrder.orderStatus === "Cancelled"
+                          ? "border-slate-200 bg-slate-100 text-slate-400 cursor-not-allowed"
+                          : "border-sky-400 bg-white text-slate-800 focus:ring-2 focus:ring-sky-200"
+                      }`}
                     />
                   </div>
 
@@ -4637,14 +4655,19 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                         </a>
                       )}
                     </div>
-                    <div className="flex items-center gap-2 rounded-xl sm:rounded-2xl border border-slate-200 bg-[#f8fafc] px-3.5 py-2">
+                    <div className={`flex items-center gap-2 rounded-xl sm:rounded-2xl border px-3.5 py-2 ${
+                      viewingOrder.orderStatus === "Cancelled" ? "border-slate-200 bg-slate-100 cursor-not-allowed" : "border-slate-200 bg-[#f8fafc]"
+                    }`}>
                       <input
                         type="text"
+                        disabled={viewingOrder.orderStatus === "Cancelled"}
                         value={modalTrackingLink}
                         onChange={(e) => setModalTrackingLink(e.target.value)}
                         onBlur={handleSaveTracking}
-                        placeholder="https://tracking.link/..."
-                        className="w-full bg-transparent text-xs text-slate-700 focus:outline-none placeholder:text-slate-400 font-mono"
+                        placeholder={viewingOrder.orderStatus === "Cancelled" ? "Shipment cancelled" : "https://tracking.link/..."}
+                        className={`w-full bg-transparent text-xs font-mono focus:outline-none ${
+                          viewingOrder.orderStatus === "Cancelled" ? "text-slate-400 cursor-not-allowed" : "text-slate-700 placeholder:text-slate-400"
+                        }`}
                       />
                       {modalTrackingLink && (
                         <a
@@ -4661,7 +4684,9 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                       )}
                     </div>
                     <p className="text-[0.62rem] text-slate-400 mt-1">
-                      Status changes to 'Shipped' or 'Out for Delivery' automatically notify the customer.
+                      {viewingOrder.orderStatus === "Cancelled"
+                        ? "Shipment is cancelled. Courier tracking cannot be updated."
+                        : "Status changes to 'Shipped' or 'Out for Delivery' automatically notify the customer."}
                     </p>
                   </div>
                 </div>
@@ -4680,26 +4705,59 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                   { key: "Delivered" as OrderStatus, label: "Delivered" },
                   { key: "Cancelled" as OrderStatus, label: "Cancelled" },
                 ].map((st) => {
+                  const isCurrentOrderCancelled = viewingOrder.orderStatus === "Cancelled";
                   const isActive =
                     viewingOrder.orderStatus === st.key ||
                     (st.key === "Dispatched" && viewingOrder.orderStatus === "Shipped");
-                  const isDisabled = modalStatusSaving;
+                  const isBlockedByCancel = isCurrentOrderCancelled && st.key !== "Cancelled";
+                  const isDisabled =
+                    modalStatusSaving ||
+                    isActive ||
+                    isBlockedByCancel ||
+                    (isCurrentOrderCancelled && st.key === "Cancelled");
+
+                  let buttonClass = "";
+                  if (isCurrentOrderCancelled) {
+                    if (st.key === "Cancelled") {
+                      buttonClass =
+                        "bg-rose-600 text-white font-bold ring-2 ring-rose-200 shadow-xs cursor-default";
+                    } else {
+                      buttonClass =
+                        "border border-slate-200 bg-slate-100 text-slate-400 opacity-25 cursor-not-allowed pointer-events-none line-through";
+                    }
+                  } else if (isActive) {
+                    buttonClass =
+                      "bg-[#004f9e] text-white shadow-xs font-bold ring-2 ring-blue-300 cursor-default";
+                  } else {
+                    buttonClass =
+                      "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 cursor-pointer";
+                  }
 
                   return (
                     <button
                       key={st.key}
                       disabled={isDisabled}
-                      onClick={() => handleModalStatusChange(st.key)}
-                      className={`rounded-full px-3 sm:px-4 py-1.5 text-[0.7rem] sm:text-xs font-semibold transition-all cursor-pointer ${
-                        isActive
-                          ? "bg-[#004f9e] text-white shadow-xs font-bold ring-2 ring-blue-300"
-                          : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300"
-                      }`}
+                      onClick={() => !isDisabled && handleModalStatusChange(st.key)}
+                      title={
+                        isBlockedByCancel
+                          ? "This order is cancelled and cannot be changed back to any other status."
+                          : undefined
+                      }
+                      className={`rounded-full px-3 sm:px-4 py-1.5 text-[0.7rem] sm:text-xs font-semibold transition-all ${buttonClass}`}
                     >
                       {st.label}
                     </button>
                   );
                 })}
+
+                {viewingOrder.orderStatus === "Cancelled" && (
+                  <span className="inline-flex items-center gap-1 text-[0.65rem] sm:text-[0.68rem] font-bold text-rose-600 bg-rose-50 border border-rose-200/80 rounded-full px-2.5 py-0.5">
+                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    <span>Status Locked</span>
+                  </span>
+                )}
               </div>
 
               {/* Total Price */}
