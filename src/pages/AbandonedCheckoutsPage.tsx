@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useECommerce } from "@/context/ECommerceContext";
 import { formatINR, Order } from "@/lib/ecommerceStore";
 import { Header } from "@/components/site/Header";
@@ -51,6 +51,17 @@ export function AbandonedCheckoutsPage({ onNavigateHome }: AbandonedCheckoutsPag
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3000);
   };
+
+  // Mark all current incomplete orders as seen in admin badge store
+  useEffect(() => {
+    try {
+      const cached = JSON.parse(localStorage.getItem("qualitech_admin_seen_badges_v2") || "{}");
+      const currentIds = incompleteOrders.map((o) => (o.orderNumber || o.id).toLowerCase());
+      const merged = Array.from(new Set([...(cached.incomplete || []), ...currentIds]));
+      cached.incomplete = merged;
+      localStorage.setItem("qualitech_admin_seen_badges_v2", JSON.stringify(cached));
+    } catch (_) {}
+  }, [incompleteOrders]);
 
   // Filtered Leads
   const filteredLeads = useMemo(() => {
@@ -459,7 +470,7 @@ export function AbandonedCheckoutsPage({ onNavigateHome }: AbandonedCheckoutsPag
                           <button
                             onClick={() => {
                               if (confirm(`Remove lead ${lead.orderNumber} from database?`)) {
-                                deleteAbandonedOrder(lead.orderNumber);
+                                deleteAbandonedOrder(lead.orderNumber, lead.id);
                                 showToast(`Lead ${lead.orderNumber} deleted.`);
                               }
                             }}
@@ -626,12 +637,28 @@ export function AbandonedCheckoutsPage({ onNavigateHome }: AbandonedCheckoutsPag
               </div>
 
               {/* Quick WhatsApp Action inside modal */}
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-3">
                 <button
                   onClick={() => handleWhatsAppContact(viewingLead)}
-                  className="flex-1 rounded-xl bg-emerald-600 py-3 text-xs font-bold text-white shadow-md hover:bg-emerald-700 transition-all cursor-pointer flex items-center justify-center gap-2"
+                  className="flex-1 min-w-[200px] rounded-xl bg-emerald-600 py-3 text-xs font-bold text-white shadow-md hover:bg-emerald-700 transition-all cursor-pointer flex items-center justify-center gap-2"
                 >
                   <span>Chat with Customer on WhatsApp</span>
+                </button>
+                <button
+                  onClick={() => {
+                    if (confirm(`Remove lead ${viewingLead.orderNumber} from database?`)) {
+                      deleteAbandonedOrder(viewingLead.orderNumber, viewingLead.id);
+                      setViewingLead(null);
+                      showToast(`Lead ${viewingLead.orderNumber} deleted.`);
+                    }
+                  }}
+                  className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-xs font-bold text-rose-600 hover:bg-rose-600 hover:text-white transition-all cursor-pointer flex items-center justify-center gap-1.5"
+                  title="Delete Lead"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  <span>Delete</span>
                 </button>
                 <button
                   onClick={() => setViewingLead(null)}

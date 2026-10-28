@@ -273,9 +273,37 @@ export function validateCoupon(code: string, subtotal: number): { valid: boolean
 // ORDERS STORAGE HELPERS
 // ─────────────────────────────────────────────────────────────
 
+export const DELETED_ORDERS_STORAGE_KEY = "qualitech_deleted_orders_v1";
+
+export function getDeletedOrderKeys(): Set<string> {
+  if (typeof window === "undefined") return new Set();
+  try {
+    const raw = localStorage.getItem(DELETED_ORDERS_STORAGE_KEY);
+    if (raw) {
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr)) {
+        return new Set(arr.map((k: string) => (k || "").trim().toLowerCase()).filter(Boolean));
+      }
+    }
+  } catch (_) {}
+  return new Set();
+}
+
+export function addDeletedOrderKeys(keys: string[]): void {
+  if (typeof window === "undefined") return;
+  try {
+    const existing = getDeletedOrderKeys();
+    keys.forEach((k) => {
+      if (k) existing.add(k.trim().toLowerCase());
+    });
+    localStorage.setItem(DELETED_ORDERS_STORAGE_KEY, JSON.stringify(Array.from(existing)));
+  } catch (_) {}
+}
+
 export function getStoredOrders(): Order[] {
   if (typeof window === "undefined") return [];
   try {
+    const deletedKeys = getDeletedOrderKeys();
     const saved = localStorage.getItem(ORDERS_STORAGE_KEY);
     if (saved) {
       const parsed = JSON.parse(saved);
@@ -284,6 +312,14 @@ export function getStoredOrders(): Order[] {
         const unique: Order[] = [];
         for (const ord of parsed) {
           const key = (ord.orderNumber || ord.id || "").trim().toLowerCase();
+          const ordNumKey = (ord.orderNumber || "").trim().toLowerCase();
+          const idKey = (ord.id || "").trim().toLowerCase();
+
+          // Skip any order that was deleted
+          if (deletedKeys.has(key) || (ordNumKey && deletedKeys.has(ordNumKey)) || (idKey && deletedKeys.has(idKey))) {
+            continue;
+          }
+
           if (key && !seen.has(key)) {
             seen.add(key);
             unique.push(ord);
@@ -382,8 +418,27 @@ export function updateStoredOrderStatus(orderId: string, status: OrderStatus, pa
 
 export function deleteStoredOrders(orderIds: string[]): Order[] {
   const current = getStoredOrders();
-  const idSet = new Set(orderIds);
-  const updated = current.filter((ord) => !idSet.has(ord.id) && !idSet.has(ord.orderNumber));
+  const cleanKeys = orderIds.map((id) => (id || "").trim().toLowerCase()).filter(Boolean);
+  const idSet = new Set(cleanKeys);
+
+  const allKeysToTombstone: string[] = [...cleanKeys];
+  current.forEach((ord) => {
+    const oId = (ord.id || "").trim().toLowerCase();
+    const oNum = (ord.orderNumber || "").trim().toLowerCase();
+    if (idSet.has(oId) || idSet.has(oNum)) {
+      if (oId) allKeysToTombstone.push(oId);
+      if (oNum) allKeysToTombstone.push(oNum);
+    }
+  });
+
+  addDeletedOrderKeys(allKeysToTombstone);
+  const deletedKeys = getDeletedOrderKeys();
+
+  const updated = current.filter((ord) => {
+    const oId = (ord.id || "").trim().toLowerCase();
+    const oNum = (ord.orderNumber || "").trim().toLowerCase();
+    return !deletedKeys.has(oId) && !deletedKeys.has(oNum);
+  });
   saveStoredOrders(updated);
   return updated;
 }

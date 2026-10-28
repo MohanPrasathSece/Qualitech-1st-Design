@@ -468,16 +468,36 @@ export async function updateOrderStatusInSupabase(
 export async function deleteOrdersFromSupabase(orderNumbers: string[]): Promise<boolean> {
   if (!isSupabaseConfigured || !supabase || orderNumbers.length === 0) return false;
 
+  const cleanList = Array.from(
+    new Set(
+      orderNumbers
+        .flatMap((n) => [n, n?.trim(), n?.toLowerCase(), n?.toUpperCase()])
+        .filter(Boolean) as string[]
+    )
+  );
+
   try {
-    await supabase.from("order_items").delete().in("order_number", orderNumbers);
-    const { error } = await supabase.from("orders").delete().in("order_number", orderNumbers);
+    // 1. Delete associated order items
+    await supabase.from("order_items").delete().in("order_number", cleanList);
+
+    // 2. Delete parent order record by order_number
+    const { error } = await supabase.from("orders").delete().in("order_number", cleanList);
+
+    // 3. Also attempt delete by id if any were IDs
+    await supabase.from("orders").delete().in("id", cleanList);
+
     if (error) {
-      console.error("Supabase delete orders error:", error.message);
+      console.warn("Supabase hard delete note, applying status fallback:", error.message);
+      // Soft-delete fallback in case hard-delete is restricted by RLS
+      await supabase
+        .from("orders")
+        .update({ order_status: "Deleted", payment_status: "Deleted" })
+        .in("order_number", cleanList);
       return false;
     }
     return true;
   } catch (err) {
-    console.error("Failed to delete orders from Supabase:", err);
+    console.warn("Failed to delete orders from Supabase:", err);
     return false;
   }
 }

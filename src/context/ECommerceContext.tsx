@@ -20,6 +20,8 @@ import {
   updateStoredOrder,
   updateStoredOrderStatus,
   deleteStoredOrders,
+  getDeletedOrderKeys,
+  addDeletedOrderKeys,
   exportOrdersToCsv,
   exportAbandonedCheckoutsToCsv,
   cleanupOrdersOlderThanDays,
@@ -98,7 +100,7 @@ interface ECommerceContextType {
     notes?: string
   ) => void;
   markLeadRecovered: (orderNumber: string) => void;
-  deleteAbandonedOrder: (orderNumber: string) => void;
+  deleteAbandonedOrder: (orderNumber: string, orderId?: string) => void;
   exportAbandonedOrdersCsv: () => string;
   updateOrderStatus: (
     orderId: string,
@@ -187,9 +189,20 @@ export const ECommerceProvider: React.FC<{ children: ReactNode }> = ({ children 
         }
 
         if (cloudOrders && cloudOrders.length > 0) {
-          const currentStored = getStoredOrders();
+          const deletedKeys = getDeletedOrderKeys();
+          const validCloudOrders = cloudOrders.filter((o) => {
+            const numKey = (o.orderNumber || "").trim().toLowerCase();
+            const idKey = (o.id || "").trim().toLowerCase();
+            const isDeletedStatus = (o.orderStatus as any) === "Deleted" || (o.paymentStatus as any) === "Deleted";
+            return !isDeletedStatus && !deletedKeys.has(numKey) && !deletedKeys.has(idKey);
+          });
+          const currentStored = getStoredOrders().filter((o) => {
+            const numKey = (o.orderNumber || "").trim().toLowerCase();
+            const idKey = (o.id || "").trim().toLowerCase();
+            return !deletedKeys.has(numKey) && !deletedKeys.has(idKey);
+          });
           const orderMap = new Map<string, Order>();
-          cloudOrders.forEach((o) => orderMap.set((o.orderNumber || o.id).toLowerCase(), o));
+          validCloudOrders.forEach((o) => orderMap.set((o.orderNumber || o.id).toLowerCase(), o));
           currentStored.forEach((o) => {
             const key = (o.orderNumber || o.id).toLowerCase();
             if (!orderMap.has(key)) {
@@ -537,19 +550,9 @@ export const ECommerceProvider: React.FC<{ children: ReactNode }> = ({ children 
     updateLeadStatus(orderNumber, "Recovered");
   };
 
-  const deleteAbandonedOrder = (orderNumber: string) => {
-    deleteOrders([orderNumber]);
-    try {
-      const abandonedKey = "qualitech_abandoned_checkouts_v1";
-      const existingAbandoned = JSON.parse(localStorage.getItem(abandonedKey) || "[]");
-      if (Array.isArray(existingAbandoned)) {
-        const clean = (orderNumber || "").toLowerCase();
-        const filtered = existingAbandoned.filter(
-          (o: Order) => (o.orderNumber || o.id).toLowerCase() !== clean
-        );
-        localStorage.setItem(abandonedKey, JSON.stringify(filtered));
-      }
-    } catch (_) {}
+  const deleteAbandonedOrder = (orderNumber: string, orderId?: string) => {
+    const targets = [orderNumber, orderId].filter(Boolean) as string[];
+    deleteOrders(targets);
   };
 
   const updateOrderStatus = (
@@ -613,18 +616,60 @@ export const ECommerceProvider: React.FC<{ children: ReactNode }> = ({ children 
   };
 
   const deleteOrders = (orderIds: string[]) => {
-    const idSet = new Set(orderIds.map((id) => (id || "").trim().toLowerCase()));
-    const targetOrders = orders.filter((o) => idSet.has((o.id || "").toLowerCase()) || idSet.has((o.orderNumber || "").toLowerCase()));
-    const orderNumbers = targetOrders.map((o) => o.orderNumber);
+    const cleanKeys = orderIds.map((id) => (id || "").trim().toLowerCase()).filter(Boolean);
+    const idSet = new Set(cleanKeys);
 
+    // 1. Gather all matching keys from state and local storage to tombstone
+    const currentStored = getStoredOrders();
+    const allKnown = [...orders, ...currentStored];
+    const targetOrders = allKnown.filter(
+      (o) => idSet.has((o.id || "").toLowerCase()) || idSet.has((o.orderNumber || "").toLowerCase())
+    );
+
+    const keysToTombstone: string[] = [...cleanKeys];
+    targetOrders.forEach((o) => {
+      if (o.orderNumber) keysToTombstone.push(o.orderNumber.toLowerCase());
+      if (o.id) keysToTombstone.push(o.id.toLowerCase());
+    });
+
+    // 2. Persist tombstone so deleted orders NEVER resurrect
+    addDeletedOrderKeys(keysToTombstone);
+    const tombstoneSet = getDeletedOrderKeys();
+
+    // 3. Purge from React state & persistent order storage
     const nextOrders = orders.filter(
-      (o) => !idSet.has((o.id || "").toLowerCase()) && !idSet.has((o.orderNumber || "").toLowerCase())
+      (o) =>
+        !tombstoneSet.has((o.id || "").toLowerCase()) &&
+        !tombstoneSet.has((o.orderNumber || "").toLowerCase())
     );
     setOrders(nextOrders);
     saveStoredOrders(nextOrders);
 
-    if (orderNumbers.length > 0) {
-      deleteOrdersFromSupabase(orderNumbers).catch((err) => {
+    // 4. Also purge from dedicated abandoned checkouts storage
+    try {
+      const abandonedKey = "qualitech_abandoned_checkouts_v1";
+      const existingAbandoned = JSON.parse(localStorage.getItem(abandonedKey) || "[]");
+      if (Array.isArray(existingAbandoned)) {
+        const filtered = existingAbandoned.filter(
+          (o: Order) =>
+            !tombstoneSet.has((o.orderNumber || "").toLowerCase()) &&
+            !tombstoneSet.has((o.id || "").toLowerCase())
+        );
+        localStorage.setItem(abandonedKey, JSON.stringify(filtered));
+      }
+    } catch (_) {}
+
+    // 5. Delete in Supabase backend
+    const allOrderNumbers = Array.from(
+      new Set(
+        targetOrders
+          .map((o) => o.orderNumber)
+          .concat(orderIds)
+          .filter(Boolean)
+      )
+    );
+    if (allOrderNumbers.length > 0) {
+      deleteOrdersFromSupabase(allOrderNumbers).catch((err) => {
         console.warn("Supabase order deletion error:", err);
       });
     }

@@ -190,6 +190,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
   // Seen Badges Tracking state (persisted to localStorage)
   const [seenBadges, setSeenBadges] = useState<{
     orders: string[];
+    incomplete: string[];
     tracking: string[];
     quotes: string[];
     productsCount: number;
@@ -200,6 +201,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
     } catch (_) {}
     return {
       orders: [],
+      incomplete: [],
       tracking: [],
       quotes: [],
       productsCount: 0,
@@ -219,6 +221,13 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
         const merged = Array.from(new Set([...(prev.orders || []), ...currentIds]));
         if (merged.length !== (prev.orders || []).length) {
           next.orders = merged;
+          changed = true;
+        }
+      } else if (activeSection === "incomplete") {
+        const currentIds = incompleteOrders.map((o) => (o.orderNumber || o.id).toLowerCase());
+        const merged = Array.from(new Set([...(prev.incomplete || []), ...currentIds]));
+        if (merged.length !== (prev.incomplete || []).length) {
+          next.incomplete = merged;
           changed = true;
         }
       } else if (activeSection === "tracking") {
@@ -252,7 +261,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
       }
       return prev;
     });
-  }, [activeSection, validOrders, quoteRequests, products.length, isAuthenticated]);
+  }, [activeSection, validOrders, incompleteOrders, quoteRequests, products.length, isAuthenticated]);
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -265,7 +274,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [importText, setImportText] = useState("");
   const [importFormat, setImportFormat] = useState<"csv" | "json">("csv");
-  const [toastMessage, setToastMessage] = useState<{ title: string; type: "success" | "error" | "info" } | null>(null);
+  const [toastMessage, setToastMessage] = useState<{ title: string; type: "success" | "error" | "info" | "warning" } | null>(null);
 
   // Excel Bulk Import State
   const [isExcelModalOpen, setIsExcelModalOpen] = useState(false);
@@ -442,7 +451,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
     }
   }, [orders, viewingOrder]);
 
-  const showToast = (title: string, type: "success" | "error" | "info" = "success") => {
+  const showToast = (title: string, type: "success" | "error" | "info" | "warning" = "success") => {
     setToastMessage({ title, type });
     setTimeout(() => setToastMessage(null), 3500);
   };
@@ -934,7 +943,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
   const handleModalStatusChange = async (newStatus: OrderStatus) => {
     if (!viewingOrder) return;
 
-    if (viewingOrder.orderStatus === "Cancelled") {
+    if ((viewingOrder.orderStatus as string) === "Cancelled") {
       showToast("This order is cancelled and cannot be reverted to any other status.", "warning");
       return;
     }
@@ -944,17 +953,17 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
     const targetIdx = PROGRESSION_STAGES.indexOf(newStatus);
 
     // Prevent going backwards in workflow
-    if (newStatus !== "Cancelled" && currentIdx !== -1 && targetIdx !== -1 && targetIdx < currentIdx) {
+    if ((newStatus as string) !== "Cancelled" && currentIdx !== -1 && targetIdx !== -1 && targetIdx < currentIdx) {
       showToast("Order status can only move forward, cannot go backwards.", "warning");
       return;
     }
 
-    if (viewingOrder.orderStatus === "Delivered" && newStatus === "Cancelled") {
+    if (viewingOrder.orderStatus === "Delivered" && (newStatus as string) === "Cancelled") {
       showToast("Delivered orders cannot be cancelled.", "warning");
       return;
     }
 
-    if (newStatus === "Cancelled") {
+    if ((newStatus as string) === "Cancelled") {
       if (!confirm(`Are you sure you want to cancel Order #${viewingOrder.orderNumber}? Once cancelled, inventory will be restocked and the order CANNOT be reverted to any other status.`)) {
         return;
       }
@@ -985,7 +994,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
       }
 
       // Automatically restock products to catalogue inventory when an order is Cancelled
-      if (newStatus === "Cancelled" && oldStatus !== "Cancelled") {
+      if ((newStatus as string) === "Cancelled" && (oldStatus as string) !== "Cancelled") {
         const currentProds = getStoredProducts();
         let restockCount = 0;
         const updatedProds = currentProds.map((p) => {
@@ -1020,7 +1029,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
           `Order #${viewingOrder.orderNumber} cancelled. Restocked ${restockCount} items. Refund details emailed to Admin!`,
           "success"
         );
-      } else if (oldStatus === "Cancelled" && newStatus !== "Cancelled") {
+      } else if ((oldStatus as string) === "Cancelled" && (newStatus as string) !== "Cancelled") {
         // Re-deduct inventory if order is un-cancelled
         const currentProds = getStoredProducts();
         const updatedProds = currentProds.map((p) => {
@@ -1498,6 +1507,14 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
     return quoteRequests.filter((q) => !seenSet.has((q.rfq_number || q.id).toLowerCase())).length;
   }, [quoteRequests, seenBadges.quotes, activeSection]);
 
+  const unseenIncompleteCount = useMemo(() => {
+    if (activeSection === "incomplete") return 0;
+    const seenSet = new Set(seenBadges.incomplete || []);
+    return incompleteOrders.filter(
+      (o) => o.followUpStatus !== "Recovered" && !seenSet.has((o.orderNumber || o.id).toLowerCase())
+    ).length;
+  }, [incompleteOrders, seenBadges.incomplete, activeSection]);
+
   const unseenProductsCount = useMemo(() => {
     if (activeSection === "products") return 0;
     if ((seenBadges.productsCount || 0) === 0) return 0;
@@ -1551,7 +1568,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       ),
-      count: incompleteOrders.filter((o) => o.followUpStatus !== "Recovered").length,
+      count: unseenIncompleteCount,
       badgeColor: "bg-amber-100 text-amber-800",
     },
     {
@@ -1768,6 +1785,8 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
               ? "bg-emerald-600 text-white shadow-emerald-900/20"
               : toastMessage.type === "error"
               ? "bg-rose-600 text-white shadow-rose-900/20"
+              : toastMessage.type === "warning"
+              ? "bg-amber-600 text-white shadow-amber-900/20"
               : "bg-slate-900 text-white shadow-slate-950/20"
           }`}
         >
@@ -1870,7 +1889,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                     <span className={isActive ? "text-white" : "text-slate-400"}>
                       {item.icon}
                     </span>
-                    {!sidebarOpen && typeof item.count === "number" && item.count > 0 && (
+                    {!sidebarOpen && !isActive && typeof item.count === "number" && item.count > 0 && (
                       <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
@@ -1878,12 +1897,10 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                     )}
                     {sidebarOpen && <span className="truncate">{item.label}</span>}
                   </div>
-                  {sidebarOpen && typeof item.count === "number" && item.count > 0 && (
+                  {sidebarOpen && !isActive && typeof item.count === "number" && item.count > 0 && (
                     <span
                       className={`text-xs px-2 py-0.5 rounded-full font-bold transition-all ${
-                        isActive
-                          ? "bg-white/20 text-white"
-                          : item.badgeColor || "bg-slate-100 text-slate-700"
+                        item.badgeColor || "bg-slate-100 text-slate-700"
                       }`}
                     >
                       {item.count}
@@ -1940,6 +1957,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
               {activeSection === "overview" && "Executive Dashboard & Operations"}
               {activeSection === "products" && "Product Catalogue & Inventory (167+ Items)"}
               {activeSection === "orders" && "Customer Orders & Invoices"}
+              {activeSection === "incomplete" && "Customer Leads & Incomplete Payments"}
               {activeSection === "tracking" && "Shipment & Courier Logistics"}
               {activeSection === "quotes" && "Custom RFQ Quotation Requests"}
               {activeSection === "analytics" && "Store Analytics & Metrics"}
@@ -2926,12 +2944,28 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                             </td>
 
                             <td className="py-3.5 px-4 align-top text-right">
-                              <button
-                                onClick={() => onNavigateHome("#incomplete-payments")}
-                                className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-100 cursor-pointer"
-                              >
-                                <span>Inspect</span>
-                              </button>
+                              <div className="flex items-center justify-end gap-1.5">
+                                <button
+                                  onClick={() => onNavigateHome("#incomplete-payments")}
+                                  className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-100 cursor-pointer"
+                                >
+                                  <span>Inspect</span>
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    if (confirm(`Remove lead ${lead.orderNumber} from database?`)) {
+                                      deleteAbandonedOrder(lead.orderNumber, lead.id);
+                                      showToast(`Lead ${lead.orderNumber} deleted.`, "info");
+                                    }
+                                  }}
+                                  title="Delete Lead"
+                                  className="inline-flex items-center justify-center rounded-lg border border-rose-200 bg-rose-50 p-1.5 text-rose-600 hover:bg-rose-600 hover:text-white transition-colors cursor-pointer"
+                                >
+                                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                  </svg>
+                                </button>
+                              </div>
                             </td>
                           </tr>
                         );

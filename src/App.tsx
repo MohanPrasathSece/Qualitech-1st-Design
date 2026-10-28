@@ -171,6 +171,22 @@ function Stats() {
 
 /* ─── Business Structure ─── */
 
+const DISTRIBUTOR_LOGOS = [
+  { name: "Amphenol", file: "AmphenolLogo-9Bd.png" },
+  { name: "Zolex", file: "zolex.png" },
+  { name: "Boyu", file: "boyu.png" },
+  { name: "Edge Connect", file: "edge conn.png" },
+  { name: "HADZ", file: "hadz.png" },
+  { name: "HXH", file: "hxh.png" },
+  { name: "Inlinko", file: "inlinko.png" },
+  { name: "Ixnya", file: "ixnya.png" },
+  { name: "Omten", file: "omten.png" },
+  { name: "SFA", file: "sfa.png" },
+  { name: "Sunchu", file: "sunchu.png" },
+  { name: "WCH", file: "wch.png" },
+  { name: "XHF", file: "xhf.png" },
+];
+
 interface BusinessStructureProps {
   onNavigate: (href: string, isPage?: boolean) => void;
 }
@@ -245,30 +261,16 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                     <div className="flex marquee-track w-max">
                       {[...Array(2)].map((_, setIdx) => (
                         <div key={setIdx} className="flex items-center gap-6 px-3 shrink-0 sm:gap-8 sm:px-4">
-                          {/* Amphenol - text/icon badge */}
-                          <div className="flex items-center gap-2 shrink-0 transition-all duration-300 hover:scale-105">
-                            <svg className="h-5 w-5 text-[#004f9e] sm:h-6 sm:w-6" viewBox="0 0 32 32" fill="currentColor">
-                              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" strokeWidth="2" />
-                              <path d="M8 16c2-6 6-6 8 0s6 6 8 0" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                            </svg>
-                            <span className="font-display text-xs font-extrabold text-[#004f9e] sm:text-sm">Amphenol</span>
-                          </div>
-                          {/* Zolex - official logo */}
-                          <div className="shrink-0 transition-all duration-300 hover:scale-105">
-                            <img
-                              src="/images/products/individual_logos_transparent/ZOLEX.png"
-                              alt="Zolex"
-                              className="h-6 w-auto max-w-[80px] object-contain drop-shadow-xs sm:h-8 sm:max-w-[100px]"
-                              loading="lazy"
-                            />
-                          </div>
-                          {/* Individual brand logos in full color */}
-                          {["BOYU", "EDGE_CONNECT", "HDZ", "HXXH", "NINKO", "OmTen", "SFA", "SUNCHU", "WEICH", "XHF", "XINYA"].map((logo) => (
-                            <div key={logo} className="shrink-0 transition-all duration-300 hover:scale-105">
+                          {DISTRIBUTOR_LOGOS.map((logo) => (
+                            <div
+                              key={logo.file}
+                              className="shrink-0 flex items-center justify-center transition-all duration-300 hover:scale-105"
+                            >
                               <img
-                                src={`/images/products/individual_logos_transparent/${logo}.png`}
-                                alt={logo.replace(/_/g, " ")}
-                                className="h-6 w-auto max-w-[80px] object-contain drop-shadow-xs sm:h-8 sm:max-w-[100px]"
+                                src={`/images/distributor%20logos/${encodeURIComponent(logo.file)}`}
+                                alt={logo.name}
+                                title={logo.name}
+                                className="h-6 w-auto max-w-[85px] object-contain drop-shadow-xs sm:h-8 sm:max-w-[110px]"
                                 loading="lazy"
                               />
                             </div>
