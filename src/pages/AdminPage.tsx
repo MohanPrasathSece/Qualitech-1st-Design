@@ -4381,47 +4381,55 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
       {/* MODAL: ORDER DETAILS (Exact design as requested in Screenshot 1) */}
       {/* ───────────────────────────────────────────────────────────── */}
       {viewingOrder && (
-        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
-          <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-xs transition-opacity" onClick={() => setViewingOrder(null)} />
+        <div className="fixed inset-0 z-[150] flex items-center justify-center p-3 sm:p-4 md:p-6 overflow-y-auto">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-slate-950/75 backdrop-blur-xs transition-opacity"
+            onClick={() => setViewingOrder(null)}
+          />
 
-          <div className="relative z-10 my-8 w-full max-w-2xl overflow-hidden rounded-3xl bg-white p-7 sm:p-9 shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95 duration-200">
-            {/* Modal Top Header */}
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#1e1b4b] tracking-tight">
+          {/* Modal Container */}
+          <div className="relative z-10 my-auto w-full max-w-3xl max-h-[92vh] flex flex-col rounded-2xl sm:rounded-3xl bg-white shadow-2xl border border-slate-100 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            {/* Modal Top Header (Sticky) */}
+            <div className="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 bg-white/95 px-5 py-3.5 sm:px-7 sm:py-4.5 backdrop-blur-md shrink-0">
+              <div className="min-w-0">
+                <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#1e1b4b] tracking-tight truncate">
                   Order <span className="font-mono">#{viewingOrder.orderNumber}</span>
                 </h3>
+                <p className="text-[0.68rem] text-slate-400 mt-0.5">
+                  Placed on {new Date(viewingOrder.createdAt).toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+                </p>
               </div>
 
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                 {/* Status Pill Badge */}
                 {viewingOrder.orderStatus === "Cancelled" ? (
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 border border-slate-300 px-3.5 py-1 text-xs font-bold text-slate-600 uppercase tracking-wider">
-                    <svg className="h-3.5 w-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 border border-slate-300 px-2.5 sm:px-3 py-0.5 sm:py-1 text-[0.68rem] sm:text-xs font-bold text-slate-600 uppercase tracking-wider">
+                    <svg className="h-3 w-3 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                       <circle cx="12" cy="12" r="9" />
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15 9l-6 6M9 9l6 6" />
                     </svg>
                     <span>CANCELLED</span>
                   </span>
                 ) : viewingOrder.orderStatus === "Confirmed" ? (
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 border border-blue-200/80 px-3.5 py-1 text-xs font-bold text-blue-600 uppercase tracking-wider">
-                    <svg className="h-3.5 w-3.5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 border border-blue-200/80 px-2.5 sm:px-3 py-0.5 sm:py-1 text-[0.68rem] sm:text-xs font-bold text-blue-600 uppercase tracking-wider">
+                    <svg className="h-3 w-3 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                       <circle cx="12" cy="12" r="9" />
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4" />
                     </svg>
                     <span>CONFIRMED</span>
                   </span>
                 ) : viewingOrder.orderStatus === "Delivered" ? (
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 px-3.5 py-1 text-xs font-bold text-emerald-600 uppercase tracking-wider">
-                    <svg className="h-3.5 w-3.5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 border border-emerald-200/80 px-2.5 sm:px-3 py-0.5 sm:py-1 text-[0.68rem] sm:text-xs font-bold text-emerald-600 uppercase tracking-wider">
+                    <svg className="h-3 w-3 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                       <circle cx="12" cy="12" r="9" />
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4" />
                     </svg>
                     <span>DELIVERED</span>
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 border border-indigo-200/80 px-3.5 py-1 text-xs font-bold text-indigo-600 uppercase tracking-wider">
-                    <svg className="h-3.5 w-3.5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <span className="inline-flex items-center gap-1 rounded-full bg-indigo-50 border border-indigo-200/80 px-2.5 sm:px-3 py-0.5 sm:py-1 text-[0.68rem] sm:text-xs font-bold text-indigo-600 uppercase tracking-wider">
+                    <svg className="h-3 w-3 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                       <circle cx="12" cy="12" r="9" />
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4" />
                     </svg>
@@ -4430,7 +4438,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                 )}
 
                 {/* Payment Badge */}
-                <span className="inline-block rounded-full bg-[#fef3c7] px-3.5 py-1 text-[0.68rem] font-extrabold uppercase tracking-wider text-[#92400e]">
+                <span className="inline-block rounded-full bg-[#fef3c7] px-2.5 sm:px-3 py-0.5 sm:py-1 text-[0.65rem] sm:text-[0.68rem] font-extrabold uppercase tracking-wider text-[#92400e]">
                   {viewingOrder.paymentStatus === "Paid" ? "PREPAID" : "CASH ON DELIVERY"}
                 </span>
 
@@ -4438,10 +4446,10 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                 <button
                   type="button"
                   onClick={() => downloadQuotationFromOrder(viewingOrder)}
-                  className="flex items-center gap-1.5 rounded-full bg-[#004f9e]/10 border border-[#004f9e]/30 px-3 py-1 text-[0.68rem] font-bold text-[#004f9e] hover:bg-[#004f9e] hover:text-white transition-all cursor-pointer"
+                  className="inline-flex items-center gap-1 rounded-full bg-[#004f9e]/10 border border-[#004f9e]/30 px-2.5 sm:px-3 py-0.5 sm:py-1 text-[0.65rem] sm:text-[0.68rem] font-bold text-[#004f9e] hover:bg-[#004f9e] hover:text-white transition-all cursor-pointer"
                   title="Download Branded Proforma PDF Invoice"
                 >
-                  <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg className="h-3 w-3 sm:h-3.5 sm:w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                   <span>PDF Invoice</span>
@@ -4450,214 +4458,220 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                 {/* Close Button */}
                 <button
                   onClick={() => setViewingOrder(null)}
-                  className="rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors ml-1 cursor-pointer"
-                  title="Close"
+                  className="rounded-full p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors cursor-pointer ml-1"
+                  title="Close Modal"
                 >
-                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg className="h-4.5 w-4.5 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               </div>
             </div>
 
-            {/* Cancelled Order - Manual Refund Alert Banner */}
-            {viewingOrder.orderStatus === "Cancelled" && (
-              <div className="mt-5 rounded-2xl bg-amber-50/90 border border-amber-200 p-4 text-xs">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div>
-                    <div className="flex items-center gap-1.5 font-bold text-amber-900 text-sm">
-                      <span className="text-base">⚠️</span>
-                      <span>Order Cancelled — Manual Refund Required</span>
-                    </div>
-                    <p className="mt-1 text-amber-800 leading-relaxed text-xs">
-                      Automatic refund is <strong className="underline">NOT</strong> triggered. Inventory has been restocked. 
-                      {viewingOrder.paymentStatus === "Paid" || (viewingOrder.paymentMethod || "").toLowerCase().includes("prepaid")
-                        ? ` Please manually refund ${formatINR(viewingOrder.total)} via Razorpay Dashboard using Payment ID: ${viewingOrder.razorpayPaymentId || viewingOrder.paymentId || "order record"}.`
-                        : " This is a COD order: Ensure no money was collected or arrange direct UPI/IMPS payout if delivered."}
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      try {
-                        await sendOrderCancellationAdminRefundAlert(viewingOrder);
-                        showToast("Manual refund notification re-sent to admin email!", "success");
-                      } catch {
-                        showToast("Failed to send refund email", "error");
-                      }
-                    }}
-                    className="shrink-0 self-start sm:self-center px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs shadow-xs transition-colors cursor-pointer flex items-center gap-1.5"
-                    title="Send manual refund instructions to Admin Email"
-                  >
-                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                    <span>Re-send Refund Email</span>
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* 2-Column Content Layout */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6">
-              {/* Left Column: Customer Info & Address */}
-              <div className="space-y-4">
-                {/* Customer Info */}
-                <div>
-                  <p className="text-[0.68rem] font-bold uppercase tracking-widest text-[#64748b] mb-1.5">
-                    CUSTOMER INFO
-                  </p>
-                  <div className="rounded-2xl bg-[#f8fafc] border border-slate-100 p-4 space-y-1">
-                    <p className="font-bold text-sm text-slate-900">{viewingOrder.customer.fullName}</p>
-                    <p className="text-xs text-slate-500">{viewingOrder.customer.email}</p>
-                    <p className="text-xs text-slate-500">{viewingOrder.customer.phone}</p>
-                    {viewingOrder.customer.companyName && (
-                      <p className="text-xs text-[#004f9e] font-semibold pt-0.5">{viewingOrder.customer.companyName}</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Razorpay Transaction Details (if paid via Razorpay) */}
-                {(viewingOrder.razorpayPaymentId || viewingOrder.razorpayOrderId) && (
-                  <div>
-                    <p className="text-[0.68rem] font-bold uppercase tracking-widest text-[#64748b] mb-1.5 flex items-center justify-between">
-                      <span>RAZORPAY SETTLEMENT</span>
-                      <span className="text-[0.62rem] text-emerald-600 font-bold bg-emerald-50 border border-emerald-200/80 px-1.5 py-0.2 rounded-md">
-                        VERIFIED GATEWAY
-                      </span>
-                    </p>
-                    <div className="rounded-2xl bg-blue-50/60 border border-blue-100 p-3.5 space-y-2 text-xs">
-                      {viewingOrder.razorpayPaymentId && (
-                        <div className="flex items-center justify-between">
-                          <span className="text-slate-500 text-[0.72rem]">Payment ID:</span>
-                          <span className="font-mono font-bold text-[#004f9e] select-all">
-                            {viewingOrder.razorpayPaymentId}
-                          </span>
-                        </div>
-                      )}
-                      {viewingOrder.razorpayOrderId && (
-                        <div className="flex items-center justify-between">
-                          <span className="text-slate-500 text-[0.72rem]">Razorpay Order:</span>
-                          <span className="font-mono text-slate-700 select-all">
-                            {viewingOrder.razorpayOrderId}
-                          </span>
-                        </div>
-                      )}
-                      <div className="pt-1.5 border-t border-blue-200/60 flex items-center justify-between text-[0.68rem] text-slate-500">
-                        <span>Gateway Provider</span>
-                        <span className="font-semibold text-slate-800">Razorpay India</span>
+            {/* Scrollable Modal Body */}
+            <div className="flex-1 overflow-y-auto px-5 py-4 sm:px-7 sm:py-6 space-y-5 overscroll-contain">
+              {/* Cancelled Order - Manual Refund Alert Banner */}
+              {viewingOrder.orderStatus === "Cancelled" && (
+                <div className="rounded-2xl bg-amber-50/90 border border-amber-200 p-3.5 sm:p-4 text-xs">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-1.5 font-bold text-amber-900 text-sm">
+                        <span className="text-base shrink-0">⚠️</span>
+                        <span>Order Cancelled — Manual Refund Required</span>
                       </div>
+                      <p className="mt-1 text-amber-800 leading-relaxed text-xs">
+                        Automatic refund is <strong className="underline">NOT</strong> triggered. Inventory has been restocked. 
+                        {viewingOrder.paymentStatus === "Paid" || (viewingOrder.paymentMethod || "").toLowerCase().includes("prepaid")
+                          ? ` Please manually refund ${formatINR(viewingOrder.total)} via Razorpay Dashboard using Payment ID: ${viewingOrder.razorpayPaymentId || viewingOrder.paymentId || "order record"}.`
+                          : " This is a COD order: Ensure no money was collected or arrange direct UPI/IMPS payout if delivered."}
+                      </p>
                     </div>
-                  </div>
-                )}
-
-                {/* Shipping Address */}
-                <div>
-                  <p className="text-[0.68rem] font-bold uppercase tracking-widest text-[#64748b] mb-1.5">
-                    SHIPPING ADDRESS
-                  </p>
-                  <div className="rounded-2xl bg-[#f8fafc] border border-slate-100 p-4">
-                    <p className="text-xs text-slate-700 leading-relaxed">
-                      {viewingOrder.customer.address} , {viewingOrder.customer.city} , {viewingOrder.customer.state} , {viewingOrder.customer.pincode}, India
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Column: Items, Tracking ID & Link */}
-              <div className="space-y-3">
-                {/* Items */}
-                <div>
-                  <p className="text-[0.68rem] font-bold uppercase tracking-widest text-[#64748b] text-right md:text-right mb-1.5">
-                    ITEMS
-                  </p>
-                  <div className="rounded-2xl bg-[#f8fafc] border border-slate-100 p-3 max-h-32 overflow-y-auto space-y-1.5">
-                    {viewingOrder.items.map((item, idx) => (
-                      <div key={idx} className="flex items-center justify-between text-xs py-1 px-1">
-                        <div className="max-w-[180px] truncate">
-                          <span className="font-medium text-slate-800">{item.product.name}</span>
-                        </div>
-                        <span className="font-bold text-slate-900 font-mono">x{item.quantity}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Tracking ID Input */}
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-[0.68rem] font-bold uppercase tracking-widest text-[#64748b]">
-                      TRACKING ID
-                    </span>
                     <button
-                      onClick={handleSaveTracking}
-                      className="text-[0.65rem] font-bold text-[#004f9e] hover:underline cursor-pointer"
+                      type="button"
+                      onClick={async () => {
+                        try {
+                          await sendOrderCancellationAdminRefundAlert(viewingOrder);
+                          showToast("Manual refund notification re-sent to admin email!", "success");
+                        } catch {
+                          showToast("Failed to send refund email", "error");
+                        }
+                      }}
+                      className="shrink-0 self-start sm:self-center px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs shadow-xs transition-colors cursor-pointer flex items-center gap-1.5"
+                      title="Send manual refund instructions to Admin Email"
                     >
-                      Save ID
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                      <span>Re-send Refund Email</span>
                     </button>
                   </div>
-                  <input
-                    type="text"
-                    value={modalTrackingId}
-                    onChange={(e) => setModalTrackingId(e.target.value)}
-                    onBlur={handleSaveTracking}
-                    placeholder="e.g. SF-123456789"
-                    className="w-full rounded-2xl border-2 border-sky-400 bg-white px-4 py-2.5 text-sm text-slate-800 text-right focus:outline-none focus:ring-2 focus:ring-sky-200 font-mono"
-                  />
+                </div>
+              )}
+
+              {/* 2-Column Content Layout (Responsive grid) */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+                {/* Left Column: Customer Info & Address */}
+                <div className="space-y-4">
+                  {/* Customer Info */}
+                  <div>
+                    <p className="text-[0.68rem] font-bold uppercase tracking-widest text-[#64748b] mb-1.5">
+                      CUSTOMER INFO
+                    </p>
+                    <div className="rounded-2xl bg-[#f8fafc] border border-slate-100 p-3.5 sm:p-4 space-y-1">
+                      <p className="font-bold text-sm text-slate-900">{viewingOrder.customer.fullName}</p>
+                      <p className="text-xs text-slate-500 break-all">{viewingOrder.customer.email}</p>
+                      <p className="text-xs text-slate-500">{viewingOrder.customer.phone}</p>
+                      {viewingOrder.customer.companyName && (
+                        <p className="text-xs text-[#004f9e] font-semibold pt-0.5">{viewingOrder.customer.companyName}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Razorpay Transaction Details (if paid via Razorpay) */}
+                  {(viewingOrder.razorpayPaymentId || viewingOrder.razorpayOrderId) && (
+                    <div>
+                      <p className="text-[0.68rem] font-bold uppercase tracking-widest text-[#64748b] mb-1.5 flex items-center justify-between">
+                        <span>RAZORPAY SETTLEMENT</span>
+                        <span className="text-[0.62rem] text-emerald-600 font-bold bg-emerald-50 border border-emerald-200/80 px-1.5 py-0.2 rounded-md">
+                          VERIFIED GATEWAY
+                        </span>
+                      </p>
+                      <div className="rounded-2xl bg-blue-50/60 border border-blue-100 p-3.5 space-y-2 text-xs">
+                        {viewingOrder.razorpayPaymentId && (
+                          <div className="flex flex-wrap items-center justify-between gap-1">
+                            <span className="text-slate-500 text-[0.72rem]">Payment ID:</span>
+                            <span className="font-mono font-bold text-[#004f9e] select-all break-all">
+                              {viewingOrder.razorpayPaymentId}
+                            </span>
+                          </div>
+                        )}
+                        {viewingOrder.razorpayOrderId && (
+                          <div className="flex flex-wrap items-center justify-between gap-1">
+                            <span className="text-slate-500 text-[0.72rem]">Razorpay Order:</span>
+                            <span className="font-mono text-slate-700 select-all break-all">
+                              {viewingOrder.razorpayOrderId}
+                            </span>
+                          </div>
+                        )}
+                        <div className="pt-1.5 border-t border-blue-200/60 flex items-center justify-between text-[0.68rem] text-slate-500">
+                          <span>Gateway Provider</span>
+                          <span className="font-semibold text-slate-800">Razorpay India</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Shipping Address */}
+                  <div>
+                    <p className="text-[0.68rem] font-bold uppercase tracking-widest text-[#64748b] mb-1.5">
+                      SHIPPING ADDRESS
+                    </p>
+                    <div className="rounded-2xl bg-[#f8fafc] border border-slate-100 p-3.5 sm:p-4">
+                      <p className="text-xs text-slate-700 leading-relaxed break-words">
+                        {viewingOrder.customer.address} , {viewingOrder.customer.city} , {viewingOrder.customer.state} , {viewingOrder.customer.pincode}, India
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Tracking Link Input */}
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-[0.68rem] font-bold uppercase tracking-widest text-[#64748b]">
-                      TRACKING LINK
-                    </span>
-                    {modalTrackingLink && (
-                      <a
-                        href={modalTrackingLink}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-[0.65rem] font-bold text-[#004f9e] hover:underline inline-flex items-center gap-0.5"
-                      >
-                        <span>Test Link</span>
-                        <span>↗</span>
-                      </a>
-                    )}
+                {/* Right Column: Items, Tracking ID & Link */}
+                <div className="space-y-4">
+                  {/* Items */}
+                  <div>
+                    <p className="text-[0.68rem] font-bold uppercase tracking-widest text-[#64748b] mb-1.5">
+                      ITEMS ORDERED
+                    </p>
+                    <div className="rounded-2xl bg-[#f8fafc] border border-slate-100 p-3 max-h-36 overflow-y-auto space-y-1.5 divide-y divide-slate-100/80">
+                      {viewingOrder.items.map((item, idx) => (
+                        <div key={idx} className="flex items-center justify-between text-xs py-1.5 px-1 gap-2">
+                          <div className="min-w-0 flex-1">
+                            <span className="font-medium text-slate-800 block truncate" title={item.product.name}>
+                              {item.product.name}
+                            </span>
+                            <span className="text-[10px] text-slate-400">SKU: {item.product.sku}</span>
+                          </div>
+                          <span className="font-bold text-slate-900 font-mono shrink-0">x{item.quantity}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-[#f8fafc] px-3.5 py-2">
+
+                  {/* Tracking ID Input */}
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[0.68rem] font-bold uppercase tracking-widest text-[#64748b]">
+                        TRACKING ID
+                      </span>
+                      <button
+                        onClick={handleSaveTracking}
+                        className="text-[0.65rem] font-bold text-[#004f9e] hover:underline cursor-pointer"
+                      >
+                        Save ID
+                      </button>
+                    </div>
                     <input
                       type="text"
-                      value={modalTrackingLink}
-                      onChange={(e) => setModalTrackingLink(e.target.value)}
+                      value={modalTrackingId}
+                      onChange={(e) => setModalTrackingId(e.target.value)}
                       onBlur={handleSaveTracking}
-                      placeholder="https://tracking.link/..."
-                      className="w-full bg-transparent text-xs text-slate-700 text-right focus:outline-none placeholder:text-slate-400 font-mono"
+                      placeholder="e.g. SF-123456789"
+                      className="w-full rounded-xl sm:rounded-2xl border-2 border-sky-400 bg-white px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-200 font-mono"
                     />
-                    {modalTrackingLink && (
-                      <a
-                        href={modalTrackingLink}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-slate-400 hover:text-[#004f9e] transition-colors shrink-0"
-                        title="Open tracking link in new tab"
-                      >
-                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                      </a>
-                    )}
                   </div>
-                  <p className="text-[0.62rem] text-slate-400 text-right mt-1">
-                    Status changes to 'Shipped' or 'Out for Delivery' automatically notify the customer.
-                  </p>
+
+                  {/* Tracking Link Input */}
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[0.68rem] font-bold uppercase tracking-widest text-[#64748b]">
+                        TRACKING LINK
+                      </span>
+                      {modalTrackingLink && (
+                        <a
+                          href={modalTrackingLink}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-[0.65rem] font-bold text-[#004f9e] hover:underline inline-flex items-center gap-0.5"
+                        >
+                          <span>Test Link</span>
+                          <span>↗</span>
+                        </a>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 rounded-xl sm:rounded-2xl border border-slate-200 bg-[#f8fafc] px-3.5 py-2">
+                      <input
+                        type="text"
+                        value={modalTrackingLink}
+                        onChange={(e) => setModalTrackingLink(e.target.value)}
+                        onBlur={handleSaveTracking}
+                        placeholder="https://tracking.link/..."
+                        className="w-full bg-transparent text-xs text-slate-700 focus:outline-none placeholder:text-slate-400 font-mono"
+                      />
+                      {modalTrackingLink && (
+                        <a
+                          href={modalTrackingLink}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-slate-400 hover:text-[#004f9e] transition-colors shrink-0"
+                          title="Open tracking link in new tab"
+                        >
+                          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                        </a>
+                      )}
+                    </div>
+                    <p className="text-[0.62rem] text-slate-400 mt-1">
+                      Status changes to 'Shipped' or 'Out for Delivery' automatically notify the customer.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Bottom Row: Status Change Pills & Total Price */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 pt-5 border-t border-slate-100">
+            {/* Bottom Row: Status Change Pills & Total Price (Sticky Footer) */}
+            <div className="sticky bottom-0 z-20 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-t border-slate-100 bg-slate-50/95 px-5 py-3.5 sm:px-7 sm:py-4 backdrop-blur-md shrink-0">
               {/* Status Pills */}
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                 {[
                   { key: "Confirmed" as OrderStatus, label: "Confirmed" },
                   { key: "Processing" as OrderStatus, label: "Processing" },
@@ -4676,7 +4690,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                       key={st.key}
                       disabled={isDisabled}
                       onClick={() => handleModalStatusChange(st.key)}
-                      className={`rounded-full px-4 sm:px-5 py-2 text-xs font-semibold transition-all cursor-pointer ${
+                      className={`rounded-full px-3 sm:px-4 py-1.5 text-[0.7rem] sm:text-xs font-semibold transition-all cursor-pointer ${
                         isActive
                           ? "bg-[#004f9e] text-white shadow-xs font-bold ring-2 ring-blue-300"
                           : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300"
@@ -4689,11 +4703,11 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
               </div>
 
               {/* Total Price */}
-              <div className="text-right sm:text-right w-full sm:w-auto">
-                <span className="text-[0.68rem] text-slate-400 font-medium block">
+              <div className="text-right shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200/60 flex sm:block items-center justify-between">
+                <span className="text-[0.65rem] text-slate-400 font-bold uppercase tracking-wider block sm:mb-0.5">
                   Total Price
                 </span>
-                <span className="text-2xl font-black text-slate-900 tracking-tight">
+                <span className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight font-mono">
                   {formatINR(viewingOrder.total)}
                 </span>
               </div>
