@@ -554,10 +554,44 @@ export async function submitQuoteRequestToSupabase(
   }
 }
 
+const DELETED_RFQS_STORAGE_KEY = "qualitech_deleted_rfqs_v1";
+
+function getDeletedRfqIds(): Set<string> {
+  try {
+    const raw = localStorage.getItem(DELETED_RFQS_STORAGE_KEY);
+    if (!raw) return new Set();
+    const parsed = JSON.parse(raw);
+    return new Set(Array.isArray(parsed) ? parsed : []);
+  } catch {
+    return new Set();
+  }
+}
+
+function markRfqAsDeleted(id: string, rfqNumber?: string) {
+  try {
+    const deleted = getDeletedRfqIds();
+    if (id) deleted.add(id);
+    if (rfqNumber) deleted.add(rfqNumber);
+    localStorage.setItem(DELETED_RFQS_STORAGE_KEY, JSON.stringify(Array.from(deleted)));
+  } catch (e) {
+    console.warn("Failed to persist deleted RFQ ID:", e);
+  }
+}
+
 /** Fetch all RFQ quote requests for admin */
 export async function fetchQuoteRequestsFromSupabase(): Promise<SupabaseQuoteRecord[]> {
+  const deletedSet = getDeletedRfqIds();
+
+  const filterDeleted = (records: SupabaseQuoteRecord[]) => {
+    if (!Array.isArray(records)) return [];
+    return records.filter(
+      (q) => !deletedSet.has(q.id) && !deletedSet.has(q.rfq_number)
+    );
+  };
+
   if (!isSupabaseConfigured || !supabase) {
-    return JSON.parse(localStorage.getItem("qualitech_rfq_quotes_v1") || "[]");
+    const local = JSON.parse(localStorage.getItem("qualitech_rfq_quotes_v1") || "[]");
+    return filterDeleted(local);
   }
 
   try {
@@ -567,25 +601,43 @@ export async function fetchQuoteRequestsFromSupabase(): Promise<SupabaseQuoteRec
       .order("created_at", { ascending: false });
 
     if (error || !data) {
-      return JSON.parse(localStorage.getItem("qualitech_rfq_quotes_v1") || "[]");
+      const local = JSON.parse(localStorage.getItem("qualitech_rfq_quotes_v1") || "[]");
+      return filterDeleted(local);
     }
-    return data;
+    return filterDeleted(data);
   } catch (err) {
-    return JSON.parse(localStorage.getItem("qualitech_rfq_quotes_v1") || "[]");
+    const local = JSON.parse(localStorage.getItem("qualitech_rfq_quotes_v1") || "[]");
+    return filterDeleted(local);
   }
 }
 
 /** Delete an RFQ quote enquiry by ID or RFQ Number */
-export async function deleteQuoteRequestFromSupabase(id: string): Promise<boolean> {
+export async function deleteQuoteRequestFromSupabase(id: string, rfqNumber?: string): Promise<boolean> {
+  // 1. Immediately persist to blacklist so background polling NEVER resurfaces it
+  markRfqAsDeleted(id, rfqNumber);
+
+  // 2. Also remove from local storage cache
+  try {
+    const stored: any[] = JSON.parse(localStorage.getItem("qualitech_rfq_quotes_v1") || "[]");
+    const filtered = stored.filter((q) => q.id !== id && q.rfq_number !== id && (!rfqNumber || q.rfq_number !== rfqNumber));
+    localStorage.setItem("qualitech_rfq_quotes_v1", JSON.stringify(filtered));
+  } catch (e) {
+    console.warn("Failed to clean local storage quotes:", e);
+  }
+
+  // 3. Attempt direct delete in Supabase
   if (isSupabaseConfigured && supabase) {
     try {
-      await supabase.from("quote_requests").delete().or(`id.eq.${id},rfq_number.eq.${id}`);
+      if (id) {
+        await supabase.from("quote_requests").delete().eq("id", id);
+      }
+      if (rfqNumber) {
+        await supabase.from("quote_requests").delete().eq("rfq_number", rfqNumber);
+      }
     } catch (err) {
       console.warn("Supabase delete quote error:", err);
     }
   }
-  const stored: any[] = JSON.parse(localStorage.getItem("qualitech_rfq_quotes_v1") || "[]");
-  const filtered = stored.filter((q) => q.id !== id && q.rfq_number !== id);
-  localStorage.setItem("qualitech_rfq_quotes_v1", JSON.stringify(filtered));
+
   return true;
 }

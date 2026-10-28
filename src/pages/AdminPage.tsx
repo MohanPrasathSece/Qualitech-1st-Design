@@ -395,7 +395,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
     // Periodic live background sync every 4 seconds so admin section always takes latest updates
     const livePoll = setInterval(() => {
       fetchQuoteRequestsFromSupabase().then((quotes) => {
-        if (quotes && quotes.length > 0) {
+        if (Array.isArray(quotes)) {
           setQuoteRequests(quotes);
         }
       }).catch(() => {});
@@ -1436,8 +1436,8 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
 
   const handleDeleteQuoteRequest = async (id: string, rfqNum: string) => {
     if (confirm(`Are you sure you want to delete RFQ Enquiry #${rfqNum}?`)) {
-      await deleteQuoteRequestFromSupabase(id);
-      setQuoteRequests((prev) => prev.filter((q) => q.id !== id && q.rfq_number !== id));
+      await deleteQuoteRequestFromSupabase(id, rfqNum);
+      setQuoteRequests((prev) => prev.filter((q) => q.id !== id && q.rfq_number !== id && q.rfq_number !== rfqNum));
       showToast(`RFQ #${rfqNum} deleted.`, "info");
     }
   };
