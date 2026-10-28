@@ -85,6 +85,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
     updateLeadStatus,
     deleteAbandonedOrder,
     exportAbandonedOrdersCsv,
+    clearAllOrders,
   } = useECommerce();
 
   // Valid, Completed Orders (Excludes Incomplete/Abandoned Checkouts & duplicates, sorted newest first)
@@ -1072,6 +1073,49 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
       showToast("Error running stock audit.", "error");
     } finally {
       setIsAuditingStock(false);
+    }
+  };
+
+  const handlePurgeTestData = () => {
+    if (
+      !window.confirm(
+        "WARNING: This will permanently delete all test orders, test shipments, and test quotation enquiries from both local storage and cloud database to launch the website live with a clean slate.\n\nAre you sure you want to proceed?"
+      )
+    ) {
+      return;
+    }
+
+    try {
+      // 1. Purge all orders & shipments
+      clearAllOrders();
+
+      // 2. Purge quote requests & enquiries
+      try {
+        const quoteIds = quoteRequests.map((q) => q.rfq_number || q.id);
+        quoteIds.push(
+          "RFQ-574721",
+          "RFQ-659916",
+          "66459d00-8a0a-4620-a0f7-9d93cf2ca020",
+          "ee85baf7-11a9-4599-914f-54a76a06a71b"
+        );
+        localStorage.setItem("qualitech_dismissed_quotes_v1", JSON.stringify(quoteIds));
+        localStorage.setItem("qualitech_rfq_quotes_v1", "[]");
+        setQuoteRequests([]);
+      } catch (_) {}
+
+      // 3. Reset seen badges
+      try {
+        localStorage.setItem(
+          "qualitech_admin_seen_badges_v2",
+          JSON.stringify({ orders: [], tracking: [], quotes: [], productsCount: products.length })
+        );
+        setSeenBadges({ orders: [], tracking: [], quotes: [], productsCount: products.length });
+      } catch (_) {}
+
+      showToast("All test enquiries, orders, and shipments have been purged! Store is ready for live traffic.", "success");
+    } catch (err) {
+      console.error("Purge error:", err);
+      showToast("Error purging test data. Please check console.", "error");
     }
   };
 
@@ -2184,6 +2228,16 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                   className="flex items-center justify-center gap-2 rounded-xl bg-white border border-slate-200 p-3.5 text-xs font-bold text-slate-800 hover:bg-slate-900 hover:text-white transition-all shadow-xs cursor-pointer"
                 >
                   <span>View Public Storefront ↗</span>
+                </button>
+                <button
+                  onClick={handlePurgeTestData}
+                  className="flex items-center justify-center gap-2 rounded-xl bg-rose-50 border border-rose-200 p-3.5 text-xs font-bold text-rose-700 hover:bg-rose-600 hover:text-white hover:border-rose-600 transition-all shadow-xs cursor-pointer"
+                  title="Purge all test enquiries, orders, and shipments before going live"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  <span>Purge Test Data (Go Live)</span>
                 </button>
               </div>
             </div>

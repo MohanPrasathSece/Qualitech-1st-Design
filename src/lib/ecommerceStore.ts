@@ -388,6 +388,15 @@ export function deleteStoredOrders(orderIds: string[]): Order[] {
   return updated;
 }
 
+export function clearAllStoredOrders(): void {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(ORDERS_STORAGE_KEY, "[]");
+  try {
+    localStorage.setItem("qualitech_abandoned_checkouts_v1", "[]");
+  } catch (_) {}
+  window.dispatchEvent(new CustomEvent(ORDERS_UPDATED_EVENT, { detail: [] }));
+}
+
 /**
  * Export orders array to CSV formatted string (Excel compatible)
  */
