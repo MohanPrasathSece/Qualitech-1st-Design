@@ -299,6 +299,41 @@ export const BRANDS = ["All Brands", "Amphenol", "Zolex", "Qualitech"] as const;
 
 export const PRODUCTS: Product[] = [
   // ═══════════════════════════════════════════════════════════════
+  // LIVE VERIFICATION TEST PRODUCT (₹5 INR)
+  // ═══════════════════════════════════════════════════════════════
+  {
+    id: "qt-test-sample-5inr",
+    sku: "QT-TEST-SAMPLE-05",
+    name: "Live Order Test Sample Component (₹5 Live Verification)",
+    brand: "Qualitech",
+    category: "Custom Cable Assemblies",
+    subCategory: "Turnkey OEM Solutions",
+    description: "Official live order verification component configured at ₹5 INR for end-to-end checkout, payment gateway verification, and live dispatch email testing.",
+    features: [
+      "Instant checkout verification sample",
+      "Live Razorpay & COD payment validation",
+      "Immediate automated delivery & dispatch email trigger",
+      "100% Quality Tested"
+    ],
+    specs: {
+      "Type": "Live Checkout Test Component",
+      "Standard": "ISO 9001:2015 Verified",
+      "Manufacturer": "Qualitech Connectronics Private Limited",
+      "Test Price": "₹5 INR Only"
+    },
+    industries: ["Industrial Automation", "Telecommunications"],
+    featured: true,
+    image: "/images/products/qualitech/cat-wire-to-board.jpg",
+    inStock: true,
+    stockCount: 999,
+    minOrderQty: 1,
+    unit: "pcs",
+    price: 5,
+    salePrice: 5,
+    isEnquiry: false,
+    leadTime: "Instant Dispatch",
+  },
+  // ═══════════════════════════════════════════════════════════════
   // QUALITECH CUSTOM CABLE ASSEMBLIES & WIRE HARNESSES (PHOTOSHOOT PRODUCTS)
   // ═══════════════════════════════════════════════════════════════
   {

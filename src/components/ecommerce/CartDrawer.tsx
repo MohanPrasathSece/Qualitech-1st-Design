@@ -145,7 +145,6 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToShop }) => {
     clearCart,
   } = useECommerce();
 
-  const [copiedQuote, setCopiedQuote] = useState(false);
   const [downloadingQuote, setDownloadingQuote] = useState(false);
 
   if (!isCartOpen) return null;
@@ -161,29 +160,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToShop }) => {
     }
   };
 
-  const handleGenerateQuoteSummary = () => {
-    const text = [
-      `=== QUALITECH CONNECTRONICS - FORMAL RFQ SUMMARY ===`,
-      `Date: ${new Date().toLocaleDateString()}`,
-      `Items:`,
-      ...cart.map(
-        (item, idx) =>
-          `${idx + 1}. [${item.product.sku}] ${item.product.name} x ${item.quantity} ${item.product.unit || "pcs"} @ ${formatINR(item.unitPrice)} = ${formatINR(item.unitPrice * item.quantity)}`
-      ),
-      `Subtotal: ${formatINR(cartSubtotal)}`,
-      `Estimated GST (18%): ${formatINR(cartTax)}`,
-      `Estimated Total: ${formatINR(cartTotal)}`,
-      `====================================================`,
-    ]
-      .filter(Boolean)
-      .join("\n");
-
-    navigator.clipboard?.writeText(text);
-    setCopiedQuote(true);
-    setTimeout(() => setCopiedQuote(false), 3000);
-  };
-
-  const progressPercent = Math.min(100, Math.round(((freeShippingThreshold - freeShippingRemaining) / freeShippingThreshold) * 100));
+  const progressPercent =
+    freeShippingThreshold > 0
+      ? Math.min(100, Math.round(((freeShippingThreshold - freeShippingRemaining) / freeShippingThreshold) * 100))
+      : 100;
 
   return (
     <div className="fixed inset-0 z-[100] flex justify-end">
@@ -236,34 +216,18 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToShop }) => {
           </div>
         </div>
 
-        {/* Free Shipping Progress Indicator */}
+        {/* Flat Rate Shipping Notice */}
         {cart.length > 0 && (
-          <div className="border-b border-border bg-steel-light/15 px-6 py-3">
-            <div className="flex items-center justify-between text-xs font-semibold text-graphite">
-              <span>
-                {freeShippingRemaining === 0 ? (
-                  <span className="inline-flex items-center gap-1.5 text-emerald-600">
-                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                    Qualified for Free Express Dispatch!
-                  </span>
-                ) : (
-                  <span>
-                    Add <strong className="text-brand-blue">{formatINR(freeShippingRemaining)}</strong> more for Free Delivery
-                  </span>
-                )}
-              </span>
-              <span className="text-[0.68rem] text-muted-foreground">{progressPercent}%</span>
-            </div>
-            <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-border">
-              <div
-                className={`h-full transition-all duration-500 rounded-full ${
-                  freeShippingRemaining === 0 ? "bg-emerald-500" : "bg-brand-blue"
-                }`}
-                style={{ width: `${progressPercent}%` }}
-              />
-            </div>
+          <div className="border-b border-border bg-steel-light/15 px-6 py-2.5 flex items-center justify-between text-xs font-semibold text-graphite">
+            <span className="flex items-center gap-1.5 text-slate-700">
+              <svg className="h-4 w-4 text-[#004f9e]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
+              </svg>
+              <span>Pan-India Logistics Freight:</span>
+            </span>
+            <span className="font-mono font-bold text-[#004f9e] bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-md">
+              ₹150 Flat Shipping
+            </span>
           </div>
         )}
 
@@ -425,7 +389,17 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToShop }) => {
             {/* Action Buttons */}
             <div className="mt-4 flex flex-col gap-2">
               <button
-                onClick={openCheckout}
+                type="button"
+                onClick={() => {
+                  closeCart();
+                  window.location.hash = "#checkout";
+                  try {
+                    window.dispatchEvent(new HashChangeEvent("hashchange"));
+                  } catch (_) {
+                    window.dispatchEvent(new Event("hashchange"));
+                  }
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
                 className="group flex w-full items-center justify-center gap-2 rounded-xl bg-brand-blue py-3.5 font-display text-xs font-bold uppercase tracking-[0.16em] text-white shadow-md hover:bg-graphite transition-all cursor-pointer"
               >
                 <span>Proceed to Checkout</span>
@@ -441,17 +415,6 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToShop }) => {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
                 <span>{downloadingQuote ? "Generating Official PDF..." : "Download Formal RFQ (PDF)"}</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={handleGenerateQuoteSummary}
-                className="flex w-full items-center justify-center gap-2 rounded-xl border border-border py-2.5 font-display text-[0.7rem] font-bold uppercase tracking-wider text-graphite hover:bg-steel-light/50 transition-colors cursor-pointer"
-              >
-                <svg className="h-3.5 w-3.5 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                </svg>
-                <span>{copiedQuote ? "RFQ Copied to Clipboard!" : "Copy Official RFQ Text"}</span>
               </button>
             </div>
 

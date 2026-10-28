@@ -31,8 +31,8 @@ export interface RFQFormData {
 const envAdminEmails = (import.meta.env["VITE_ADMIN_NOTIFICATION_EMAIL"] as string) || "";
 export const ADMIN_EMAILS: string[] = envAdminEmails
   ? envAdminEmails.split(",").map((s) => s.trim()).filter(Boolean)
-  : ["zyradigitalsofficial@gmail.com", "info@qualitechindia.in"];
-export const ADMIN_EMAIL = ADMIN_EMAILS[0] || "zyradigitalsofficial@gmail.com";
+  : ["info@qualitechindia.in"];
+export const ADMIN_EMAIL = ADMIN_EMAILS[0] || "info@qualitechindia.in";
 
 // Configurable SMTP / Resend / Webhook credentials
 const RESEND_API_KEY = (import.meta.env["VITE_RESEND_API_KEY"] as string) || "";
@@ -68,6 +68,10 @@ async function dispatchEmail(payload: {
         const data = await res.json().catch(() => ({}));
         console.log(`[Gmail SMTP Success] Email sent to: ${Array.isArray(payload.to) ? payload.to.join(", ") : payload.to} | Subject: "${payload.subject}"`, data);
         return { success: true };
+      } else {
+        const errJson = await res.json().catch(() => ({}));
+        console.error(`[Gmail SMTP Error]:`, errJson?.error || "SMTP dispatch error");
+        return { success: false, error: errJson?.error || "SMTP dispatch error" };
       }
     } catch (err: any) {
       console.warn("SMTP endpoint error:", err);
@@ -207,7 +211,7 @@ export async function sendOrderConfirmationEmail(order: Order): Promise<boolean>
         <div style="background-color: #f8fafc; padding: 20px 32px; border-top: 1px solid #e2e8f0; text-align: center; font-size: 12px; color: #64748b;">
           <p style="margin: 0;">Qualitech Connectronics Private Limited • Est. 1995</p>
           <p style="margin: 4px 0 0 0;">Cherlapally Industrial Area, Hyderabad, Telangana - 500051</p>
-          <p style="margin: 4px 0 0 0;">Direct Support: <a href="mailto:zyradigitalsofficial@gmail.com" style="color: #004f9e;">zyradigitalsofficial@gmail.com</a> | +91 98490 01484</p>
+          <p style="margin: 4px 0 0 0;">Direct Support: <a href="mailto:info@qualitechindia.in" style="color: #004f9e;">info@qualitechindia.in</a> | +91 98490 01484</p>
         </div>
       </div>
     </body>
@@ -447,7 +451,7 @@ export async function sendOrderStatusEmail(
         <!-- Footer -->
         <div style="background-color: #f8fafc; padding: 20px 32px; border-top: 1px solid #e2e8f0; text-align: center; font-size: 12px; color: #64748b;">
           <p style="margin: 0;">Qualitech Connectronics Pvt. Ltd. • IDA Cherlapally, Hyderabad - 500051</p>
-          <p style="margin: 4px 0 0 0;">Helpline: <a href="mailto:zyradigitalsofficial@gmail.com" style="color: #004f9e;">zyradigitalsofficial@gmail.com</a> | +91 98490 01484</p>
+          <p style="margin: 4px 0 0 0;">Helpline: <a href="mailto:info@qualitechindia.in" style="color: #004f9e;">info@qualitechindia.in</a> | +91 98490 01484</p>
         </div>
       </div>
     </body>
@@ -462,13 +466,211 @@ export async function sendOrderStatusEmail(
   });
 
   // 2. Also inform admin team
-  await dispatchEmail({
-    to: ADMIN_EMAILS,
-    subject: `[STATUS CHANGED: ${status.toUpperCase()}] Order #${order.orderNumber} (${order.customer.fullName})`,
-    html: `<p>Admin status update applied to <strong>#${order.orderNumber}</strong>:</p><p>New Status: <strong>${status}</strong></p><p>Tracking ID: <strong>${trackingNumber}</strong></p><p>Tracking URL: <a href="${trackingLink}">${trackingLink}</a></p>`,
-  });
+  if (status === "Cancelled") {
+    await sendOrderCancellationAdminRefundAlert(order);
+  } else {
+    await dispatchEmail({
+      to: ADMIN_EMAILS,
+      subject: `[STATUS CHANGED: ${status.toUpperCase()}] Order #${order.orderNumber} (${order.customer.fullName})`,
+      html: `<p>Admin status update applied to <strong>#${order.orderNumber}</strong>:</p><p>New Status: <strong>${status}</strong></p><p>Tracking ID: <strong>${trackingNumber}</strong></p><p>Tracking URL: <a href="${trackingLink}">${trackingLink}</a></p>`,
+    });
+  }
 
   return customerResult.success;
+}
+
+// ==============================================================================
+// 4B. ORDER CANCELLED - MANUAL REFUND ACTION NOTIFICATION TO ADMIN
+// ==============================================================================
+
+export async function sendOrderCancellationAdminRefundAlert(
+  order: Order,
+  cancelNote?: string
+): Promise<boolean> {
+  const isPrepaid =
+    (order.paymentMethod || "").toLowerCase().includes("prepaid") ||
+    (order.paymentStatus || "").toLowerCase() === "paid" ||
+    !!order.paymentId;
+
+  const itemsRows = (order.items || [])
+    .map(
+      (item) => `
+      <tr>
+        <td style="padding: 10px; border-bottom: 1px solid #e2e8f0;">
+          <strong>${item.product.name}</strong><br/>
+          <span style="font-family: monospace; font-size: 11px; color: #64748b;">SKU: ${item.product.sku} (${item.product.brand || "Qualitech"})</span>
+        </td>
+        <td style="padding: 10px; border-bottom: 1px solid #e2e8f0; text-align: center;">${item.quantity}</td>
+        <td style="padding: 10px; border-bottom: 1px solid #e2e8f0; text-align: right; font-family: monospace;">₹${item.unitPrice.toLocaleString("en-IN")}</td>
+        <td style="padding: 10px; border-bottom: 1px solid #e2e8f0; text-align: right; font-family: monospace; font-weight: bold;">₹${(item.unitPrice * item.quantity).toLocaleString("en-IN")}</td>
+      </tr>`
+    )
+    .join("");
+
+  const emailHtml = `
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset="utf-8"/><title>Action Required: Manual Refund for Order #${order.orderNumber}</title></head>
+    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f1f5f9; margin: 0; padding: 24px; color: #0f172a;">
+      <div style="max-width: 650px; margin: 0 auto; background: #ffffff; border-radius: 16px; border: 1px solid #cbd5e1; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.08);">
+        
+        <!-- Header Banner: Urgent Action Required -->
+        <div style="background: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%); padding: 28px 32px; color: #ffffff;">
+          <div style="display: inline-block; background-color: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;">
+            ACTION REQUIRED • MANUAL REFUND
+          </div>
+          <h1 style="margin: 12px 0 0 0; font-size: 22px; font-weight: 800; letter-spacing: -0.5px;">Order #${order.orderNumber} Cancelled</h1>
+          <p style="margin: 6px 0 0 0; font-size: 13px; color: #fecaca;">
+            Please manually refund the customer. Automated refund is NOT triggered by the system.
+          </p>
+        </div>
+
+        <!-- Alert Callout -->
+        <div style="margin: 24px 32px 0 32px; padding: 16px 20px; background-color: #fff7ed; border-left: 4px solid #ea580c; border-radius: 8px;">
+          <p style="margin: 0; font-size: 14px; font-weight: bold; color: #9a3412;">
+            Refund Payable: <span style="font-size: 18px; font-family: monospace; color: #c2410c;">₹${order.total.toLocaleString("en-IN")}</span>
+          </p>
+          <p style="margin: 6px 0 0 0; font-size: 13px; color: #7c2d12; line-height: 1.5;">
+            Payment Method: <strong>${order.paymentMethod || (isPrepaid ? "PREPAID" : "CASH ON DELIVERY")}</strong> | Payment Status: <strong>${order.paymentStatus || "N/A"}</strong>
+            <br/>${isPrepaid ? "⚠️ This order was paid online. Please manually issue the refund from your Razorpay Merchant Dashboard." : "ℹ️ This is a Cash On Delivery (COD) order. If goods were not delivered, no refund is needed. If cash was already collected, transfer via UPI / IMPS."}
+          </p>
+        </div>
+
+        <div style="padding: 24px 32px;">
+          <!-- Customer Details Card -->
+          <h3 style="font-size: 12px; text-transform: uppercase; color: #64748b; margin: 0 0 10px 0; letter-spacing: 0.5px;">Customer &amp; Recipient Details</h3>
+          <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+              <tr>
+                <td style="padding: 6px 0; color: #64748b; width: 150px;">Customer Name:</td>
+                <td style="padding: 6px 0; font-weight: bold; color: #0f172a;">${order.customer.fullName}</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 0; color: #64748b;">Company / Firm:</td>
+                <td style="padding: 6px 0; font-weight: 600; color: #0f172a;">${order.customer.companyName || "Individual Customer"}</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 0; color: #64748b;">Email Address:</td>
+                <td style="padding: 6px 0; color: #004f9e; font-weight: 600;">
+                  <a href="mailto:${order.customer.email}" style="color: #004f9e; text-decoration: none;">${order.customer.email}</a>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 0; color: #64748b;">Phone / Mobile:</td>
+                <td style="padding: 6px 0; color: #0f172a; font-weight: 600;">
+                  <a href="tel:${order.customer.phone}" style="color: #0f172a; text-decoration: none;">${order.customer.phone}</a>
+                </td>
+              </tr>
+              ${order.customer.gstin ? `<tr>
+                <td style="padding: 6px 0; color: #64748b;">GSTIN:</td>
+                <td style="padding: 6px 0; font-family: monospace; font-weight: bold; color: #0f172a;">${order.customer.gstin}</td>
+              </tr>` : ""}
+              <tr>
+                <td style="padding: 6px 0; color: #64748b; vertical-align: top;">Address:</td>
+                <td style="padding: 6px 0; color: #334155; line-height: 1.4;">
+                  ${order.customer.address}, ${order.customer.city}, ${order.customer.state} - ${order.customer.pincode}
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <!-- Order & Payment Audit Identifiers -->
+          <h3 style="font-size: 12px; text-transform: uppercase; color: #64748b; margin: 0 0 10px 0; letter-spacing: 0.5px;">Order &amp; Payment Identifiers</h3>
+          <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+              <tr>
+                <td style="padding: 6px 0; color: #64748b; width: 150px;">Order Number:</td>
+                <td style="padding: 6px 0; font-family: monospace; font-weight: bold; color: #004f9e;">#${order.orderNumber}</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 0; color: #64748b;">Internal Order ID:</td>
+                <td style="padding: 6px 0; font-family: monospace; color: #475569;">${order.id}</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 0; color: #64748b;">Payment Gateway Ref:</td>
+                <td style="padding: 6px 0; font-family: monospace; font-weight: bold; color: ${order.paymentId ? '#0f172a' : '#64748b'};">
+                  ${order.paymentId || "N/A (Cash on Delivery or Offline)"}
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 0; color: #64748b;">Order Placed At:</td>
+                <td style="padding: 6px 0; color: #475569;">${new Date(order.createdAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}</td>
+              </tr>
+              ${order.customer.orderNotes ? `<tr>
+                <td style="padding: 6px 0; color: #64748b; vertical-align: top;">Customer Notes:</td>
+                <td style="padding: 6px 0; color: #334155; font-style: italic;">${order.customer.orderNotes}</td>
+              </tr>` : ""}
+              ${cancelNote ? `<tr>
+                <td style="padding: 6px 0; color: #b91c1c; font-weight: bold;">Cancellation Note:</td>
+                <td style="padding: 6px 0; color: #b91c1c; font-weight: 600;">${cancelNote}</td>
+              </tr>` : ""}
+            </table>
+          </div>
+
+          <!-- Step-by-Step Manual Refund Instructions -->
+          <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 18px; margin-bottom: 24px;">
+            <h4 style="margin: 0 0 10px 0; color: #166534; font-size: 14px; font-weight: bold;">
+              💡 Instructions to Complete Manual Refund:
+            </h4>
+            ${
+              isPrepaid
+                ? `<ol style="margin: 0; padding-left: 20px; color: #15803d; font-size: 13px; line-height: 1.6;">
+                    <li>Log into your <strong>Razorpay Dashboard</strong> (<a href="https://dashboard.razorpay.com" target="_blank" style="color: #004f9e; text-decoration: underline;">dashboard.razorpay.com</a>).</li>
+                    <li>Go to <strong>Transactions</strong> &rarr; <strong>Payments</strong>.</li>
+                    <li>Search Payment ID: <code style="background-color: #dcfce7; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-weight: bold;">${order.paymentId || order.customer.email}</code> or customer name <strong>${order.customer.fullName}</strong>.</li>
+                    <li>Click <strong>Issue Refund</strong> and verify the amount: <strong style="font-family: monospace;">₹${order.total.toLocaleString("en-IN")}</strong>.</li>
+                    <li>Confirm refund. Razorpay will automatically reverse funds to the customer's original UPI/card/account within 1-3 business days.</li>
+                  </ol>`
+                : `<p style="margin: 0; color: #15803d; font-size: 13px; line-height: 1.6;">
+                    This order was placed under <strong>Cash on Delivery (COD)</strong>.<br/>
+                    • <strong>If parcel was not dispatched / not delivered:</strong> No cash was collected. Simply cancel courier dispatch. No refund is required.<br/>
+                    • <strong>If cash was already collected:</strong> Contact <strong>${order.customer.fullName}</strong> at <a href="tel:${order.customer.phone}" style="color: #166534; font-weight: bold;">${order.customer.phone}</a> or <a href="mailto:${order.customer.email}" style="color: #166534; font-weight: bold;">${order.customer.email}</a> to obtain their UPI ID or Bank Account info, and transfer <strong>₹${order.total.toLocaleString("en-IN")}</strong> via IMPS/NEFT.
+                  </p>`
+            }
+          </div>
+
+          <!-- Items Restocked Table -->
+          <h3 style="font-size: 12px; text-transform: uppercase; color: #64748b; margin: 0 0 10px 0; letter-spacing: 0.5px;">Cancelled Items (Restocked to Inventory)</h3>
+          <table style="width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 20px;">
+            <thead>
+              <tr style="background-color: #f8fafc; color: #475569; text-align: left; font-size: 11px; text-transform: uppercase;">
+                <th style="padding: 8px 10px; border-bottom: 2px solid #e2e8f0;">Component</th>
+                <th style="padding: 8px 10px; border-bottom: 2px solid #e2e8f0; text-align: center;">Qty Restocked</th>
+                <th style="padding: 8px 10px; border-bottom: 2px solid #e2e8f0; text-align: right;">Unit Rate</th>
+                <th style="padding: 8px 10px; border-bottom: 2px solid #e2e8f0; text-align: right;">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${itemsRows}
+            </tbody>
+          </table>
+
+          <div style="border-top: 2px solid #e2e8f0; padding-top: 12px; text-align: right; font-size: 13px;">
+            <p style="margin: 2px 0; color: #64748b;">Subtotal: <strong style="font-family: monospace; color: #0f172a;">₹${order.subtotal.toLocaleString("en-IN")}</strong></p>
+            <p style="margin: 2px 0; color: #64748b;">GST (18%): <strong style="font-family: monospace; color: #0f172a;">₹${order.tax.toLocaleString("en-IN")}</strong></p>
+            <p style="margin: 2px 0; color: #64748b;">Shipping Logistics: <strong style="font-family: monospace; color: #0f172a;">₹${order.shippingCost.toLocaleString("en-IN")}</strong></p>
+            <p style="margin: 8px 0 0 0; font-size: 16px; font-weight: 800; color: #b91c1c;">
+              Total Refund Due: ₹${order.total.toLocaleString("en-IN")}
+            </p>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="background-color: #f8fafc; padding: 18px 32px; border-top: 1px solid #e2e8f0; text-align: center; font-size: 12px; color: #64748b;">
+          Qualitech Connectronics Admin Notification System • IDA Cherlapally, Hyderabad
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  return (
+    await dispatchEmail({
+      to: ADMIN_EMAILS,
+      subject: `[ACTION REQUIRED: MANUAL REFUND] Order #${order.orderNumber} Cancelled - Refund ₹${order.total.toLocaleString("en-IN")} to ${order.customer.fullName}`,
+      html: emailHtml,
+    })
+  ).success;
 }
 
 // ==============================================================================

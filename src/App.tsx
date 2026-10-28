@@ -27,12 +27,14 @@ import { ContactPage } from "@/pages/ContactPage";
 import { AdminPage } from "@/pages/AdminPage";
 import { PrivacyPolicyPage } from "@/pages/PrivacyPolicyPage";
 import { TermsPage } from "@/pages/TermsPage";
+import { CheckoutPage } from "@/pages/CheckoutPage";
+import { AbandonedCheckoutsPage } from "@/pages/AbandonedCheckoutsPage";
 import { ECommerceProvider } from "@/context/ECommerceContext";
 import { CartDrawer } from "@/components/ecommerce/CartDrawer";
 import { ProductDetailModal } from "@/components/ecommerce/ProductDetailModal";
-import { CheckoutModal } from "@/components/ecommerce/CheckoutModal";
 import { OrderSuccessModal } from "@/components/ecommerce/OrderSuccessModal";
 import { WhatsAppWidget } from "@/components/common/WhatsAppWidget";
+import { FloatingCartWidget } from "@/components/ecommerce/FloatingCartWidget";
 
 export default function App() {
   return (
@@ -43,8 +45,8 @@ export default function App() {
         window.scrollTo({ top: 0, behavior: "smooth" });
       }} />
       <ProductDetailModal />
-      <CheckoutModal />
       <OrderSuccessModal />
+      <FloatingCartWidget />
       <WhatsAppWidget />
     </ECommerceProvider>
   );
@@ -52,7 +54,7 @@ export default function App() {
 
 /* ─── Hero ─── */
 
-function Hero({ onNavigate }: { onNavigate?: (target: string) => void }) {
+function Hero({ onNavigate }: { onNavigate?: (target: string, isPage?: boolean) => void }) {
   return (
     <section id="top" className="relative overflow-hidden bg-background pt-32 sm:pt-36 lg:pt-40">
       <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-5 pb-16 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16 lg:pb-24">
@@ -86,14 +88,14 @@ function Hero({ onNavigate }: { onNavigate?: (target: string) => void }) {
           <Reveal delay={380}>
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
               <a
-                href="#business"
+                href="#products"
                 onClick={(e) => {
                   e.preventDefault();
-                  onNavigate?.("#business");
+                  onNavigate?.("#products", true);
                 }}
                 className="group inline-flex items-center justify-center gap-3 rounded-xl bg-graphite px-7 py-4 font-display text-[0.72rem] font-bold uppercase tracking-[0.2em] text-white transition-all duration-300 hover:bg-brand-blue shadow-sm"
               >
-                Explore Our Solutions
+                Shop Products
                 <span className="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
               </a>
               <a
@@ -278,13 +280,20 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                 </div>
               </div>
 
-              <div className="px-5 pb-5 sm:px-8 sm:pb-8 pt-0 w-full">
+              <div className="px-5 pb-5 sm:px-8 sm:pb-8 pt-0 w-full flex flex-wrap items-center justify-between gap-3">
+                <button
+                  type="button"
+                  onClick={() => onNavigate("#products", true)}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-brand-blue/10 border border-brand-blue/30 px-3 py-1.5 font-display text-[0.68rem] font-bold uppercase tracking-wider text-brand-blue hover:bg-brand-blue hover:text-white transition-all cursor-pointer shadow-2xs"
+                >
+                  ⚡ Shop 400+ Connectors Online →
+                </button>
                 <button
                   type="button"
                   onClick={() => onNavigate("#amphenol", true)}
                   className="group/btn inline-flex items-center gap-2.5 font-display text-[0.68rem] font-bold uppercase tracking-[0.14em] text-brand-blue cursor-pointer sm:text-[0.72rem] sm:tracking-[0.2em]"
                 >
-                  Authorised & Supported Lines
+                  Authorised Lines
                   <span className="h-px w-6 bg-brand-blue transition-all duration-300 group-hover/btn:w-14 sm:w-8" />
                 </button>
               </div>
@@ -636,7 +645,7 @@ function ProductsOverview({ onNavigate }: ProductsOverviewProps) {
     <section id="shop" className="border-y border-border bg-background py-20 lg:py-28">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <Reveal>
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
             <div>
               <div className="flex items-center gap-3">
                 <span className="h-px w-10 bg-brand-yellow" />
@@ -649,6 +658,14 @@ function ProductsOverview({ onNavigate }: ProductsOverviewProps) {
                 From globally trusted electronics component brands to custom-engineered cable assemblies - explore our complete product and service offerings.
               </p>
             </div>
+
+            <button
+              onClick={() => onNavigate("#products", true)}
+              className="inline-flex items-center gap-2.5 rounded-xl bg-brand-blue px-6 py-3.5 font-display text-[0.72rem] font-bold uppercase tracking-[0.18em] text-white hover:bg-graphite transition-all shadow-md cursor-pointer shrink-0"
+            >
+              <span>Shop All Connectors</span>
+              <span>→</span>
+            </button>
           </div>
         </Reveal>
 
@@ -675,6 +692,12 @@ function ProductsOverview({ onNavigate }: ProductsOverviewProps) {
                   Amphenol · Zolex
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2">
+                  <button
+                    onClick={() => onNavigate("#products", true)}
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-brand-blue px-3.5 py-1.5 font-display text-[0.68rem] font-bold uppercase tracking-wider text-white hover:bg-white hover:text-brand-blue transition-colors cursor-pointer shadow-xs"
+                  >
+                    🛒 Shop 400+ Connectors Online →
+                  </button>
                   <button
                     onClick={() => onNavigate("#amphenol", true)}
                     className="inline-flex items-center gap-1.5 rounded-lg bg-white/20 px-3 py-1.5 font-display text-[0.68rem] font-bold uppercase tracking-wider text-white hover:bg-white hover:text-graphite transition-colors cursor-pointer"
@@ -810,7 +833,7 @@ function FinalCTA({ onNavigate }: { onNavigate?: (target: string) => void }) {
 
 /* ─── Root App Component & Multi-Page Router ─── */
 
-type PageType = "home" | "products" | "about" | "manufacturing" | "qualitech" | "amphenol" | "zolex" | "contact" | "admin" | "privacy" | "terms";
+type PageType = "home" | "products" | "about" | "manufacturing" | "qualitech" | "amphenol" | "zolex" | "contact" | "admin" | "privacy" | "terms" | "checkout" | "incomplete-payments";
 
 function HomeContent() {
   const getPageFromHash = (): PageType => {
@@ -818,6 +841,16 @@ function HomeContent() {
     const rawHash = window.location.hash.toLowerCase();
     const hash = rawHash.split("?")[0] || "";
     if (hash === "#admin" || hash === "#/admin" || hash === "#admin-panel") return "admin";
+    if (
+      hash === "#incomplete-payments" ||
+      hash === "#/incomplete-payments" ||
+      hash === "#abandoned-checkouts" ||
+      hash === "#/abandoned-checkouts" ||
+      hash === "#customer-leads" ||
+      hash === "#/customer-leads" ||
+      hash === "#leads"
+    ) return "incomplete-payments";
+    if (hash === "#checkout" || hash === "#/checkout" || hash === "#order-checkout") return "checkout";
     if (hash === "#products" || hash === "#shop" || hash === "#catalog" || hash === "#catalogue") return "products";
     if (hash === "#about-page" || hash === "#about-us") return "about";
     if (hash === "#manufacturing" || hash === "#cable-assemblies" || hash === "#facilities") return "manufacturing";
@@ -857,9 +890,31 @@ function HomeContent() {
       return;
     }
 
+    if (cleanTarget === "#checkout" || cleanTarget === "#/checkout") {
+      setCurrentPage("checkout");
+      window.history.pushState(null, "", "#checkout");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
     if (cleanTarget === "#admin" || cleanTarget === "#/admin" || cleanTarget === "#admin-panel") {
       setCurrentPage("admin");
       window.history.pushState(null, "", "#admin");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    if (
+      cleanTarget === "#incomplete-payments" ||
+      cleanTarget === "#/incomplete-payments" ||
+      cleanTarget === "#abandoned-checkouts" ||
+      cleanTarget === "#/abandoned-checkouts" ||
+      cleanTarget === "#customer-leads" ||
+      cleanTarget === "#/customer-leads" ||
+      cleanTarget === "#leads"
+    ) {
+      setCurrentPage("incomplete-payments");
+      window.history.pushState(null, "", "#incomplete-payments");
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
@@ -953,6 +1008,14 @@ function HomeContent() {
   };
 
   // Render individual page components
+  if (currentPage === "incomplete-payments") {
+    return <AbandonedCheckoutsPage onNavigateHome={handleNavigate} />;
+  }
+
+  if (currentPage === "checkout") {
+    return <CheckoutPage onNavigateHome={handleNavigate} />;
+  }
+
   if (currentPage === "admin") {
     return <AdminPage onNavigateHome={handleNavigate} />;
   }

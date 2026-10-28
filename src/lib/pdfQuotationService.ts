@@ -128,7 +128,7 @@ export function generateBrandedPDFQuotation(options: {
   doc.setTextColor(71, 85, 105);
   doc.text("Electronic Components Distribution & Custom Cable Assembly Manufacturing", 14, 25);
   doc.text("Plot No. 84, Phase-II, IDA Cherlapally, Hyderabad - 500051, Telangana, India", 14, 29);
-  doc.text("Phone: +91 98490 01484  |  Email: zyradigitalsofficial@gmail.com  |  Web: qualitechconnectronics.com", 14, 33);
+  doc.text("Phone: +91 98490 01484  |  Email: info@qualitechindia.in  |  Web: qualitechconnectronics.com", 14, 33);
   doc.text("GSTIN: 36AAPFQ2748F1ZT  |  State Code: 36 (Telangana)  |  ISO 9001:2015 & IPC-WHMA-A-620", 14, 37);
 
   // Divider
@@ -249,7 +249,7 @@ export function generateBrandedPDFQuotation(options: {
     },
     columnStyles: {
       0: { halign: "center", cellWidth: 10 },
-      1: { cellWidth: 70 },
+      1: { cellWidth: 68 },
       2: { halign: "center", cellWidth: 20 },
       3: { halign: "center", cellWidth: 15, fontStyle: "bold" },
       4: { halign: "right", cellWidth: 24 },

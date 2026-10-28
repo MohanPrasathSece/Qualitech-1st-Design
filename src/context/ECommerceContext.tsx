@@ -15,11 +15,13 @@ import {
   saveStoredCoupon,
   validateCoupon,
   getStoredOrders,
+  saveStoredOrders,
   createStoredOrder,
   updateStoredOrder,
   updateStoredOrderStatus,
   deleteStoredOrders,
   exportOrdersToCsv,
+  exportAbandonedCheckoutsToCsv,
   cleanupOrdersOlderThanDays,
   CART_UPDATED_EVENT,
   ORDERS_UPDATED_EVENT,
@@ -87,8 +89,17 @@ interface ECommerceContextType {
     orderData: Omit<
       Order,
       "id" | "orderNumber" | "createdAt" | "trackingNumber" | "estimatedDelivery"
-    >
+    >,
+    existingOrderNumber?: string
   ) => Order;
+  updateLeadStatus: (
+    orderNumber: string,
+    status: "New Lead" | "Contacted" | "Followed Up" | "Recovered" | "Lost",
+    notes?: string
+  ) => void;
+  markLeadRecovered: (orderNumber: string) => void;
+  deleteAbandonedOrder: (orderNumber: string) => void;
+  exportAbandonedOrdersCsv: () => string;
   updateOrderStatus: (
     orderId: string,
     status: Order["orderStatus"],
@@ -100,7 +111,7 @@ interface ECommerceContextType {
     notifyCustomer?: boolean
   ) => Order | undefined;
   deleteOrders: (orderIds: string[]) => void;
-  run30DayCleanup: (days?: number) => { count: number; totalAmount: number };
+  run30DayCleanup: (days?: number, onlyCancelled?: boolean) => { count: number; totalAmount: number };
   exportOrdersCsv: () => string;
   checkAndTriggerLowStockAlerts: (triggerReason?: string) => Promise<number>;
 
@@ -117,7 +128,7 @@ interface ECommerceContextType {
 
 const ECommerceContext = createContext<ECommerceContextType | undefined>(undefined);
 
-const FREE_SHIPPING_THRESHOLD = 5000; // Free shipping over ₹5,000
+const FREE_SHIPPING_THRESHOLD = 0; // Flat 150 Rs shipping on all orders
 
 export const ECommerceProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -128,7 +139,7 @@ export const ECommerceProvider: React.FC<{ children: ReactNode }> = ({ children 
   const [selectedShipping, setSelectedShipping] = useState<ShippingOption>(
     SHIPPING_OPTIONS[0] || {
       id: "standard",
-      name: "Standard Road Logistics",
+      name: "Standard Surface Express",
       description: "Surface Express cargo across India",
       cost: 150,
       estimatedDays: "3-5 Business Days",
@@ -176,7 +187,32 @@ export const ECommerceProvider: React.FC<{ children: ReactNode }> = ({ children 
         }
 
         if (cloudOrders && cloudOrders.length > 0) {
-          setOrders(cloudOrders);
+          const currentStored = getStoredOrders();
+          const orderMap = new Map<string, Order>();
+          cloudOrders.forEach((o) => orderMap.set((o.orderNumber || o.id).toLowerCase(), o));
+          currentStored.forEach((o) => {
+            const key = (o.orderNumber || o.id).toLowerCase();
+            if (!orderMap.has(key)) {
+              orderMap.set(key, o);
+            }
+          });
+          const merged = Array.from(orderMap.values());
+          setOrders(merged);
+          saveStoredOrders(merged);
+        }
+
+        // Automated 30-day retention check: Cancelled orders older than 30 days
+        try {
+          const { archivedOrders, remainingOrders, csvContent } = cleanupOrdersOlderThanDays(30, true);
+          if (archivedOrders.length > 0) {
+            console.log(`[Retention Daemon] Found ${archivedOrders.length} cancelled orders older than 30 days. Purging and emailing Excel backup...`);
+            setOrders(remainingOrders);
+            const orderNumbers = archivedOrders.map((o) => o.orderNumber);
+            deleteOrdersFromSupabase(orderNumbers).catch(console.warn);
+            send30DayOrderCleanupEmail(archivedOrders, csvContent).catch(console.warn);
+          }
+        } catch (cleanErr) {
+          console.warn("Automated 30-day cleanup note:", cleanErr);
         }
       } catch (err) {
         console.warn("Supabase background sync skipped (offline or unconfigured):", err);
@@ -184,10 +220,27 @@ export const ECommerceProvider: React.FC<{ children: ReactNode }> = ({ children 
     }
     syncFromSupabase();
 
+    // Periodic live sync so updates in Supabase or background are instantly reflected
+    const syncInterval = setInterval(() => {
+      syncFromSupabase();
+    }, 4000);
+
+    // Cross-tab instant reactivity
+    const handleStorageUpdate = (e: StorageEvent) => {
+      if (!e.key || e.key.includes("qualitech")) {
+        setOrders(getStoredOrders());
+        setProducts(getStoredProducts());
+        setCart(getStoredCart());
+      }
+    };
+    window.addEventListener("storage", handleStorageUpdate);
+
     return () => {
+      clearInterval(syncInterval);
       window.removeEventListener(PRODUCTS_UPDATED_EVENT, handleProductsUpdate);
       window.removeEventListener(CART_UPDATED_EVENT, handleCartUpdate);
       window.removeEventListener(ORDERS_UPDATED_EVENT, handleOrdersUpdate);
+      window.removeEventListener("storage", handleStorageUpdate);
     };
   }, []);
 
@@ -227,10 +280,9 @@ export const ECommerceProvider: React.FC<{ children: ReactNode }> = ({ children 
 
   const cartShipping = useMemo(() => {
     if (cart.length === 0) return 0;
-    if (freeShippingEligible && selectedShipping.id === "standard") return 0;
-    if (activeCoupon?.discountType === "free_shipping") return 0;
-    return selectedShipping.cost;
-  }, [cart.length, freeShippingEligible, selectedShipping, activeCoupon]);
+    if (selectedShipping?.id === "pickup") return 0;
+    return 150; // Flat 150 Rs shipping on all deliveries
+  }, [cart.length, selectedShipping?.id]);
 
   const taxableAmount = Math.max(0, cartSubtotal - cartDiscount);
   // 18% GST standard on electronic components & cables in India
@@ -289,7 +341,10 @@ export const ECommerceProvider: React.FC<{ children: ReactNode }> = ({ children 
     >
   ): Order => {
     const newOrder = createStoredOrder(orderData);
-    setOrders((prev) => [newOrder, ...prev]);
+    setOrders((prev) => {
+      const exists = prev.some((o) => (o.orderNumber || o.id) === (newOrder.orderNumber || newOrder.id));
+      return exists ? prev : [newOrder, ...prev];
+    });
     setCart([]);
     setIsCheckoutOpen(false);
     setIsCartOpen(false);
@@ -354,25 +409,147 @@ export const ECommerceProvider: React.FC<{ children: ReactNode }> = ({ children 
     orderData: Omit<
       Order,
       "id" | "orderNumber" | "createdAt" | "trackingNumber" | "estimatedDelivery"
-    >
+    >,
+    existingOrderNumber?: string
   ): Order => {
-    const incompleteOrder: Order = {
-      ...orderData,
-      id: `ord_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
-      orderNumber: `QT-INC-${Math.floor(10000 + Math.random() * 90000)}`,
-      createdAt: new Date().toISOString(),
-      orderStatus: "Payment Incomplete",
-      paymentStatus: "Incomplete",
-      trackingNumber: "N/A - Incomplete",
-      estimatedDelivery: "Pending Payment",
-    };
+    let incompleteOrder: Order;
+    const currentStored = getStoredOrders();
 
-    // Save to Supabase for audit/abandoned cart tracking
+    if (existingOrderNumber) {
+      const existing = currentStored.find(
+        (o) => (o.orderNumber || "").toLowerCase() === existingOrderNumber.toLowerCase()
+      );
+      if (existing) {
+        incompleteOrder = {
+          ...existing,
+          ...orderData,
+          customer: {
+            ...existing.customer,
+            ...orderData.customer,
+          },
+          updatedAt: new Date().toISOString(),
+        };
+      } else {
+        incompleteOrder = {
+          ...orderData,
+          id: `ord_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+          orderNumber: existingOrderNumber,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          orderStatus: orderData.orderStatus || "Payment Incomplete",
+          paymentStatus: orderData.paymentStatus || "Incomplete",
+          trackingNumber: "N/A - Incomplete",
+          estimatedDelivery: "Pending Payment",
+          followUpStatus: orderData.followUpStatus || "New Lead",
+        };
+      }
+    } else {
+      const randNum = Math.floor(10000 + Math.random() * 90000);
+      incompleteOrder = {
+        ...orderData,
+        id: `ord_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+        orderNumber: `QT-INC-${randNum}`,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        orderStatus: orderData.orderStatus || "Payment Incomplete",
+        paymentStatus: orderData.paymentStatus || "Incomplete",
+        trackingNumber: "N/A - Incomplete",
+        estimatedDelivery: "Pending Payment",
+        followUpStatus: orderData.followUpStatus || "New Lead",
+      };
+    }
+
+    // 1. Update orders in localStorage & React state
+    const filtered = currentStored.filter(
+      (o) => (o.orderNumber || o.id).toLowerCase() !== (incompleteOrder.orderNumber || incompleteOrder.id).toLowerCase()
+    );
+    const updatedOrders = [incompleteOrder, ...filtered];
+    saveStoredOrders(updatedOrders);
+    setOrders(updatedOrders);
+
+    // 2. Also persist in dedicated abandoned checkouts local storage
+    try {
+      const abandonedKey = "qualitech_abandoned_checkouts_v1";
+      const existingAbandoned = JSON.parse(localStorage.getItem(abandonedKey) || "[]");
+      const filteredAbandoned = (Array.isArray(existingAbandoned) ? existingAbandoned : []).filter(
+        (o: Order) => (o.orderNumber || o.id).toLowerCase() !== (incompleteOrder.orderNumber || incompleteOrder.id).toLowerCase()
+      );
+      localStorage.setItem(abandonedKey, JSON.stringify([incompleteOrder, ...filteredAbandoned]));
+    } catch (_) {}
+
+    // 3. Upsert to Supabase in background
     saveOrderToSupabase(incompleteOrder).catch((err) => {
       console.warn("Supabase record incomplete order note:", err);
     });
 
     return incompleteOrder;
+  };
+
+  const updateLeadStatus = (
+    orderNumber: string,
+    status: "New Lead" | "Contacted" | "Followed Up" | "Recovered" | "Lost",
+    notes?: string
+  ) => {
+    const cleanNum = (orderNumber || "").trim().toLowerCase();
+    const current = getStoredOrders();
+    const updated = current.map((ord) => {
+      if ((ord.orderNumber || ord.id).toLowerCase() === cleanNum) {
+        return {
+          ...ord,
+          followUpStatus: status,
+          ...(notes !== undefined ? { adminNotes: notes } : {}),
+          updatedAt: new Date().toISOString(),
+        };
+      }
+      return ord;
+    });
+    saveStoredOrders(updated);
+    setOrders(updated);
+
+    // Update in dedicated abandoned storage
+    try {
+      const abandonedKey = "qualitech_abandoned_checkouts_v1";
+      const existingAbandoned = JSON.parse(localStorage.getItem(abandonedKey) || "[]");
+      if (Array.isArray(existingAbandoned)) {
+        const updatedAbandoned = existingAbandoned.map((ord: Order) => {
+          if ((ord.orderNumber || ord.id).toLowerCase() === cleanNum) {
+            return {
+              ...ord,
+              followUpStatus: status,
+              ...(notes !== undefined ? { adminNotes: notes } : {}),
+              updatedAt: new Date().toISOString(),
+            };
+          }
+          return ord;
+        });
+        localStorage.setItem(abandonedKey, JSON.stringify(updatedAbandoned));
+      }
+    } catch (_) {}
+
+    // Also update order in Supabase
+    const target = updated.find((o) => (o.orderNumber || o.id).toLowerCase() === cleanNum);
+    if (target) {
+      saveOrderToSupabase(target).catch(console.warn);
+    }
+  };
+
+  const markLeadRecovered = (orderNumber: string) => {
+    updateLeadStatus(orderNumber, "Recovered");
+  };
+
+  const deleteAbandonedOrder = (orderNumber: string) => {
+    deleteOrders([orderNumber]);
+    try {
+      const abandonedKey = "qualitech_abandoned_checkouts_v1";
+      const existingAbandoned = JSON.parse(localStorage.getItem(abandonedKey) || "[]");
+      if (Array.isArray(existingAbandoned)) {
+        const clean = (orderNumber || "").toLowerCase();
+        const filtered = existingAbandoned.filter(
+          (o: Order) => (o.orderNumber || o.id).toLowerCase() !== clean
+        );
+        localStorage.setItem(abandonedKey, JSON.stringify(filtered));
+      }
+    } catch (_) {}
   };
 
   const updateOrderStatus = (
@@ -391,32 +568,60 @@ export const ECommerceProvider: React.FC<{ children: ReactNode }> = ({ children 
     updates: Partial<Order>,
     notifyCustomer: boolean = true
   ): Order | undefined => {
-    const updated = updateStoredOrder(orderId, updates);
-    setOrders(updated);
+    const cleanId = (orderId || "").trim().toLowerCase();
+    let targetOrder: Order | undefined;
 
-    const targetOrder = updated.find((o) => o.id === orderId || o.orderNumber === orderId);
+    // 1. Gather all existing orders from current state and storage
+    const currentOrders = orders && orders.length > 0 ? orders : getStoredOrders();
+    const nextOrders = currentOrders.map((ord) => {
+      const ordId = (ord.id || "").trim().toLowerCase();
+      const ordNum = (ord.orderNumber || "").trim().toLowerCase();
+      const isMatch = ordId === cleanId || ordNum === cleanId || (updates.orderNumber && ord.orderNumber === updates.orderNumber);
+
+      if (isMatch) {
+        targetOrder = {
+          ...ord,
+          ...updates,
+        };
+        return targetOrder;
+      }
+      return ord;
+    });
+
     if (targetOrder) {
-      // 1. Sync to Supabase
+      // 2. Immediately update in-memory React state so UI re-renders without refreshing
+      setOrders(nextOrders);
+      // 3. Persist to localStorage and dispatch event for any other open tabs
+      saveStoredOrders(nextOrders);
+
+      // 4. Sync status/tracking update to Supabase orders table
       updateOrderInSupabase(targetOrder.orderNumber, updates).catch((err) => {
         console.warn("Supabase order update error:", err);
       });
 
-      // 2. Dispatch status update email to customer & admin
+      // 5. Dispatch automated email (e.g. Delivered / Shipped) to customer and admin
       if (notifyCustomer) {
         sendOrderStatusEmail(targetOrder).catch((err) => {
           console.warn("Status notification email send error:", err);
         });
       }
+    } else {
+      console.warn("Order not found for update:", orderId);
     }
+
     return targetOrder;
   };
 
   const deleteOrders = (orderIds: string[]) => {
-    const targetOrders = orders.filter((o) => orderIds.includes(o.id) || orderIds.includes(o.orderNumber));
+    const idSet = new Set(orderIds.map((id) => (id || "").trim().toLowerCase()));
+    const targetOrders = orders.filter((o) => idSet.has((o.id || "").toLowerCase()) || idSet.has((o.orderNumber || "").toLowerCase()));
     const orderNumbers = targetOrders.map((o) => o.orderNumber);
 
-    const updated = deleteStoredOrders(orderIds);
-    setOrders(updated);
+    const nextOrders = orders.filter(
+      (o) => !idSet.has((o.id || "").toLowerCase()) && !idSet.has((o.orderNumber || "").toLowerCase())
+    );
+    setOrders(nextOrders);
+    saveStoredOrders(nextOrders);
 
     if (orderNumbers.length > 0) {
       deleteOrdersFromSupabase(orderNumbers).catch((err) => {
@@ -425,8 +630,8 @@ export const ECommerceProvider: React.FC<{ children: ReactNode }> = ({ children 
     }
   };
 
-  const run30DayCleanup = (days = 30): { count: number; totalAmount: number } => {
-    const { archivedOrders, remainingOrders, csvContent } = cleanupOrdersOlderThanDays(days);
+  const run30DayCleanup = (days = 30, onlyCancelled = false): { count: number; totalAmount: number } => {
+    const { archivedOrders, remainingOrders, csvContent } = cleanupOrdersOlderThanDays(days, onlyCancelled);
     setOrders(remainingOrders);
 
     if (archivedOrders.length > 0) {
@@ -454,6 +659,17 @@ export const ECommerceProvider: React.FC<{ children: ReactNode }> = ({ children 
     return exportOrdersToCsv(orders);
   };
 
+  const exportAbandonedOrdersCsv = (): string => {
+    const incomplete = orders.filter(
+      (o) =>
+        o.orderStatus === "Payment Incomplete" ||
+        o.orderStatus === "Payment Failed" ||
+        o.paymentStatus === "Failed" ||
+        o.paymentStatus === "Incomplete"
+    );
+    return exportAbandonedCheckoutsToCsv(incomplete);
+  };
+
   const checkAndTriggerLowStockAlerts = async (triggerReason = "Manual Inventory Health Audit"): Promise<number> => {
     const currentProds = getStoredProducts();
     const lowStock: LowStockItemAlert[] = currentProds
@@ -479,7 +695,16 @@ export const ECommerceProvider: React.FC<{ children: ReactNode }> = ({ children 
 
   const openCheckout = () => {
     setIsCartOpen(false);
-    setIsCheckoutOpen(true);
+    setIsCheckoutOpen(false);
+    if (typeof window !== "undefined") {
+      window.location.hash = "#checkout";
+      try {
+        window.dispatchEvent(new HashChangeEvent("hashchange"));
+      } catch (_) {
+        window.dispatchEvent(new Event("hashchange"));
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
   const closeCheckout = () => setIsCheckoutOpen(false);
 
@@ -518,6 +743,10 @@ export const ECommerceProvider: React.FC<{ children: ReactNode }> = ({ children 
         removeCoupon,
         placeOrder,
         recordIncompleteOrder,
+        updateLeadStatus,
+        markLeadRecovered,
+        deleteAbandonedOrder,
+        exportAbandonedOrdersCsv,
         updateOrderStatus,
         updateOrderDetails,
         deleteOrders,

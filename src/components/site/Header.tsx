@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { useECommerce } from "@/context/ECommerceContext";
 
 export interface NavChild {
   label: string;
@@ -23,10 +24,12 @@ export interface NavItem {
   href: string;
   isPage?: boolean;
   dropdown?: boolean;
+  badge?: string;
 }
 
 export const NAV: NavItem[] = [
   { label: "Home", href: "#top" },
+  { label: "Shop", href: "#products", isPage: true },
   { label: "About Us", href: "#about-page", isPage: true },
   { label: "Facilities", href: "#facilities", isPage: true },
   { label: "Contact Us", href: "#contact-page", isPage: true },
@@ -35,16 +38,23 @@ export const NAV: NavItem[] = [
 export const DROPDOWN_VERTICALS: NavMainOption[] = [
   {
     id: "distribution",
-    label: "Distribution",
+    label: "Distribution & Store",
     badge: "Authorized",
     badgeColor: "bg-brand-blue text-white",
-    description: "Distribution of Electronic Components",
+    description: "400+ Electronic Connectors with Online Ordering",
     children: [
+      {
+        label: "Shop All Products Online",
+        href: "#products",
+        isPage: true,
+        description: "Browse 400+ Industrial Connectors with Instant Razorpay Checkout",
+        badge: "Online Store",
+      },
       {
         label: "Qualitech Products",
         href: "#qualitech",
         isPage: true,
-        description: "401+ Genuine Industrial Connectors & Stock",
+        description: "401+ Genuine Industrial Connectors & In-Stock Parts",
         badge: "401 Products",
       },
       {
@@ -87,13 +97,11 @@ export interface HeaderProps {
 }
 
 export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
+  const { cartCount, openCart } = useECommerce();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [productsDropdown, setProductsDropdown] = useState(false);
   const [activeMainOption, setActiveMainOption] = useState<"distribution" | "manufacturing">("distribution");
-  const [mobileProductsOpen, setMobileProductsOpen] = useState(false);
-  const [mobileDistOpen, setMobileDistOpen] = useState(true);
-  const [mobileMfgOpen, setMobileMfgOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -131,6 +139,7 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
 
   const isProductsActive =
     productsDropdown ||
+    currentPage === "products" ||
     currentPage === "qualitech" ||
     currentPage === "amphenol" ||
     currentPage === "zolex";
@@ -157,7 +166,7 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
         </button>
 
         {/* Center: Desktop Navigation */}
-        <nav className="hidden lg:flex items-center flex-nowrap gap-2.5 xl:gap-5 shrink-0">
+        <nav className="hidden lg:flex items-center flex-nowrap gap-2.5 xl:gap-4 shrink-0">
           {NAV.map((item) => {
             if (item.dropdown) {
               return (
@@ -169,7 +178,10 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
                   onMouseLeave={handleMouseLeaveContainer}
                 >
                   <button
-                    onClick={() => setProductsDropdown((v) => !v)}
+                    onClick={() => {
+                      setProductsDropdown((v) => !v);
+                      onNavigate(item.href, item.isPage);
+                    }}
                     className={`h-9 px-2 inline-flex items-center gap-1 font-display text-[0.72rem] xl:text-[0.76rem] uppercase tracking-[0.12em] transition-colors duration-200 hover:text-foreground cursor-pointer whitespace-nowrap relative ${
                       isProductsActive
                         ? "text-brand-blue font-bold after:absolute after:bottom-0 after:left-2 after:right-2 after:h-[2px] after:bg-brand-blue"
@@ -192,8 +204,8 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
 
                   {/* Desktop Dropdown */}
                   {productsDropdown && (
-                    <div className="absolute left-1/2 top-full mt-2 -translate-x-1/2 w-[540px] overflow-hidden rounded-2xl border border-border bg-background shadow-[var(--shadow-panel)] animate-in fade-in slide-in-from-top-2 duration-200 z-50">
-                      <div className="grid grid-cols-[220px_1fr] divide-x divide-border">
+                    <div className="absolute left-1/2 top-full mt-2 -translate-x-1/2 w-[560px] overflow-hidden rounded-2xl border border-border bg-background shadow-[var(--shadow-panel)] animate-in fade-in slide-in-from-top-2 duration-200 z-50">
+                      <div className="grid grid-cols-[230px_1fr] divide-x divide-border">
                         {/* Left Column */}
                         <div className="p-3 bg-steel-light/30 flex flex-col gap-2">
                           <div className="px-2 pt-1 pb-1">
@@ -254,7 +266,7 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
                             <div className="px-1 pt-1 pb-2 flex items-center justify-between border-b border-border/70">
                               <p className="text-[0.6rem] font-bold uppercase tracking-[0.2em] text-brand-blue">
                                 {activeMainOption === "distribution"
-                                  ? "Distribution Lines"
+                                  ? "Distribution & Online Store"
                                   : "Manufacturing Capabilities"}
                               </p>
                             </div>
@@ -275,7 +287,9 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
                                     <div className="flex items-center gap-2">
                                       <span
                                         className={`h-2 w-2 rounded-full ${
-                                          sub.label === "Amphenol"
+                                          sub.badge === "Online Store"
+                                            ? "bg-emerald-500"
+                                            : sub.label === "Amphenol"
                                             ? "bg-[#004f9e]"
                                             : sub.label === "Zolex"
                                             ? "bg-brand-blue"
@@ -285,6 +299,11 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
                                       <span className="font-display text-xs font-bold text-graphite group-hover:text-brand-blue transition-colors">
                                         {sub.label}
                                       </span>
+                                      {sub.badge && (
+                                        <span className="rounded-full bg-brand-blue/10 px-1.5 py-0.2 text-[0.55rem] font-extrabold text-brand-blue">
+                                          {sub.badge}
+                                        </span>
+                                      )}
                                     </div>
                                     <span className="text-[0.65rem] font-bold text-brand-blue opacity-0 group-hover:opacity-100 transition-opacity">
                                       View →
@@ -309,29 +328,56 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
               (item.label === "Home" && (currentPage === "home" || !currentPage)) ||
               (item.label === "About Us" && currentPage === "about") ||
               (item.label === "Facilities" && (currentPage === "manufacturing" || currentPage === "facilities")) ||
-              (item.label === "Contact Us" && currentPage === "contact");
+              (item.label === "Contact Us" && currentPage === "contact") ||
+              (item.label === "Shop" && currentPage === "products");
 
             return (
               <button
                 key={item.label}
                 onClick={() => onNavigate(item.href, item.isPage)}
-                className={`h-9 px-2 inline-flex items-center font-display text-[0.72rem] xl:text-[0.76rem] uppercase tracking-[0.12em] transition-colors duration-200 hover:text-foreground cursor-pointer whitespace-nowrap relative ${
+                className={`h-9 px-2 inline-flex items-center gap-1.5 font-display text-[0.72rem] xl:text-[0.76rem] uppercase tracking-[0.12em] transition-colors duration-200 hover:text-foreground cursor-pointer whitespace-nowrap relative ${
                   isActive
                     ? "text-brand-blue font-bold after:absolute after:bottom-0 after:left-2 after:right-2 after:h-[2px] after:bg-brand-blue"
                     : "text-muted-foreground font-semibold after:absolute after:bottom-0 after:left-2 after:right-2 after:h-[2px] after:bg-transparent hover:after:bg-brand-blue/30"
                 }`}
               >
-                {item.label}
+                <span>{item.label}</span>
+                {item.badge && (
+                  <span className="rounded-full bg-brand-blue px-1.5 py-0.2 text-[0.55rem] font-black text-white uppercase tracking-wider">
+                    {item.badge}
+                  </span>
+                )}
               </button>
             );
           })}
         </nav>
 
         {/* Right: Actions */}
-        <div className="flex items-center flex-nowrap gap-2 shrink-0">
+        <div className="flex items-center flex-nowrap gap-2 sm:gap-2.5 shrink-0">
+          {/* Cart Drawer Trigger */}
+          <button
+            type="button"
+            onClick={openCart}
+            aria-label={`Open Cart (${cartCount} items)`}
+            className="relative flex h-8.5 sm:h-9 items-center gap-1.5 sm:gap-2 rounded-xl border border-border bg-white px-2.5 sm:px-3 text-graphite shadow-2xs hover:border-brand-blue hover:text-brand-blue transition-all cursor-pointer"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+            <span className="font-display text-[0.68rem] sm:text-[0.7rem] font-bold uppercase tracking-wider hidden sm:inline">
+              Cart
+            </span>
+            {cartCount > 0 ? (
+              <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-brand-blue px-1.5 text-[0.65rem] font-extrabold text-white shadow-xs">
+                {cartCount}
+              </span>
+            ) : null}
+          </button>
+
+          {/* Request Quote Button */}
           <button
             onClick={() => onNavigate("#contact-page", true)}
-            className="hidden sm:inline-flex h-8.5 items-center justify-center gap-1.5 rounded-xl bg-brand-blue px-3.5 font-display text-[0.7rem] font-bold uppercase tracking-wider text-white shadow-xs hover:bg-graphite transition-all cursor-pointer shrink-0"
+            className="hidden sm:inline-flex h-8.5 sm:h-9 items-center justify-center gap-1.5 rounded-xl bg-brand-blue px-3.5 font-display text-[0.7rem] font-bold uppercase tracking-wider text-white shadow-xs hover:bg-graphite transition-all cursor-pointer shrink-0"
           >
             Request Quote
           </button>
@@ -364,6 +410,43 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
         }`}
       >
         <nav className="flex flex-col px-5 py-3 sm:px-8 space-y-1">
+          {/* Mobile Cart Button */}
+          <button
+            onClick={() => {
+              setOpen(false);
+              openCart();
+            }}
+            className="flex items-center justify-between border-b border-border/70 py-2.5 px-3 rounded-xl text-left font-display text-sm uppercase tracking-[0.14em] bg-steel-light/50 font-bold text-graphite hover:bg-steel-light transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <svg className="h-4 w-4 text-brand-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+              <span>View Cart</span>
+            </div>
+            <span className="rounded-full bg-brand-blue px-2 py-0.5 text-xs text-white">
+              {cartCount} {cartCount === 1 ? "item" : "items"}
+            </span>
+          </button>
+
+          {/* Shop Online / Products */}
+          <button
+            onClick={() => {
+              setOpen(false);
+              onNavigate("#products", true);
+            }}
+            className={`border-b border-border/70 py-2.5 px-3 rounded-xl text-left font-display text-sm uppercase tracking-[0.14em] transition-colors flex items-center justify-between ${
+              currentPage === "products"
+                ? "bg-brand-blue/10 text-brand-blue font-bold"
+                : "text-foreground font-semibold"
+            }`}
+          >
+            <span>Shop</span>
+            <span className="rounded-full bg-brand-blue text-white px-2 py-0.5 text-[0.62rem] font-extrabold uppercase">
+              Online Store
+            </span>
+          </button>
+
           <button
             onClick={() => {
               setOpen(false);
@@ -377,18 +460,47 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
           >
             Home
           </button>
+
           <button
             onClick={() => {
               setOpen(false);
-              onNavigate("#about-page", true);
+              onNavigate("#qualitech", true);
             }}
             className={`border-b border-border/70 py-2.5 px-3 rounded-xl text-left font-display text-sm uppercase tracking-[0.14em] transition-colors ${
-              currentPage === "about"
+              currentPage === "qualitech"
                 ? "bg-brand-blue/10 text-brand-blue font-bold"
                 : "text-foreground font-semibold"
             }`}
           >
-            About Us
+            Qualitech Connectors (401 Items)
+          </button>
+
+          <button
+            onClick={() => {
+              setOpen(false);
+              onNavigate("#amphenol", true);
+            }}
+            className={`border-b border-border/70 py-2.5 px-3 rounded-xl text-left font-display text-sm uppercase tracking-[0.14em] transition-colors ${
+              currentPage === "amphenol"
+                ? "bg-brand-blue/10 text-brand-blue font-bold"
+                : "text-foreground font-semibold"
+            }`}
+          >
+            Amphenol Official Line
+          </button>
+
+          <button
+            onClick={() => {
+              setOpen(false);
+              onNavigate("#zolex", true);
+            }}
+            className={`border-b border-border/70 py-2.5 px-3 rounded-xl text-left font-display text-sm uppercase tracking-[0.14em] transition-colors ${
+              currentPage === "zolex"
+                ? "bg-brand-blue/10 text-brand-blue font-bold"
+                : "text-foreground font-semibold"
+            }`}
+          >
+            Zolex Official Line
           </button>
 
           <button
@@ -402,7 +514,21 @@ export function Header({ onNavigate, currentPage = "home" }: HeaderProps) {
                 : "text-foreground font-semibold"
             }`}
           >
-            Facilities
+            Facilities &amp; Manufacturing
+          </button>
+
+          <button
+            onClick={() => {
+              setOpen(false);
+              onNavigate("#about-page", true);
+            }}
+            className={`border-b border-border/70 py-2.5 px-3 rounded-xl text-left font-display text-sm uppercase tracking-[0.14em] transition-colors ${
+              currentPage === "about"
+                ? "bg-brand-blue/10 text-brand-blue font-bold"
+                : "text-foreground font-semibold"
+            }`}
+          >
+            About Us
           </button>
 
           <button

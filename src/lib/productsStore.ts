@@ -2,7 +2,7 @@ import { PRODUCTS, Product } from "@/data/products";
 import { getProductDefaultPrice, getProductTieredPricing } from "./ecommerceStore";
 import * as XLSX from "xlsx";
 
-const STORAGE_KEY = "qualitech_products_catalogue_v15";
+const STORAGE_KEY = "qualitech_products_catalogue_v17";
 
 // Event for cross-component re-renders
 export const PRODUCTS_UPDATED_EVENT = "qualitech:products_updated";
@@ -419,6 +419,9 @@ export function importProductsFromExcel(
     }
 
     const worksheet = workbook.Sheets[firstSheetName];
+    if (!worksheet) {
+      return { success: false, count: 0, added: 0, updated: 0, error: "The selected Excel sheet could not be read." };
+    }
     const rawRows = XLSX.utils.sheet_to_json<Record<string, any>>(worksheet, { defval: "" });
 
     if (rawRows.length === 0) {
@@ -504,8 +507,9 @@ export function importProductsFromExcel(
       });
 
       const existingIdx = existingSkuMap.get(sku.toLowerCase());
-      if (existingIdx !== undefined) {
-        workingList[existingIdx] = { ...workingList[existingIdx], ...productPayload, id: workingList[existingIdx].id };
+      const existingItem = existingIdx !== undefined ? workingList[existingIdx] : undefined;
+      if (existingIdx !== undefined && existingItem) {
+        workingList[existingIdx] = { ...existingItem, ...productPayload, id: existingItem.id };
         updatedCount++;
       } else {
         workingList.unshift(productPayload);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useECommerce } from "@/context/ECommerceContext";
 import {
   formatINR,
@@ -20,12 +20,16 @@ export const CheckoutModal: React.FC = () => {
       openCart,
       placeOrder,
       recordIncompleteOrder,
+      markLeadRecovered,
     } = useECommerce();
 
   const [step, setStep] = useState<1 | 2>(1);
+  const activeLeadOrderNumberRef = useRef<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [paymentChoice, setPaymentChoice] = useState<"cod" | "razorpay">("cod");
+
+  const [gatewayStage, setGatewayStage] = useState<string | null>(null);
 
   // Form State with clean localStorage caching for returning buyers
   const [customer, setCustomer] = useState<CustomerInfo>(() => {
@@ -54,6 +58,40 @@ export const CheckoutModal: React.FC = () => {
     e.preventDefault();
     setErrorMessage(null);
     setStep(2);
+
+    try {
+      localStorage.setItem("qualitech_customer_profile_v1", JSON.stringify(customer));
+    } catch (_) {}
+
+    try {
+      const lead = recordIncompleteOrder(
+        {
+          items: cart,
+          customer: {
+            ...customer,
+            orderNotes: customer.orderNotes
+              ? `${customer.orderNotes} [Customer reached payment step 2]`
+              : "[Customer reached payment step 2]",
+          },
+          shippingMethod: selectedShipping,
+          paymentMethod: paymentChoice === "razorpay" ? "UPI / Razorpay (Instant)" : "Cash on Delivery",
+          paymentStatus: "Incomplete",
+          orderStatus: "Payment Incomplete",
+          subtotal: cartSubtotal,
+          discount: 0,
+          tax: cartTax,
+          shippingCost: cartShipping,
+          total: cartTotal,
+          followUpStatus: "New Lead",
+        },
+        activeLeadOrderNumberRef.current || undefined
+      );
+      if (lead?.orderNumber) {
+        activeLeadOrderNumberRef.current = lead.orderNumber;
+      }
+    } catch (err) {
+      console.warn("Could not pre-save modal customer lead:", err);
+    }
   };
 
   const handlePlaceOrderWithCOD = () => {
@@ -85,11 +123,17 @@ export const CheckoutModal: React.FC = () => {
 
       setIsSubmitting(false);
       setStep(1);
+
+      if (activeLeadOrderNumberRef.current) {
+        markLeadRecovered(activeLeadOrderNumberRef.current);
+        activeLeadOrderNumberRef.current = null;
+      }
     }, 350);
   };
 
   const handlePlaceOrderWithRazorpay = () => {
     setIsSubmitting(true);
+    setGatewayStage("initiating");
     setErrorMessage(null);
 
     // Cache customer details for convenience
@@ -107,13 +151,20 @@ export const CheckoutModal: React.FC = () => {
       customerPhone: customer.phone,
       companyName: customer.companyName,
       gstin: customer.gstin,
-      onSuccess: (paymentId, orderId) => {
+      onProgress: (stage) => {
+        if (stage === "creating_order") setGatewayStage("Connecting to Razorpay...");
+        else if (stage === "ready") setGatewayStage("Awaiting Payment Completion...");
+        else if (stage === "verifying") setGatewayStage("Verifying Bank Authorization...");
+      },
+      onSuccess: ({ paymentId, orderId, signature, verified, simulated }) => {
+        setGatewayStage(null);
+
         // Complete Order Creation on Verified Payment
         placeOrder({
           items: cart,
           customer: {
             ...customer,
-            orderNotes: `${customer.orderNotes || ""} [Razorpay Txn: ${paymentId}${orderId ? ` | Order ID: ${orderId}` : ""}]`,
+            orderNotes: `${customer.orderNotes || ""} [Razorpay Txn: ${paymentId}${orderId ? ` | Order ID: ${orderId}` : ""}${verified ? " | Verified ✓" : ""}${simulated ? " (Test Mode)" : ""}]`,
           },
           shippingMethod: selectedShipping,
           paymentMethod: "UPI / Razorpay (Instant)",
@@ -130,48 +181,63 @@ export const CheckoutModal: React.FC = () => {
 
         setIsSubmitting(false);
         setStep(1);
+
+        if (activeLeadOrderNumberRef.current) {
+          markLeadRecovered(activeLeadOrderNumberRef.current);
+          activeLeadOrderNumberRef.current = null;
+        }
       },
       onFailure: (err) => {
         setIsSubmitting(false);
-        setErrorMessage(err?.description || "Razorpay payment was not completed. Please retry or choose Cash on Delivery.");
+        setGatewayStage(null);
+        setErrorMessage(err?.description || err?.message || "Razorpay payment was not completed. Please retry or choose Cash on Delivery.");
         
-        // Log incomplete payment attempt in Supabase for audit
-        recordIncompleteOrder({
-          items: cart,
-          customer: {
-            ...customer,
-            orderNotes: `${customer.orderNotes || ""} [Payment Failed: ${err?.description || "Cancelled by user"}]`,
+        // Log incomplete payment attempt in Supabase & local storage
+        recordIncompleteOrder(
+          {
+            items: cart,
+            customer: {
+              ...customer,
+              orderNotes: `${customer.orderNotes || ""} [Payment Failed: ${err?.description || err?.message || "Cancelled by user"}]`,
+            },
+            shippingMethod: selectedShipping,
+            paymentMethod: "UPI / Razorpay (Instant)",
+            paymentStatus: "Failed",
+            orderStatus: "Payment Failed",
+            subtotal: cartSubtotal,
+            discount: 0,
+            tax: cartTax,
+            shippingCost: cartShipping,
+            total: cartTotal,
+            followUpStatus: "New Lead",
           },
-          shippingMethod: selectedShipping,
-          paymentMethod: "UPI / Razorpay (Instant)",
-          paymentStatus: "Failed",
-          orderStatus: "Payment Incomplete",
-          subtotal: cartSubtotal,
-          discount: 0,
-          tax: cartTax,
-          shippingCost: cartShipping,
-          total: cartTotal,
-        });
+          activeLeadOrderNumberRef.current || undefined
+        );
       },
       onDismiss: () => {
         setIsSubmitting(false);
+        setGatewayStage(null);
         // Log abandoned checkout attempt
-        recordIncompleteOrder({
-          items: cart,
-          customer: {
-            ...customer,
-            orderNotes: `${customer.orderNotes || ""} [Checkout Dismissed by Customer]`,
+        recordIncompleteOrder(
+          {
+            items: cart,
+            customer: {
+              ...customer,
+              orderNotes: `${customer.orderNotes || ""} [Checkout Dismissed by Customer at Gateway]`,
+            },
+            shippingMethod: selectedShipping,
+            paymentMethod: "UPI / Razorpay (Instant)",
+            paymentStatus: "Incomplete",
+            orderStatus: "Payment Incomplete",
+            subtotal: cartSubtotal,
+            discount: 0,
+            tax: cartTax,
+            shippingCost: cartShipping,
+            total: cartTotal,
+            followUpStatus: "New Lead",
           },
-          shippingMethod: selectedShipping,
-          paymentMethod: "UPI / Razorpay (Instant)",
-          paymentStatus: "Incomplete",
-          orderStatus: "Payment Incomplete",
-          subtotal: cartSubtotal,
-          discount: 0,
-          tax: cartTax,
-          shippingCost: cartShipping,
-          total: cartTotal,
-        });
+          activeLeadOrderNumberRef.current || undefined
+        );
       },
     });
   };
@@ -545,22 +611,27 @@ export const CheckoutModal: React.FC = () => {
                     onClick={() => setPaymentChoice("razorpay")}
                     className={`flex flex-col justify-between rounded-2xl border-2 p-3.5 transition-all cursor-pointer select-none ${
                       paymentChoice === "razorpay"
-                        ? "border-[#004f9e] bg-blue-50/50 shadow-sm shadow-[#004f9e]/10"
+                        ? "border-[#004f9e] bg-blue-50/50 shadow-sm shadow-[#004f9e]/10 ring-1 ring-[#004f9e]/30"
                         : "border-border bg-white hover:border-slate-300"
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2.5">
-                        <div className={`flex h-8 w-8 items-center justify-center rounded-xl ${
+                        <div className={`flex h-9 w-9 items-center justify-center rounded-xl shadow-2xs ${
                           paymentChoice === "razorpay" ? "bg-[#004f9e] text-white" : "bg-slate-100 text-slate-600"
                         }`}>
-                          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                           </svg>
                         </div>
                         <div>
-                          <p className="text-xs font-bold text-graphite">Razorpay Online</p>
-                          <p className="text-[0.68rem] text-muted-foreground">UPI, Cards, NetBanking</p>
+                          <div className="flex items-center gap-1.5">
+                            <p className="text-xs font-bold text-graphite">Razorpay Online</p>
+                            <span className="rounded-full bg-blue-100 px-1.5 py-0.2 font-mono text-[0.6rem] font-bold text-[#004f9e]">
+                              Official Gateway
+                            </span>
+                          </div>
+                          <p className="text-[0.68rem] text-muted-foreground mt-0.5">UPI, Cards, NetBanking, EMI &amp; Wallets</p>
                         </div>
                       </div>
                       <input
@@ -571,11 +642,23 @@ export const CheckoutModal: React.FC = () => {
                         className="h-4 w-4 text-[#004f9e] focus:ring-[#004f9e]"
                       />
                     </div>
-                    <div className="mt-2.5 pt-2 border-t border-border/50 flex items-center justify-between">
-                      <span className="text-[0.62rem] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/60 px-2 py-0.5 rounded-md uppercase">
-                        Instant Settlement
+
+                    {/* Supported Methods Badges */}
+                    <div className="mt-2.5 pt-2 border-t border-border/50 flex flex-wrap items-center justify-between gap-1">
+                      <div className="flex items-center gap-1">
+                        <span className="rounded-md bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.5 text-[0.62rem] font-bold text-emerald-700 uppercase">
+                          UPI (GPay / PhonePe / Paytm)
+                        </span>
+                        <span className="rounded-md bg-slate-100 px-1.5 py-0.5 text-[0.62rem] font-medium text-slate-600">
+                          Cards / NetBanking
+                        </span>
+                      </div>
+                      <span className="text-[0.62rem] text-emerald-600 font-bold flex items-center gap-0.5">
+                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                        Instant Verified
                       </span>
-                      <span className="text-[0.62rem] text-slate-500 font-medium">SSL Secure</span>
                     </div>
                   </label>
                 </div>
@@ -645,23 +728,37 @@ export const CheckoutModal: React.FC = () => {
                     type="button"
                     disabled={isSubmitting}
                     onClick={handlePlaceOrderWithRazorpay}
-                    className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3 font-display text-xs font-bold uppercase tracking-[0.16em] text-white hover:bg-emerald-700 transition-all shadow-md cursor-pointer disabled:opacity-50"
+                    className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-[#004f9e] hover:bg-slate-900 py-3 font-display text-xs font-bold uppercase tracking-[0.16em] text-white transition-all shadow-md cursor-pointer disabled:opacity-50"
                   >
                     {isSubmitting ? (
                       <>
                         <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                        <span>Opening Razorpay Secure Gateway...</span>
+                        <span>{gatewayStage || "Opening Razorpay Secure Gateway..."}</span>
                       </>
                     ) : (
                       <>
-                        <span>Pay with Razorpay</span>
+                        <span>Pay via Razorpay • {formatINR(cartTotal)}</span>
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
                       </>
                     )}
                   </button>
                 )}
+              </div>
+
+              {/* Security and Trust Footer */}
+              <div className="flex items-center justify-center gap-3 pt-2 text-[0.65rem] text-slate-400">
+                <span className="flex items-center gap-1">
+                  <svg className="w-3.5 h-3.5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                  256-Bit SSL Encrypted
+                </span>
+                <span>•</span>
+                <span>RBI Authorized Razorpay Gateway</span>
+                <span>•</span>
+                <span>Instant GST Invoice</span>
               </div>
             </div>
           )}

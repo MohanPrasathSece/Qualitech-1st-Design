@@ -9,6 +9,7 @@ export interface NavItem {
 
 export const FOOTER_COMPANY: NavItem[] = [
   { label: "Home", href: "#top" },
+  { label: "Shop Connectors Online", href: "#products", isPage: true },
   { label: "About Us", href: "#about-page", isPage: true },
   { label: "Facilities & Infrastructure", href: "#facilities", isPage: true },
   { label: "Contact Us", href: "#contact-page", isPage: true },

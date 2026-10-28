@@ -65,12 +65,23 @@ CREATE TABLE IF NOT EXISTS public.orders (
   total NUMERIC(12, 2) NOT NULL,
   tracking_number TEXT,
   estimated_delivery TEXT,
+  razorpay_payment_id TEXT,
+  razorpay_order_id TEXT,
+  razorpay_signature TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Migration for existing installations:
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS razorpay_payment_id TEXT;
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS razorpay_order_id TEXT;
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS razorpay_signature TEXT;
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS tracking_link TEXT;
+
 CREATE INDEX IF NOT EXISTS idx_orders_order_number ON public.orders(order_number);
 CREATE INDEX IF NOT EXISTS idx_orders_order_status ON public.orders(order_status);
+CREATE INDEX IF NOT EXISTS idx_orders_razorpay_payment_id ON public.orders(razorpay_payment_id);
+CREATE INDEX IF NOT EXISTS idx_orders_razorpay_order_id ON public.orders(razorpay_order_id);
 CREATE INDEX IF NOT EXISTS idx_orders_created_at ON public.orders(created_at DESC);
 
 -- ------------------------------------------------------------------------------
@@ -175,56 +186,72 @@ ALTER TABLE public.quote_requests ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.coupons ENABLE ROW LEVEL SECURITY;
 
 -- Products: Everyone can read, authenticated or anon can read
+DROP POLICY IF EXISTS "Public Read Products" ON public.products;
 CREATE POLICY "Public Read Products" ON public.products
   FOR SELECT USING (true);
 
+DROP POLICY IF EXISTS "Admin All Products" ON public.products;
 CREATE POLICY "Admin All Products" ON public.products
   FOR ALL USING (true);
 
 -- Orders: Anyone can insert their order, users can read their orders
+DROP POLICY IF EXISTS "Public Insert Orders" ON public.orders;
 CREATE POLICY "Public Insert Orders" ON public.orders
   FOR INSERT WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Public Read Orders" ON public.orders;
 CREATE POLICY "Public Read Orders" ON public.orders
   FOR SELECT USING (true);
 
+DROP POLICY IF EXISTS "Admin All Orders" ON public.orders;
 CREATE POLICY "Admin All Orders" ON public.orders
   FOR ALL USING (true);
 
 -- Order Items
+DROP POLICY IF EXISTS "Public Insert Order Items" ON public.order_items;
 CREATE POLICY "Public Insert Order Items" ON public.order_items
   FOR INSERT WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Public Read Order Items" ON public.order_items;
 CREATE POLICY "Public Read Order Items" ON public.order_items
   FOR SELECT USING (true);
 
 -- Quote Requests
+DROP POLICY IF EXISTS "Public Insert Quote Requests" ON public.quote_requests;
 CREATE POLICY "Public Insert Quote Requests" ON public.quote_requests
   FOR INSERT WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Public Read Quote Requests" ON public.quote_requests;
 CREATE POLICY "Public Read Quote Requests" ON public.quote_requests
   FOR SELECT USING (true);
 
 -- Coupons
+DROP POLICY IF EXISTS "Public Read Active Coupons" ON public.coupons;
 CREATE POLICY "Public Read Active Coupons" ON public.coupons
   FOR SELECT USING (is_active = true);
 
 -- Storage Policies: Public read for product images, datasheets & cad drawings
+DROP POLICY IF EXISTS "Public Read Product Images" ON storage.objects;
 CREATE POLICY "Public Read Product Images" ON storage.objects
   FOR SELECT USING (bucket_id = 'product-images');
 
+DROP POLICY IF EXISTS "Public Upload Product Images" ON storage.objects;
 CREATE POLICY "Public Upload Product Images" ON storage.objects
   FOR INSERT WITH CHECK (bucket_id = 'product-images');
 
+DROP POLICY IF EXISTS "Public Read CAD Drawings" ON storage.objects;
 CREATE POLICY "Public Read CAD Drawings" ON storage.objects
   FOR SELECT USING (bucket_id = 'cad-drawings');
 
+DROP POLICY IF EXISTS "Public Upload CAD Drawings" ON storage.objects;
 CREATE POLICY "Public Upload CAD Drawings" ON storage.objects
   FOR INSERT WITH CHECK (bucket_id = 'cad-drawings');
 
+DROP POLICY IF EXISTS "Public Read Product Datasheets" ON storage.objects;
 CREATE POLICY "Public Read Product Datasheets" ON storage.objects
   FOR SELECT USING (bucket_id = 'product-datasheets');
 
+DROP POLICY IF EXISTS "Public Upload Product Datasheets" ON storage.objects;
 CREATE POLICY "Public Upload Product Datasheets" ON storage.objects
   FOR INSERT WITH CHECK (bucket_id = 'product-datasheets');
 
@@ -239,14 +266,17 @@ BEGIN
 END;
 $$ LANGUAGE 'plpgsql';
 
+DROP TRIGGER IF EXISTS update_products_updated_at ON public.products;
 CREATE TRIGGER update_products_updated_at
 BEFORE UPDATE ON public.products
 FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_orders_updated_at ON public.orders;
 CREATE TRIGGER update_orders_updated_at
 BEFORE UPDATE ON public.orders
 FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_quote_requests_updated_at ON public.quote_requests;
 CREATE TRIGGER update_quote_requests_updated_at
 BEFORE UPDATE ON public.quote_requests
 FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();

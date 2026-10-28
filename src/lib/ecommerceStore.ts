@@ -78,6 +78,10 @@ export interface Order {
   estimatedDelivery: string;
   razorpayPaymentId?: string | undefined;
   razorpayOrderId?: string | undefined;
+  paymentId?: string | undefined;
+  followUpStatus?: "New Lead" | "Contacted" | "Followed Up" | "Recovered" | "Lost" | undefined;
+  adminNotes?: string | undefined;
+  updatedAt?: string | undefined;
 }
 
 // Storage Keys
@@ -89,20 +93,20 @@ const ACTIVE_COUPON_KEY = "qualitech_ecommerce_coupon_v1";
 export const CART_UPDATED_EVENT = "qualitech:cart_updated";
 export const ORDERS_UPDATED_EVENT = "qualitech:orders_updated";
 
-// Default Shipping Options
+// Shipping Options (Flat 150 Rs for all delivery options)
 export const SHIPPING_OPTIONS: ShippingOption[] = [
   {
     id: "standard",
     name: "Standard Surface Express",
-    description: "Reliable road express freight (3-5 business days)",
-    cost: 250,
+    description: "Reliable road express freight across India (3-5 business days)",
+    cost: 150,
     estimatedDays: "3 - 5 Days",
   },
   {
     id: "express_air",
     name: "Priority Air Cargo",
     description: "Fast track air dispatch for critical deadlines (24-48 hrs)",
-    cost: 750,
+    cost: 150,
     estimatedDays: "24 - 48 Hours",
   },
   {
@@ -114,44 +118,8 @@ export const SHIPPING_OPTIONS: ShippingOption[] = [
   },
 ];
 
-// Available Promo Codes
-export const AVAILABLE_COUPONS: Coupon[] = [
-  {
-    code: "QUALITECH10",
-    description: "10% off your entire industrial component order",
-    discountType: "percent",
-    discountValue: 10,
-    minSpend: 1000,
-  },
-  {
-    code: "INDUS2026",
-    description: "15% off orders exceeding ₹5,000 for OEMs",
-    discountType: "percent",
-    discountValue: 15,
-    minSpend: 5000,
-  },
-  {
-    code: "WELCOME500",
-    description: "Flat ₹500 discount on first purchase over ₹2,000",
-    discountType: "fixed",
-    discountValue: 500,
-    minSpend: 2000,
-  },
-  {
-    code: "FREESHIP",
-    description: "Free express shipping on your entire shipment",
-    discountType: "free_shipping",
-    discountValue: 0,
-  },
-  {
-    code: "BULK20",
-    description: "20% off high-volume orders exceeding ₹25,000",
-    discountType: "percent",
-    discountValue: 20,
-    minSpend: 25000,
-    maxDiscount: 10000,
-  },
-];
+// Available Promo Codes (Disabled/Removed per requirement)
+export const AVAILABLE_COUPONS: Coupon[] = [];
 
 // Exact Pricing Getter - uses exact price from data/Excel without fake additions
 export function getProductDefaultPrice(product: Product): number {
@@ -272,11 +240,8 @@ export function clearStoredCart(): CartItem[] {
 export function getStoredCoupon(): Coupon | null {
   if (typeof window === "undefined") return null;
   try {
-    const saved = localStorage.getItem(ACTIVE_COUPON_KEY);
-    if (saved) return JSON.parse(saved);
-  } catch (err) {
-    console.error("Failed to parse coupon", err);
-  }
+    localStorage.removeItem(ACTIVE_COUPON_KEY);
+  } catch (_) {}
   return null;
 }
 
@@ -314,7 +279,20 @@ export function getStoredOrders(): Order[] {
     const saved = localStorage.getItem(ORDERS_STORAGE_KEY);
     if (saved) {
       const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed)) return parsed;
+      if (Array.isArray(parsed)) {
+        const seen = new Set<string>();
+        const unique: Order[] = [];
+        for (const ord of parsed) {
+          const key = (ord.orderNumber || ord.id || "").trim().toLowerCase();
+          if (key && !seen.has(key)) {
+            seen.add(key);
+            unique.push(ord);
+          } else if (!key) {
+            unique.push(ord);
+          }
+        }
+        return unique;
+      }
     }
   } catch (err) {
     console.error("Failed to parse orders from localStorage", err);
@@ -325,8 +303,19 @@ export function getStoredOrders(): Order[] {
 export function saveStoredOrders(orders: Order[]): void {
   if (typeof window === "undefined") return;
   try {
-    localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(orders));
-    window.dispatchEvent(new CustomEvent(ORDERS_UPDATED_EVENT, { detail: orders }));
+    const seen = new Set<string>();
+    const unique: Order[] = [];
+    for (const ord of orders) {
+      const key = (ord.orderNumber || ord.id || "").trim().toLowerCase();
+      if (key && !seen.has(key)) {
+        seen.add(key);
+        unique.push(ord);
+      } else if (!key) {
+        unique.push(ord);
+      }
+    }
+    localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(unique));
+    window.dispatchEvent(new CustomEvent(ORDERS_UPDATED_EVENT, { detail: unique }));
   } catch (err) {
     console.error("Failed to save orders to localStorage", err);
   }
@@ -368,8 +357,11 @@ export function createStoredOrder(orderData: Omit<Order, "id" | "orderNumber" | 
 
 export function updateStoredOrder(orderId: string, updates: Partial<Order>): Order[] {
   const current = getStoredOrders();
+  const cleanId = (orderId || "").trim().toLowerCase();
   const updated = current.map((ord) => {
-    if (ord.id === orderId || ord.orderNumber === orderId) {
+    const ordIdMatch = (ord.id || "").trim().toLowerCase() === cleanId;
+    const ordNumMatch = (ord.orderNumber || "").trim().toLowerCase() === cleanId;
+    if (ordIdMatch || ordNumMatch) {
       return {
         ...ord,
         ...updates,
@@ -462,9 +454,78 @@ export function exportOrdersToCsv(orders: Order[]): string {
 }
 
 /**
- * Identify and clean up orders older than X days (default 30 days)
+ * Export Incomplete Payments & Customer Leads to CSV format
  */
-export function cleanupOrdersOlderThanDays(days: number = 30): {
+export function exportAbandonedCheckoutsToCsv(orders: Order[]): string {
+  const headers = [
+    "Lead Reference",
+    "Drop-off Date & Time",
+    "Customer Name",
+    "Customer Phone",
+    "Customer Email",
+    "Company Name",
+    "GSTIN",
+    "Delivery Address",
+    "City",
+    "State",
+    "Pincode",
+    "Cart Items Summary",
+    "Items Count",
+    "Subtotal (INR)",
+    "Tax (18% GST)",
+    "Shipping (INR)",
+    "Total Cart Value (INR)",
+    "Payment Gateway / Method",
+    "Payment Status",
+    "Checkout Stage / Reason",
+    "Follow-up Status",
+    "Internal Staff Notes",
+  ];
+
+  const rows = orders.map((ord) => {
+    const itemsSummary = (ord.items || [])
+      .map((i) => `${i.product?.name || "Item"} [SKU:${i.product?.sku || "N/A"}] x${i.quantity} (@Rs.${i.unitPrice})`)
+      .join(" | ");
+
+    const totalQty = (ord.items || []).reduce((acc, i) => acc + i.quantity, 0);
+
+    return [
+      `"${ord.orderNumber}"`,
+      `"${new Date(ord.createdAt).toLocaleString("en-IN")}"`,
+      `"${(ord.customer?.fullName || "").replace(/"/g, '""')}"`,
+      `"${(ord.customer?.phone || "").replace(/"/g, '""')}"`,
+      `"${(ord.customer?.email || "").replace(/"/g, '""')}"`,
+      `"${(ord.customer?.companyName || "").replace(/"/g, '""')}"`,
+      `"${(ord.customer?.gstin || "").replace(/"/g, '""')}"`,
+      `"${(ord.customer?.address || "").replace(/"/g, '""')}"`,
+      `"${(ord.customer?.city || "").replace(/"/g, '""')}"`,
+      `"${(ord.customer?.state || "").replace(/"/g, '""')}"`,
+      `"${(ord.customer?.pincode || "").replace(/"/g, '""')}"`,
+      `"${itemsSummary.replace(/"/g, '""')}"`,
+      totalQty,
+      ord.subtotal || 0,
+      ord.tax || 0,
+      ord.shippingCost || 0,
+      ord.total || 0,
+      `"${ord.paymentMethod || "Razorpay / UPI"}"`,
+      `"${ord.paymentStatus || "Incomplete"}"`,
+      `"${(ord.customer?.orderNotes || ord.orderStatus || "").replace(/"/g, '""')}"`,
+      `"${ord.followUpStatus || "New Lead"}"`,
+      `"${(ord.adminNotes || "").replace(/"/g, '""')}"`,
+    ].join(",");
+  });
+
+  return [headers.join(","), ...rows].join("\r\n");
+}
+
+/**
+ * Identify and clean up orders older than X days (default 30 days)
+ * Can target cancelled orders specifically or all orders
+ */
+export function cleanupOrdersOlderThanDays(
+  days: number = 30,
+  onlyCancelled: boolean = false
+): {
   archivedOrders: Order[];
   remainingOrders: Order[];
   csvContent: string;
@@ -474,12 +535,20 @@ export function cleanupOrdersOlderThanDays(days: number = 30): {
 
   const archivedOrders = current.filter((ord) => {
     const orderTime = new Date(ord.createdAt).getTime();
-    return !isNaN(orderTime) && orderTime < cutoffTime;
+    if (isNaN(orderTime) || orderTime >= cutoffTime) return false;
+    if (onlyCancelled) {
+      return ord.orderStatus === "Cancelled";
+    }
+    return true;
   });
 
   const remainingOrders = current.filter((ord) => {
     const orderTime = new Date(ord.createdAt).getTime();
-    return isNaN(orderTime) || orderTime >= cutoffTime;
+    if (isNaN(orderTime) || orderTime >= cutoffTime) return true;
+    if (onlyCancelled) {
+      return ord.orderStatus !== "Cancelled";
+    }
+    return false;
   });
 
   if (archivedOrders.length > 0) {

@@ -346,7 +346,8 @@ export async function saveOrderToSupabase(order: Order): Promise<boolean> {
   if (!isSupabaseConfigured || !supabase) return false;
 
   try {
-    const { error: orderError } = await supabase.from("orders").insert({
+    // Build base order payload
+    const basePayload: any = {
       order_number: order.orderNumber,
       customer: order.customer,
       shipping_method: order.shippingMethod,
@@ -360,20 +361,44 @@ export async function saveOrderToSupabase(order: Order): Promise<boolean> {
       shipping_cost: order.shippingCost,
       total: order.total,
       tracking_number: order.trackingNumber,
-      tracking_link: order.trackingLink || null,
       estimated_delivery: order.estimatedDelivery,
-      razorpay_payment_id: order.razorpayPaymentId || null,
-      razorpay_order_id: order.razorpayOrderId || null,
       created_at: order.createdAt || new Date().toISOString(),
-    });
+    };
+
+    // Conditionally add tracking_link and Razorpay fields only when they exist
+    if (order.trackingLink) basePayload.tracking_link = order.trackingLink;
+    if (order.razorpayPaymentId) basePayload.razorpay_payment_id = order.razorpayPaymentId;
+    if (order.razorpayOrderId) basePayload.razorpay_order_id = order.razorpayOrderId;
+
+    let { error: orderError } = await supabase
+      .from("orders")
+      .upsert(basePayload, { onConflict: "order_number" });
+
+    // Schema-cache fallback: If the database is missing optional columns, strip them and retry upsert
+    if (
+      orderError &&
+      (orderError.message.includes("razorpay_order_id") ||
+        orderError.message.includes("razorpay_payment_id") ||
+        orderError.message.includes("tracking_link"))
+    ) {
+      console.warn("Retrying order upsert without optional columns due to schema cache mismatch in Supabase...");
+      delete basePayload.razorpay_payment_id;
+      delete basePayload.razorpay_order_id;
+      delete basePayload.tracking_link;
+      const retryResult = await supabase
+        .from("orders")
+        .upsert(basePayload, { onConflict: "order_number" });
+      orderError = retryResult.error;
+    }
 
     if (orderError) {
-      console.error("Supabase insert order error:", orderError.message);
+      console.error("Supabase upsert order error:", orderError.message);
       return false;
     }
 
-    // Insert order items
+    // Insert order items if any (clean previous items for this order number to prevent duplicates on upsert)
     if (order.items && order.items.length > 0) {
+      await supabase.from("order_items").delete().eq("order_number", order.orderNumber);
       const itemsRows = order.items.map((item) => ({
         order_number: order.orderNumber,
         product_id: item.product.id,
@@ -385,7 +410,6 @@ export async function saveOrderToSupabase(order: Order): Promise<boolean> {
         total_price: item.unitPrice * item.quantity,
         custom_note: item.customNote || null,
       }));
-
       await supabase.from("order_items").insert(itemsRows);
     }
 
