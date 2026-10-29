@@ -184,8 +184,23 @@ export const ECommerceProvider: React.FC<{ children: ReactNode }> = ({ children 
         ]);
 
         if (cloudProducts && cloudProducts.length > 0) {
-          setProducts(cloudProducts);
-          saveStoredProducts(cloudProducts);
+          const currentStored = getStoredProducts();
+          const isDifferent =
+            currentStored.length !== cloudProducts.length ||
+            currentStored.some((cp, idx) => {
+              const np = cloudProducts[idx];
+              return (
+                !np ||
+                cp.id !== np.id ||
+                cp.price !== np.price ||
+                cp.stockCount !== np.stockCount ||
+                cp.inStock !== np.inStock
+              );
+            });
+          if (isDifferent) {
+            setProducts(cloudProducts);
+            saveStoredProducts(cloudProducts);
+          }
         }
 
         if (cloudOrders && cloudOrders.length > 0) {

@@ -55,16 +55,24 @@ export function ShopPage({
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
   const gridTopRef = useRef<HTMLDivElement>(null);
+  const skuHandledRef = useRef(false);
 
+  // Scroll to top once on initial component mount
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, []);
+
+  // Handle ?sku= URL query param once when products load (does not reset scroll position)
+  useEffect(() => {
+    if (skuHandledRef.current || products.length === 0) return;
     try {
       const hash = window.location.hash;
       const qIdx = hash.indexOf("?");
       if (qIdx !== -1) {
         const params = new URLSearchParams(hash.slice(qIdx + 1));
         const skuParam = params.get("sku");
-        if (skuParam && products.length > 0) {
+        if (skuParam) {
+          skuHandledRef.current = true;
           const match = products.find((p) => p.sku.toLowerCase() === skuParam.toLowerCase());
           if (match) {
             openQuickView(match);
@@ -74,7 +82,7 @@ export function ShopPage({
         }
       }
     } catch (_) {}
-  }, [products]);
+  }, [products, openQuickView]);
 
 
 
