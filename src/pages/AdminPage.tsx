@@ -316,35 +316,27 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const importFileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleAdminLogin = (e: React.FormEvent) => {
+  const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginError("");
     setIsLoggingIn(true);
 
-    const validEmails = [
-      "admin@qualitech.com",
-      "admin@qualitechconnectronics.com",
-      "admin",
-      "qualitech",
-      ((import.meta.env["VITE_ADMIN_USER"] as string | undefined) || "").toLowerCase(),
-    ].filter(Boolean);
-
-    const validPasswords = [
-      "Qualitech@2026",
-      "qualitech123",
-      "Qualitech123",
-      "admin123",
-      (import.meta.env["VITE_ADMIN_PASSWORD"] as string | undefined) || "",
-    ].filter(Boolean);
+    // Hashed credentials — not stored in plain text
+    const _h = async (v: string) => {
+      const d = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(v));
+      return Array.from(new Uint8Array(d)).map(b => b.toString(16).padStart(2, "0")).join("");
+    };
 
     const inputEmail = loginEmail.trim().toLowerCase();
     const inputPass = loginPassword.trim();
 
-    const emailMatches = validEmails.some((ve) => ve === inputEmail);
-    const passMatches = validPasswords.some((vp) => vp === inputPass);
+    const [emailHash, passHash] = await Promise.all([_h(inputEmail), _h(inputPass)]);
+
+    const emailOk = emailHash === "ede6adc349777a68f793c3d5f220b3da23fc3ff41d442c1916264c23193abc30";
+    const passOk = passHash === "9d56f0af6df6afa9ead55d871170d49501de6a83792581e62709de86fa33629a";
 
     setTimeout(() => {
-      if (emailMatches && passMatches) {
+      if (emailOk && passOk) {
         sessionStorage.setItem("qualitech_admin_auth", "true");
         if (rememberMe) {
           localStorage.setItem("qualitech_admin_auth", "true");
