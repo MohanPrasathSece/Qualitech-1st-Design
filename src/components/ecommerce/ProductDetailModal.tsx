@@ -456,7 +456,7 @@ export const ProductDetailModal: React.FC = () => {
           {relatedProducts.length > 0 && (
             <div className="mt-8 border-t border-border pt-6">
               <h4 className="font-display text-sm font-bold text-graphite mb-3">
-                Complementary Components in {product.brand}
+                Suggested Products from {product.brand}
               </h4>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {relatedProducts.map((rel) => (
