@@ -590,8 +590,14 @@ function getDeletedRfqIds(): Set<string> {
 function markRfqAsDeleted(id: string, rfqNumber?: string) {
   try {
     const deleted = getDeletedRfqIds();
-    if (id) deleted.add(id);
-    if (rfqNumber) deleted.add(rfqNumber);
+    if (id) {
+      deleted.add(id);
+      deleted.add(id.trim().toLowerCase());
+    }
+    if (rfqNumber) {
+      deleted.add(rfqNumber);
+      deleted.add(rfqNumber.trim().toLowerCase());
+    }
     localStorage.setItem(DELETED_RFQS_STORAGE_KEY, JSON.stringify(Array.from(deleted)));
   } catch (e) {
     console.warn("Failed to persist deleted RFQ ID:", e);
@@ -601,12 +607,19 @@ function markRfqAsDeleted(id: string, rfqNumber?: string) {
 /** Fetch all RFQ quote requests for admin */
 export async function fetchQuoteRequestsFromSupabase(): Promise<SupabaseQuoteRecord[]> {
   const deletedSet = getDeletedRfqIds();
+  const lowerDeletedSet = new Set(Array.from(deletedSet).map((s) => String(s).trim().toLowerCase()));
 
   const filterDeleted = (records: SupabaseQuoteRecord[]) => {
     if (!Array.isArray(records)) return [];
-    return records.filter(
-      (q) => !deletedSet.has(q.id) && !deletedSet.has(q.rfq_number)
-    );
+    return records.filter((q) => {
+      if (!q) return false;
+      const idKey = String(q.id || "").trim().toLowerCase();
+      const rfqKey = String(q.rfq_number || "").trim().toLowerCase();
+      if (idKey && (deletedSet.has(q.id) || lowerDeletedSet.has(idKey))) return false;
+      if (rfqKey && (deletedSet.has(q.rfq_number) || lowerDeletedSet.has(rfqKey))) return false;
+      if ((q.status || "").toLowerCase() === "deleted") return false;
+      return true;
+    });
   };
 
   if (!isSupabaseConfigured || !supabase) {
@@ -639,20 +652,30 @@ export async function deleteQuoteRequestFromSupabase(id: string, rfqNumber?: str
   // 2. Also remove from local storage cache
   try {
     const stored: any[] = JSON.parse(localStorage.getItem("qualitech_rfq_quotes_v1") || "[]");
-    const filtered = stored.filter((q) => q.id !== id && q.rfq_number !== id && (!rfqNumber || q.rfq_number !== rfqNumber));
+    const filtered = stored.filter((q) => {
+      const qId = String(q.id || "").trim().toLowerCase();
+      const qNum = String(q.rfq_number || "").trim().toLowerCase();
+      const targetId = String(id || "").trim().toLowerCase();
+      const targetNum = String(rfqNumber || "").trim().toLowerCase();
+      if (targetId && (qId === targetId || qNum === targetId)) return false;
+      if (targetNum && (qId === targetNum || qNum === targetNum)) return false;
+      return true;
+    });
     localStorage.setItem("qualitech_rfq_quotes_v1", JSON.stringify(filtered));
   } catch (e) {
     console.warn("Failed to clean local storage quotes:", e);
   }
 
-  // 3. Attempt direct delete in Supabase
+  // 3. Attempt direct delete in Supabase, with soft-delete fallback in case hard-delete is restricted by RLS
   if (isSupabaseConfigured && supabase) {
     try {
       if (id) {
         await supabase.from("quote_requests").delete().eq("id", id);
+        await supabase.from("quote_requests").update({ status: "Deleted" }).eq("id", id);
       }
       if (rfqNumber) {
         await supabase.from("quote_requests").delete().eq("rfq_number", rfqNumber);
+        await supabase.from("quote_requests").update({ status: "Deleted" }).eq("rfq_number", rfqNumber);
       }
     } catch (err) {
       console.warn("Supabase delete quote error:", err);

@@ -109,7 +109,14 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
       });
   }, [orders]);
 
-  // Incomplete / Abandoned Checkouts (Customer Leads captured before payment)
+  // Dashboard Overview Orders (Excludes Cancelled and Deleted orders for Executive Dashboard view)
+  const dashboardOrders = useMemo(() => {
+    return validOrders.filter(
+      (o) => o.orderStatus !== "Cancelled" && (o.orderStatus as any) !== "Deleted" && !(o as any).isDeleted
+    );
+  }, [validOrders]);
+
+  // Incomplete / Abandoned Checkouts (Customer Leads captured before payment - Excludes COD orders & completed orders)
   const incompleteOrders = useMemo(() => {
     const seen = new Set<string>();
     return orders
@@ -117,6 +124,27 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
         const key = (o.orderNumber || o.id || "").trim().toLowerCase();
         if (key && seen.has(key)) return false;
         if (key) seen.add(key);
+
+        // COD orders are confirmed placed orders and should NEVER appear as incomplete payment leads
+        const isCod =
+          (o.paymentMethod || "").toLowerCase().includes("cash on delivery") ||
+          (o.paymentMethod || "").toLowerCase() === "cod" ||
+          (o.paymentStatus || "").toLowerCase().includes("cash on delivery");
+        if (isCod) return false;
+
+        // Placed / confirmed / in-transit / delivered / deleted orders are NOT incomplete leads
+        if (
+          o.orderStatus === "Confirmed" ||
+          o.orderStatus === "Shipped" ||
+          o.orderStatus === "Delivered" ||
+          o.orderStatus === "Dispatched" ||
+          o.orderStatus === "Processing" ||
+          (o.orderStatus as any) === "Deleted" ||
+          (o as any).isDeleted
+        ) {
+          return false;
+        }
+
         return (
           o.orderStatus === "Payment Incomplete" ||
           o.orderStatus === "Payment Failed" ||
@@ -160,6 +188,13 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
   });
   const [quoteRequests, setQuoteRequests] = useState<SupabaseQuoteRecord[]>([]);
   const [selectedRFQ, setSelectedRFQ] = useState<SupabaseQuoteRecord | null>(null);
+
+  // Dashboard Overview RFQ Enquiries (Excludes deleted and cancelled enquiries)
+  const dashboardQuotes = useMemo(() => {
+    return quoteRequests.filter(
+      (q) => (q.status || "").toLowerCase() !== "deleted" && (q.status || "").toLowerCase() !== "cancelled"
+    );
+  }, [quoteRequests]);
 
   // Products State
   const [products, setProducts] = useState<Product[]>([]);
@@ -1472,7 +1507,17 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
   const handleDeleteQuoteRequest = async (id: string, rfqNum: string) => {
     if (confirm(`Are you sure you want to delete RFQ Enquiry #${rfqNum}?`)) {
       await deleteQuoteRequestFromSupabase(id, rfqNum);
-      setQuoteRequests((prev) => prev.filter((q) => q.id !== id && q.rfq_number !== id && q.rfq_number !== rfqNum));
+      const targetId = (id || "").trim().toLowerCase();
+      const targetNum = (rfqNum || "").trim().toLowerCase();
+      setQuoteRequests((prev) =>
+        prev.filter((q) => {
+          const qId = (q.id || "").trim().toLowerCase();
+          const qNum = (q.rfq_number || "").trim().toLowerCase();
+          if (targetId && (qId === targetId || qNum === targetId)) return false;
+          if (targetNum && (qId === targetNum || qNum === targetNum)) return false;
+          return true;
+        })
+      );
       showToast(`RFQ #${rfqNum} deleted.`, "info");
     }
   };
@@ -2037,9 +2082,9 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                       </svg>
                     </span>
                   </div>
-                  <p className="mt-3 text-3xl font-black text-slate-900">{validOrders.length}</p>
+                  <p className="mt-3 text-3xl font-black text-slate-900">{dashboardOrders.length}</p>
                   <p className="mt-1 text-xs text-emerald-600 font-semibold">
-                    {validOrders.filter((o) => o.orderStatus === "Confirmed" || o.orderStatus === "Shipped").length} in active processing
+                    {dashboardOrders.filter((o) => o.orderStatus === "Confirmed" || o.orderStatus === "Shipped").length} in active processing
                   </p>
                 </div>
 
@@ -2075,7 +2120,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                     </span>
                   </div>
                   <p className="mt-3 text-3xl font-black text-slate-900">
-                    {validOrders.filter((o) => o.orderStatus === "Shipped" || o.orderStatus === "Dispatched").length}
+                    {dashboardOrders.filter((o) => o.orderStatus === "Shipped" || o.orderStatus === "Dispatched").length}
                   </p>
                   <p className="mt-1 text-xs text-sky-600 font-semibold">Active in transit</p>
                 </div>
@@ -2092,7 +2137,7 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                       </svg>
                     </span>
                   </div>
-                  <p className="mt-3 text-3xl font-black text-slate-900">{quoteRequests.length}</p>
+                  <p className="mt-3 text-3xl font-black text-slate-900">{dashboardQuotes.length}</p>
                   <p className="mt-1 text-xs text-amber-600 font-semibold">Customer enquiries</p>
                 </div>
 
@@ -2130,11 +2175,11 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                     </button>
                   </div>
 
-                  {validOrders.length === 0 ? (
+                  {dashboardOrders.length === 0 ? (
                     <p className="text-xs text-slate-400 py-6 text-center">No orders recorded yet.</p>
                   ) : (
                     <div className="divide-y divide-slate-100">
-                      {validOrders.slice(0, 5).map((ord) => (
+                      {dashboardOrders.slice(0, 5).map((ord) => (
                         <div key={ord.id} className="flex items-center justify-between py-3">
                           <div>
                             <p className="font-mono text-xs font-bold text-[#004f9e]">#{ord.orderNumber}</p>
@@ -2171,11 +2216,11 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                     </button>
                   </div>
 
-                  {quoteRequests.length === 0 ? (
+                  {dashboardQuotes.length === 0 ? (
                     <p className="text-xs text-slate-400 py-6 text-center">No quotation requests yet.</p>
                   ) : (
                     <div className="divide-y divide-slate-100">
-                      {quoteRequests.slice(0, 5).map((q) => (
+                      {dashboardQuotes.slice(0, 5).map((q) => (
                         <div key={q.id} className="flex items-center justify-between py-3">
                           <div>
                             <p className="font-mono text-xs font-bold text-amber-700">#{q.rfq_number}</p>
@@ -4141,8 +4186,9 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                       <input
                         type="number"
                         min="0"
-                        value={formData.stockCount || 100}
-                        onChange={(e) => setFormData({ ...formData, stockCount: parseInt(e.target.value, 10) || 0 })}
+                        placeholder="100"
+                        value={formData.stockCount !== undefined ? formData.stockCount : 100}
+                        onChange={(e) => setFormData({ ...formData, stockCount: e.target.value === "" ? 0 : parseInt(e.target.value, 10) || 0 })}
                         className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm font-mono focus:border-[#004f9e] focus:outline-hidden"
                       />
                     </div>
@@ -4150,7 +4196,8 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                       <label className="block text-sm font-semibold text-slate-700 mb-1.5">Unit</label>
                       <input
                         type="text"
-                        value={formData.unit || "pcs"}
+                        placeholder="e.g. pcs, meters, sets, reels"
+                        value={formData.unit ?? ""}
                         onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
                         className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:border-[#004f9e] focus:outline-hidden"
                       />
@@ -4159,7 +4206,8 @@ export function AdminPage({ onNavigateHome }: AdminPageProps) {
                       <label className="block text-sm font-semibold text-slate-700 mb-1.5">Lead Time</label>
                       <input
                         type="text"
-                        value={formData.leadTime || "Ships in 24-48 Hours"}
+                        placeholder="Ships in 24-48 Hours"
+                        value={formData.leadTime ?? ""}
                         onChange={(e) => setFormData({ ...formData, leadTime: e.target.value })}
                         className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:border-[#004f9e] focus:outline-hidden"
                       />

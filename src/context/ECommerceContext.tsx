@@ -720,13 +720,32 @@ export const ECommerceProvider: React.FC<{ children: ReactNode }> = ({ children 
   };
 
   const exportAbandonedOrdersCsv = (): string => {
-    const incomplete = orders.filter(
-      (o) =>
+    const incomplete = orders.filter((o) => {
+      const isCod =
+        (o.paymentMethod || "").toLowerCase().includes("cash on delivery") ||
+        (o.paymentMethod || "").toLowerCase() === "cod" ||
+        (o.paymentStatus || "").toLowerCase().includes("cash on delivery");
+      if (isCod) return false;
+
+      if (
+        o.orderStatus === "Confirmed" ||
+        o.orderStatus === "Shipped" ||
+        o.orderStatus === "Delivered" ||
+        o.orderStatus === "Dispatched" ||
+        o.orderStatus === "Processing" ||
+        (o.orderStatus as any) === "Deleted" ||
+        (o as any).isDeleted
+      ) {
+        return false;
+      }
+
+      return (
         o.orderStatus === "Payment Incomplete" ||
         o.orderStatus === "Payment Failed" ||
         o.paymentStatus === "Failed" ||
         o.paymentStatus === "Incomplete"
-    );
+      );
+    });
     return exportAbandonedCheckoutsToCsv(incomplete);
   };
 

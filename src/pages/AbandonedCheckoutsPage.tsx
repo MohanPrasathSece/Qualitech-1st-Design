@@ -24,6 +24,27 @@ export function AbandonedCheckoutsPage({ onNavigateHome }: AbandonedCheckoutsPag
         const key = (o.orderNumber || o.id || "").trim().toLowerCase();
         if (key && seen.has(key)) return false;
         if (key) seen.add(key);
+
+        // COD orders are confirmed placed orders and should NEVER appear as incomplete payment leads
+        const isCod =
+          (o.paymentMethod || "").toLowerCase().includes("cash on delivery") ||
+          (o.paymentMethod || "").toLowerCase() === "cod" ||
+          (o.paymentStatus || "").toLowerCase().includes("cash on delivery");
+        if (isCod) return false;
+
+        // Placed / confirmed / in-transit / delivered / deleted orders are NOT incomplete leads
+        if (
+          o.orderStatus === "Confirmed" ||
+          o.orderStatus === "Shipped" ||
+          o.orderStatus === "Delivered" ||
+          o.orderStatus === "Dispatched" ||
+          o.orderStatus === "Processing" ||
+          (o.orderStatus as any) === "Deleted" ||
+          (o as any).isDeleted
+        ) {
+          return false;
+        }
+
         return (
           o.orderStatus === "Payment Incomplete" ||
           o.orderStatus === "Payment Failed" ||

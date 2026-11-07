@@ -144,6 +144,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigateHome }) =>
     placeOrder,
     recordIncompleteOrder,
     markLeadRecovered,
+    deleteAbandonedOrder,
     updateCartQty,
     removeFromCart,
     removeCoupon,
@@ -254,9 +255,9 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigateHome }) =>
       setIsSubmitting(false);
       setStep(1);
 
-      // Mark the captured lead as recovered
+      // Clean up temporary lead since order is now officially placed with COD
       if (activeLeadOrderNumberRef.current) {
-        markLeadRecovered(activeLeadOrderNumberRef.current);
+        deleteAbandonedOrder(activeLeadOrderNumberRef.current);
         activeLeadOrderNumberRef.current = null;
       }
     }, 350);
@@ -311,9 +312,9 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigateHome }) =>
         setIsSubmitting(false);
         setStep(1);
 
-        // Mark the captured lead as recovered
+        // Clean up temporary lead since payment succeeded and order is confirmed
         if (activeLeadOrderNumberRef.current) {
-          markLeadRecovered(activeLeadOrderNumberRef.current);
+          deleteAbandonedOrder(activeLeadOrderNumberRef.current);
           activeLeadOrderNumberRef.current = null;
         }
       },
