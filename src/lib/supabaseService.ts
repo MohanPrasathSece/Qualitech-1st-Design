@@ -230,12 +230,26 @@ export async function uploadImageToSupabase(
 
 export const uploadProductImageToSupabase = uploadImageToSupabase;
 
-/** Upload CAD / Spec drawing to Supabase Storage 'cad-drawings' */
+/** Upload CAD / Spec drawing to Supabase Storage 'cad-drawings' (with base64 fallback) */
 export async function uploadDrawingToSupabase(
   file: File
 ): Promise<{ url: string | null; error?: string | undefined }> {
+  const readFileAsDataUrl = (f: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (e) => reject(e);
+      reader.readAsDataURL(f);
+    });
+  };
+
   if (!isSupabaseConfigured || !supabase) {
-    return { url: URL.createObjectURL(file) };
+    try {
+      const dataUrl = await readFileAsDataUrl(file);
+      return { url: dataUrl };
+    } catch {
+      return { url: URL.createObjectURL(file) };
+    }
   }
 
   try {
@@ -251,13 +265,25 @@ export async function uploadDrawingToSupabase(
       });
 
     if (uploadError) {
-      return { url: URL.createObjectURL(file), error: uploadError.message };
+      console.warn("Storage cad-drawings upload error, falling back to Data URL:", uploadError.message);
+      try {
+        const dataUrl = await readFileAsDataUrl(file);
+        return { url: dataUrl };
+      } catch {
+        return { url: URL.createObjectURL(file), error: uploadError.message };
+      }
     }
 
     const { data } = supabase.storage.from("cad-drawings").getPublicUrl(filePath);
     return { url: data.publicUrl };
   } catch (err: any) {
-    return { url: URL.createObjectURL(file), error: err?.message };
+    console.warn("Storage upload exception, falling back to Data URL:", err);
+    try {
+      const dataUrl = await readFileAsDataUrl(file);
+      return { url: dataUrl };
+    } catch {
+      return { url: URL.createObjectURL(file), error: err?.message };
+    }
   }
 }
 
@@ -509,7 +535,7 @@ export async function deleteOrdersFromSupabase(orderNumbers: string[]): Promise<
 /** Submit a custom RFQ quotation request */
 export async function submitQuoteRequestToSupabase(
   quoteData: QuoteRequestData
-): Promise<{ success: boolean; rfqNumber: string; error?: string }> {
+): Promise<{ success: boolean; rfqNumber: string; attachmentUrl?: string | undefined; error?: string }> {
   const rfqNumber = "RFQ-" + Math.floor(100000 + Math.random() * 900000);
 
   let attachmentUrl: string | undefined = undefined;
@@ -543,7 +569,7 @@ export async function submitQuoteRequestToSupabase(
       created_at: new Date().toISOString(),
     });
     localStorage.setItem("qualitech_rfq_quotes_v1", JSON.stringify(stored));
-    return { success: true, rfqNumber };
+    return { success: true, rfqNumber, attachmentUrl };
   }
 
   try {
@@ -566,11 +592,11 @@ export async function submitQuoteRequestToSupabase(
     });
 
     if (error) {
-      return { success: false, rfqNumber, error: error.message };
+      return { success: false, rfqNumber, attachmentUrl, error: error.message };
     }
-    return { success: true, rfqNumber };
+    return { success: true, rfqNumber, attachmentUrl };
   } catch (err: any) {
-    return { success: false, rfqNumber, error: err?.message || "Failed to submit RFQ" };
+    return { success: false, rfqNumber, attachmentUrl, error: err?.message || "Failed to submit RFQ" };
   }
 }
 

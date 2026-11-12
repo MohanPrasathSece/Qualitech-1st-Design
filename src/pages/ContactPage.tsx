@@ -6,8 +6,6 @@ import { Footer } from "@/components/site/Footer";
 import { sendContactFormEmail } from "@/lib/emailService";
 import { submitQuoteRequestToSupabase } from "@/lib/supabaseService";
 
-import { downloadQuotationFromRFQ } from "@/lib/pdfQuotationService";
-
 interface ContactPageProps {
   onNavigate: (href: string, isPage?: boolean) => void;
 }
@@ -45,8 +43,8 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
     setSubmittedData(dataSnapshot);
 
     try {
-      // 1. Save to Supabase RFQ / Contact database table
-      await submitQuoteRequestToSupabase({
+      // 1. Save to Supabase RFQ / Contact database table (with file upload)
+      const rfqResult = await submitQuoteRequestToSupabase({
         fullName: formData.name,
         email: formData.email,
         phone: formData.phone,
@@ -54,37 +52,28 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
         productCategory: formData.interest,
         technicalSpecs: fullMessage,
         estimatedQty: 100,
+        drawingFile: attachedFile || undefined,
       });
 
-      // 2. Dispatch email notification to admin sales
+      // 2. Dispatch email notification to admin sales (include attachment link if available)
+      const attachmentNote = rfqResult.attachmentUrl
+        ? `\n\n📎 Customer Attachment: ${rfqResult.attachmentUrl}`
+        : "";
       await sendContactFormEmail({
         fullName: formData.name,
         email: formData.email,
         phone: formData.phone,
         companyName: formData.company,
         subject: `RFQ Enquiry from ${formData.name} - ${formData.company || "General OEM"}`,
-        message: fullMessage,
+        message: fullMessage + attachmentNote,
       });
     } catch (err) {
       console.warn("Contact form notification send note:", err);
     } finally {
       setIsSubmitting(false);
       setFormSubmitted(true);
+      setAttachedFile(null);
     }
-  };
-
-  const handleDownloadPDF = () => {
-    if (!submittedData) return;
-    downloadQuotationFromRFQ({
-      rfqNumber: Math.floor(10000 + Math.random() * 90000).toString(),
-      fullName: submittedData.name,
-      email: submittedData.email,
-      phone: submittedData.phone,
-      companyName: submittedData.company,
-      productCategory: submittedData.interest,
-      technicalSpecs: submittedData.message,
-      estimatedQty: 100,
-    });
   };
 
   return (
@@ -143,18 +132,7 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                       Thank you for contacting Qualitech Connectronics. Your enquiry has been registered and routed to our applications engineering desk.
                     </p>
 
-                    <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 w-full">
-                      <button
-                        type="button"
-                        onClick={handleDownloadPDF}
-                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-brand-blue px-4 py-2.5 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-graphite transition-all shadow-sm cursor-pointer"
-                      >
-                        <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <span className="truncate">Download Formal Estimate (PDF)</span>
-                      </button>
-
+                    <div className="mt-6 flex items-center justify-center w-full">
                       <button
                         type="button"
                         onClick={() => {
