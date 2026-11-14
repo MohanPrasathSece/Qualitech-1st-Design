@@ -695,7 +695,8 @@ function ProductsOverview({ onNavigate }: ProductsOverviewProps) {
             <div className="group relative flex h-72 overflow-hidden rounded-2xl border border-border bg-graphite-deep transition-all duration-500 hover:shadow-[var(--shadow-lift)]">
               <img
                 src={cardConnectors}
-                alt="Distribution of Electronics Connectors"
+                alt="Electronic connectors distributed by Qualitech Connectronics, including Amphenol and Zolex connector solutions"
+                title="Electronic Connectors – Qualitech India"
                 loading="lazy"
                 className="absolute inset-0 h-full w-full object-cover opacity-35 transition-transform duration-[1200ms] group-hover:scale-110"
               />
@@ -739,7 +740,8 @@ function ProductsOverview({ onNavigate }: ProductsOverviewProps) {
             <div className="group relative flex h-72 overflow-hidden rounded-2xl border border-border bg-graphite-deep transition-all duration-500 hover:shadow-[var(--shadow-lift)]">
               <img
                 src={cardFacilities}
-                alt="Cable assembly manufacturing"
+                alt="Custom cable assemblies and wire harnesses manufactured by Qualitech Connectronics for OEM applications"
+                title="Custom Cable Assemblies & Wire Harnesses – Qualitech India"
                 loading="lazy"
                 className="absolute inset-0 h-full w-full object-cover opacity-35 transition-transform duration-[1200ms] group-hover:scale-110"
               />
@@ -899,6 +901,16 @@ function HomeContent() {
   };
 
   const [currentPage, setCurrentPage] = useState<PageType>(getPageFromHash);
+
+  useEffect(() => {
+    if (currentPage === "home") {
+      document.title = "Electronic Connectors & Cable Assembly Manufacturer in India";
+      const descTag = document.querySelector('meta[name="description"]');
+      if (descTag) {
+        descTag.setAttribute('content', 'Qualitech India distributes Amphenol and Zolex connectors and manufactures custom cable assemblies and wire harnesses for OEMs and industrial buyers across India.');
+      }
+    }
+  }, [currentPage]);
 
   useEffect(() => {
     const handleLocationChange = () => {

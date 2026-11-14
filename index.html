@@ -23,6 +23,48 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Official Razorpay Checkout SDK -->
     <script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
+    <!-- Structured Data (JSON-LD) for Search Engines -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://qualitechindia.in/#organization",
+          "name": "Qualitech Connectronics Private Limited",
+          "alternateName": "Qualitech India",
+          "url": "https://qualitechindia.in",
+          "logo": "https://qualitechindia.in/favicon1.png",
+          "foundingDate": "1995",
+          "description": "Distributor of electronic connectors (Amphenol, Zolex) and manufacturer of custom cable assemblies and wire harnesses in India.",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Plot No. 37/B, Phase-V, IDA, Cherlapally",
+            "addressLocality": "Hyderabad",
+            "addressRegion": "Telangana",
+            "postalCode": "500051",
+            "addressCountry": "IN"
+          },
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+91-9849001484",
+            "contactType": "sales",
+            "areaServed": "IN",
+            "availableLanguage": ["en", "hi", "te"]
+          }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://qualitechindia.in/#website",
+          "url": "https://qualitechindia.in",
+          "name": "Qualitech Connectronics",
+          "publisher": {
+            "@id": "https://qualitechindia.in/#organization"
+          }
+        }
+      ]
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>

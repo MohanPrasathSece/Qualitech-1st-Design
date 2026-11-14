@@ -26,6 +26,10 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
 
   useEffect(() => {
     document.title = "Contact Qualitech Connectronics | Cable Assembly & Connector Solutions";
+    const descTag = document.querySelector('meta[name="description"]');
+    if (descTag) {
+      descTag.setAttribute('content', 'Contact Qualitech Connectronics for custom cable assemblies, wire harnesses and electronic connectors. Get technical support, product enquiries and OEM solutions.');
+    }
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 

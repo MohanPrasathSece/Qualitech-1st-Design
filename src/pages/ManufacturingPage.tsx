@@ -80,6 +80,10 @@ const FACILITY_IMAGES = [
 export function ManufacturingPage({ onNavigate }: ManufacturingPageProps) {
   useEffect(() => {
     document.title = "Facilities & Cable Assembly Manufacturing in Hyderabad | Qualitech";
+    const descTag = document.querySelector('meta[name="description"]');
+    if (descTag) {
+      descTag.setAttribute('content', "Explore Qualitech's cable assembly facility in Hyderabad with automated wire processing, crimping, testing equipment and production capabilities for OEM applications.");
+    }
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 

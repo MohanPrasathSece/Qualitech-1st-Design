@@ -32,6 +32,10 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
 
   useEffect(() => {
     document.title = "About Qualitech Connectronics | Cable Assembly & Connector Solutions";
+    const descTag = document.querySelector('meta[name="description"]');
+    if (descTag) {
+      descTag.setAttribute('content', 'Learn about Qualitech Connectronics, established in 1995, delivering custom cable assemblies, wire harnesses and electronic connector solutions for OEMs across India.');
+    }
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
