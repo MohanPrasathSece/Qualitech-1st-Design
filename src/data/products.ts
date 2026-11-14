@@ -4,15 +4,15 @@ import p3 from "@/assets/p3.jpg";
 import p4 from "@/assets/p4.jpg";
 import p5 from "@/assets/p5.jpg";
 import p6 from "@/assets/p6.jpg";
-import cardCable from "@/assets/card-cable-assemblies.jpg";
-import cardConnectors from "@/assets/card-connectors.jpg";
+import cardCable from "@/assets/custom-cable-assemblies-wire-harnesses-qualitech-india.jpg";
+import cardConnectors from "@/assets/electronic-connectors-amphenol-zolex-qualitech-india.jpg";
 import cardFacilities from "@/assets/card-facilities.jpg";
-import heroHarness from "@/assets/hero-harness.jpg";
+import heroHarness from "@/assets/custom-cable-harness-assembly-qualitech-india.jpg";
 import indDefense from "@/assets/ind-defense.jpg";
 import indTelecom from "@/assets/ind-telecom.jpg";
 import indPower from "@/assets/ind-power.jpg";
 import indRailways from "@/assets/ind-railways.jpg";
-import aboutFactory from "@/assets/about-factory.jpg";
+import aboutFactory from "@/assets/qualitech-cable-assembly-manufacturing-facility-hyderabad.jpg";
 
 export interface TieredPrice {
   minQty: number;

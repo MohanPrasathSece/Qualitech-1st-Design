@@ -4,7 +4,7 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { Play, Pause, ShieldCheck, Cpu, Building2, CheckCircle2 } from "lucide-react";
 
-import aboutFactory from "@/assets/about-factory.jpg";
+import aboutFactory from "@/assets/qualitech-cable-assembly-manufacturing-facility-hyderabad.jpg";
 import facilitiesWide from "@/assets/facilities-wide.jpg";
 import cardFacilities from "@/assets/card-facilities.jpg";
 import heroHarness from "@/assets/hero-harness.jpg";
@@ -119,7 +119,10 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
               <div className="relative overflow-hidden rounded-2xl border border-border shadow-xl">
                 <img
                   src={aboutFactory}
-                  alt="Qualitech manufacturing facility"
+                  alt="Qualitech Connectronics manufacturing facility in Hyderabad, India, for custom cable assemblies and wire harness production"
+                  title="Qualitech Manufacturing Facility – Hyderabad, India"
+                  loading="lazy"
+                  decoding="async"
                   width={1408}
                   height={1008}
                   className="h-[380px] w-full object-cover sm:h-[480px]"

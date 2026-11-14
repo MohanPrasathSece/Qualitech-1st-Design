@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef } from "react";
 
-import heroHarness from "@/assets/hero-harness.jpg";
-import aboutFactory from "@/assets/about-factory.jpg";
-import cardCable from "@/assets/card-cable-assemblies.jpg";
-import cardConnectors from "@/assets/card-connectors.jpg";
+import heroHarness from "@/assets/custom-cable-harness-assembly-qualitech-india.jpg";
+import aboutFactory from "@/assets/qualitech-cable-assembly-manufacturing-facility-hyderabad.jpg";
+import cardCable from "@/assets/custom-cable-assemblies-wire-harnesses-qualitech-india.jpg";
+import cardConnectors from "@/assets/electronic-connectors-amphenol-zolex-qualitech-india.jpg";
 import cardFacilities from "@/assets/card-facilities.jpg";
 import indTelecom from "@/assets/ind-telecom.jpg";
 import indPower from "@/assets/ind-power.jpg";
@@ -67,20 +67,20 @@ function Hero({ onNavigate }: { onNavigate?: (target: string, isPage?: boolean) 
           </Reveal>
 
           <Reveal delay={120}>
-            <h1 className="mt-6 font-display text-4xl font-bold leading-[1.12] text-graphite sm:text-5xl lg:text-6xl">
-              Precision Connections.
-              <span className="block text-brand-blue">Engineered for Performance.</span>
+            <h1 className="mt-6 font-display text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.14] text-graphite">
+              Electronic Connectors Distributor &amp;
+              <span className="block text-brand-blue mt-1 sm:mt-1.5">Cable Assembly Manufacturer in India</span>
             </h1>
           </Reveal>
 
           <Reveal delay={220}>
-            <p className="mt-6 max-w-xl font-display text-base font-semibold text-graphite sm:text-lg">
-              Distribution of Electronics Connectors &amp; Manufacturing of Cable Assemblies
+            <p className="mt-5 max-w-xl font-display text-base font-semibold text-graphite sm:text-lg">
+              Precision Connections. Engineered for Performance.
             </p>
           </Reveal>
 
           <Reveal delay={300}>
-            <p className="mt-4 max-w-xl text-[0.95rem] leading-relaxed text-muted-foreground">
+            <p className="mt-3.5 max-w-xl text-[0.95rem] leading-relaxed text-muted-foreground">
               Qualitech Connectronics delivers high-quality electronics components from trusted brands like Amphenol and Zolex, along with custom-built wire and cable harnesses for OEM applications.
             </p>
           </Reveal>
@@ -117,7 +117,11 @@ function Hero({ onNavigate }: { onNavigate?: (target: string, isPage?: boolean) 
           <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-xl">
             <img
               src={heroHarness}
-              alt="Custom wire harness with precision multi-pin connectors"
+              alt="Custom cable harness assembly manufactured by Qualitech Connectronics in India"
+              title="Custom Cable Harness Assembly – Qualitech India"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
               width={1200}
               height={1408}
               className="h-[420px] w-full object-cover sm:h-[500px] lg:h-[560px]"
@@ -218,8 +222,10 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                 <div className="overflow-hidden w-full">
                   <img
                     src={cardConnectors}
-                    alt="Authorized Distribution of Electronics Connectors"
+                    alt="Electronic connectors distributed by Qualitech Connectronics, including Amphenol and Zolex connector solutions"
+                    title="Electronic Connectors – Qualitech India"
                     loading="lazy"
+                    decoding="async"
                     width={900}
                     height={500}
                     className="h-44 w-full object-cover transition-transform duration-[1200ms] ease-[var(--ease-precise)] group-hover:scale-110 sm:h-52"
@@ -311,8 +317,10 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                 <div className="overflow-hidden w-full">
                   <img
                     src={cardCable}
-                    alt="Custom cable assembly manufacturing"
+                    alt="Custom cable assemblies and wire harnesses manufactured by Qualitech Connectronics for OEM applications"
+                    title="Custom Cable Assemblies & Wire Harnesses – Qualitech India"
                     loading="lazy"
+                    decoding="async"
                     width={900}
                     height={500}
                     className="h-44 w-full object-cover transition-transform duration-[1200ms] ease-[var(--ease-precise)] group-hover:scale-110 sm:h-52"
@@ -427,8 +435,10 @@ function About({ onNavigate }: { onNavigate?: (target: string) => void }) {
             <div className="overflow-hidden rounded-2xl bg-steel-light">
               <img
                 src={aboutFactory}
-                alt="Wire harness assembly team working on the Qualitech production floor"
+                alt="Qualitech Connectronics manufacturing facility in Hyderabad, India, for custom cable assemblies and wire harness production"
+                title="Qualitech Manufacturing Facility – Hyderabad, India"
                 loading="lazy"
+                decoding="async"
                 width={1408}
                 height={1008}
                 className="h-[380px] w-full object-cover transition-transform duration-[1400ms] ease-[var(--ease-precise)] hover:scale-[1.04] sm:h-[520px] lg:h-[640px]"
