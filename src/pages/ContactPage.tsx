@@ -25,6 +25,7 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
   });
 
   useEffect(() => {
+    document.title = "Contact Qualitech Connectronics | Cable Assembly & Connector Solutions";
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
@@ -88,14 +89,14 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
             <div className="flex items-center gap-3">
               <span className="h-px w-10 bg-brand-yellow shrink-0" />
               <span className="font-display text-[0.65rem] sm:text-[0.68rem] font-bold uppercase tracking-[0.2em] text-steel">
-                Get In Touch
+                GET IN TOUCH
               </span>
             </div>
             <h1 className="mt-4 sm:mt-5 max-w-3xl font-display text-2xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl break-words">
               Contact Qualitech Connectronics
             </h1>
             <p className="mt-3 sm:mt-5 max-w-2xl text-[0.88rem] sm:text-[0.95rem] leading-relaxed text-steel">
-              Have an enquiry regarding Amphenol or Zolex components, or require a custom cable assembly quote? Our engineering team is ready to assist you.
+              Have an enquiry about electronic connectors, Amphenol or Zolex components, or require a custom cable assembly quote? Our engineering team is ready to support your OEM requirements.
             </p>
           </Reveal>
         </div>
@@ -109,13 +110,13 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
             <Reveal className="w-full min-w-0 max-w-full">
               <div className="rounded-2xl sm:rounded-3xl border border-border bg-[#fafbfc] p-4 sm:p-8 lg:p-10 shadow-sm w-full min-w-0">
                 <span className="text-[0.65rem] sm:text-[0.68rem] font-bold uppercase tracking-wider text-brand-blue">
-                  Online Enquiry Form
+                  ONLINE ENQUIRY FORM
                 </span>
                 <h2 className="mt-1.5 sm:mt-2 font-display text-xl sm:text-2xl lg:text-3xl font-bold text-graphite">
-                  Send Us Your Requirement
+                  Request a Custom Cable Assembly &amp; Connector Quote
                 </h2>
                 <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-muted-foreground">
-                  Fill in your details and project requirements. We typically respond within 1 business day.
+                  Share your cable assembly, wire harness or electronic connector requirements, including part numbers, specifications, quantities or technical drawings. Our team will review your requirement and get back to you.
                 </p>
 
                 {formSubmitted ? (
@@ -305,11 +306,14 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
               <Reveal delay={120} className="w-full min-w-0 max-w-full">
                 <div className="rounded-2xl sm:rounded-3xl border border-border bg-[#fafbfc] p-4 sm:p-8 w-full min-w-0">
                   <span className="text-[0.65rem] sm:text-[0.68rem] font-bold uppercase tracking-wider text-brand-orange">
-                    Corporate Office &amp; Works
+                    CORPORATE OFFICE &amp; WORKS
                   </span>
-                  <h3 className="mt-1.5 sm:mt-2 font-display text-lg sm:text-xl font-bold text-graphite break-words">
+                  <h2 className="mt-1.5 sm:mt-2 font-display text-lg sm:text-xl font-bold text-graphite break-words">
                     Qualitech Connectronics Private Limited
-                  </h3>
+                  </h2>
+                  <p className="mt-1 text-xs font-semibold text-brand-blue">
+                    Cable Assembly &amp; Electronic Connector Solutions in Hyderabad
+                  </p>
                   <div className="mt-4 space-y-1.5 text-xs sm:text-sm text-muted-foreground leading-relaxed">
                     <p className="font-semibold text-graphite">Corporate Office &amp; Works:</p>
                     <p>Plot No. 37/B, Phase-V, IDA, Cherlapally,</p>
@@ -394,11 +398,11 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
 
               <Reveal delay={200} className="w-full min-w-0 max-w-full">
                 <div className="rounded-2xl sm:rounded-3xl border border-border bg-graphite-deep text-white p-4 sm:p-8 w-full min-w-0">
-                  <h4 className="font-display text-sm sm:text-base font-bold text-white">
+                  <h2 className="font-display text-sm sm:text-base font-bold text-white">
                     Looking for Component Catalogs?
-                  </h4>
+                  </h2>
                   <p className="mt-2 text-xs text-steel leading-relaxed">
-                    Check our dedicated product sections or visit the official portals for Amphenol and Zolex.
+                    Explore Qualitech's electronic connector and component solutions or visit the official portals for Amphenol and Zolex products.
                   </p>
                   <div className="mt-4 flex flex-wrap gap-2 w-full">
                     <button
@@ -424,6 +428,42 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
               </Reveal>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* ─── Short Location Section ─── */}
+      <section className="py-14 sm:py-16 bg-[#fafbfc] border-b border-border">
+        <div className="mx-auto max-w-7xl px-4 sm:px-8 text-center max-w-3xl">
+          <Reveal>
+            <h2 className="font-display text-xl sm:text-2xl font-bold text-graphite">
+              Contact Our Cable Assembly &amp; Connector Team in Hyderabad
+            </h2>
+            <p className="mt-3 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+              Qualitech Connectronics operates from Phase-V, IDA, Cherlapally, Hyderabad, serving OEM and industrial customers with custom cable assemblies, wire harnesses and electronic connector solutions across India.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ─── Final CTA ─── */}
+      <section className="py-16 sm:py-20 bg-graphite-deep text-white border-b border-border/20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-8 text-center">
+          <Reveal>
+            <h2 className="font-display text-2xl sm:text-3xl font-bold">
+              Need a Custom Cable Solution?
+            </h2>
+            <div className="mt-6">
+              <button
+                type="button"
+                onClick={() => {
+                  window.scrollTo({ top: 300, behavior: "smooth" });
+                }}
+                className="rounded-xl bg-brand-yellow px-8 py-3.5 font-display text-xs font-bold uppercase tracking-wider text-graphite-deep hover:bg-white transition-all shadow-md cursor-pointer"
+              >
+                Request a Custom Cable Quote →
+              </button>
+            </div>
+          </Reveal>
         </div>
       </section>
 

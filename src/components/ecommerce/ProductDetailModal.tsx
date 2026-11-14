@@ -26,16 +26,38 @@ export const ProductDetailModal: React.FC = () => {
   const [downloadSuccess, setDownloadSuccess] = useState(false);
   const [imageError, setImageError] = useState(false);
 
-  // Reset quantity and error state on product change
+  // Reset quantity, error state, and manage product SEO URL
   React.useEffect(() => {
-    if (quickViewProduct) {
-      const initialQty = quickViewProduct.minOrderQty || 1;
-      setQuantity(initialQty);
-      setQuantityInput(String(initialQty));
-      setActiveTab("specs");
-      setImageError(false);
-      setDownloadSuccess(false);
+    if (!quickViewProduct) return;
+
+    const initialQty = quickViewProduct.minOrderQty || 1;
+    setQuantity(initialQty);
+    setQuantityInput(String(initialQty));
+    setActiveTab("specs");
+    setImageError(false);
+    setDownloadSuccess(false);
+
+    const prevHash = window.location.hash || "#shop";
+    const slug = (quickViewProduct.sku || quickViewProduct.name)
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
+    window.history.pushState(null, "", `#/product/${slug}/`);
+    document.title = `${quickViewProduct.name} | Qualitech Connectronics`;
+
+    const metaTag = document.querySelector('meta[name="description"]');
+    if (metaTag && quickViewProduct.description) {
+      metaTag.setAttribute("content", quickViewProduct.description.slice(0, 160));
     }
+
+    return () => {
+      if (prevHash && prevHash.startsWith("#")) {
+        window.history.replaceState(null, "", prevHash);
+      } else {
+        window.history.replaceState(null, "", "#shop");
+      }
+      document.title = "Electronic Connectors & Industrial Components | Qualitech India";
+    };
   }, [quickViewProduct]);
 
   if (!quickViewProduct) return null;
@@ -138,6 +160,17 @@ export const ProductDetailModal: React.FC = () => {
 
         {/* Content Body */}
         <div className="max-h-[calc(90vh-140px)] overflow-y-auto p-6 sm:p-8">
+          {/* Product Breadcrumbs */}
+          <nav className="flex items-center gap-1.5 text-xs text-muted-foreground mb-4 flex-wrap" aria-label="Breadcrumb">
+            <span className="hover:text-brand-blue cursor-pointer" onClick={closeQuickView}>Shop</span>
+            <span className="text-slate-300">/</span>
+            <span className="hover:text-brand-blue cursor-pointer" onClick={closeQuickView}>{product.brand}</span>
+            <span className="text-slate-300">/</span>
+            <span className="hover:text-brand-blue cursor-pointer" onClick={closeQuickView}>{product.category}</span>
+            <span className="text-slate-300">/</span>
+            <span className="font-semibold text-graphite line-clamp-1">{product.name}</span>
+          </nav>
+
           <div className="grid gap-8 md:grid-cols-[1.1fr_1.3fr]">
             {/* Left: Product Media & Badges */}
             <div className="space-y-4">

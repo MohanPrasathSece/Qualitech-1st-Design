@@ -62,7 +62,7 @@ function Hero({ onNavigate }: { onNavigate?: (target: string, isPage?: boolean) 
           <Reveal>
             <div className="flex items-center gap-3">
               <span className="h-px w-10 bg-brand-yellow" />
-              <span className="label-eyebrow">Established 1995</span>
+              <span className="label-eyebrow">QUALITECH CONNECTRONICS PRIVATE LIMITED | ESTABLISHED 1995</span>
             </div>
           </Reveal>
 
@@ -81,7 +81,7 @@ function Hero({ onNavigate }: { onNavigate?: (target: string, isPage?: boolean) 
 
           <Reveal delay={300}>
             <p className="mt-3.5 max-w-xl text-[0.95rem] leading-relaxed text-muted-foreground">
-              Qualitech Connectronics delivers high-quality electronics components from trusted brands like Amphenol and Zolex, along with custom-built wire and cable harnesses for OEM applications.
+              Qualitech Connectronics supplies electronic connectors and components from trusted brands such as Amphenol and Zolex, alongside custom-engineered cable assemblies and wire harnesses for OEM and industrial applications. We deliver application-specific connectivity solutions backed by manufacturing expertise and a commitment to quality.
             </p>
           </Reveal>
 
@@ -95,7 +95,7 @@ function Hero({ onNavigate }: { onNavigate?: (target: string, isPage?: boolean) 
                 }}
                 className="group inline-flex items-center justify-center gap-3 rounded-xl bg-graphite px-7 py-4 font-display text-[0.72rem] font-bold uppercase tracking-[0.2em] text-white transition-all duration-300 hover:bg-brand-blue shadow-sm"
               >
-                Shop Products
+                Explore Products
                 <span className="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
               </a>
               <a
@@ -136,11 +136,11 @@ function Hero({ onNavigate }: { onNavigate?: (target: string, isPage?: boolean) 
 /* ─── Stats ─── */
 
 const STATS = [
-  { value: 1995, label: "Established", plain: true },
-  { value: 30, suffix: "+", label: "Years of Experience" },
-  { text: "OEM", label: "Focused Solutions" },
-  { text: "100%", label: "Tested & Certified" },
-  { value: 7, suffix: "+", label: "Key Industries" },
+  { value: 1995, label: "Established 1995", plain: true },
+  { value: 30, suffix: "+", label: "Years of Industry Experience" },
+  { text: "OEM", label: "OEM-Focused Solutions" },
+  { text: "ISO", label: "ISO 9001 Quality System" },
+  { value: 7, suffix: "+", label: "Serving 7+ Key Industries" },
 ];
 
 function Stats() {
@@ -205,10 +205,10 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
             <span className="label-eyebrow">What We Do</span>
           </div>
           <h2 className="mt-5 max-w-3xl font-display text-2xl font-bold leading-tight text-graphite sm:mt-7 sm:text-4xl lg:text-[2.75rem]">
-            Core Solutions &amp; Capabilities
+            Electronic Components Distribution &amp; Custom Cable Assembly Solutions
           </h2>
           <p className="mt-4 max-w-2xl text-[0.95rem] leading-relaxed text-muted-foreground">
-            Qualitech Connectronics delivers world-class electronics components distribution and custom-engineered cable assembly solutions for leading OEMs.
+            Qualitech Connectronics provides electronic connectivity solutions through the distribution of trusted electronic components and the manufacturing of custom cable assemblies and wire harnesses. We support OEMs and industrial businesses with product sourcing, application-specific solutions and reliable manufacturing capabilities.
           </p>
         </Reveal>
 
@@ -239,21 +239,22 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                     </span>
                     <div>
                       <h3 className="font-display text-lg font-bold leading-snug text-graphite sm:text-xl sm:text-2xl">
-                        Distribution of Electronics Connectors
+                        Electronic Connectors &amp; Components Distribution
                       </h3>
                     </div>
                   </div>
 
                   <p className="mt-4 text-[0.92rem] leading-relaxed text-muted-foreground sm:mt-5 sm:text-[0.95rem]">
-                    Authorized distribution of premium electronics components from trusted global brands for industrial, defence, telecom, and OEM applications.
+                    We supply electronic connectors and components from established brands for industrial, automotive, telecom, defence and OEM applications. Our product range supports diverse connectivity requirements across multiple industries.
                   </p>
 
                   <ul className="mt-4 space-y-2 sm:mt-5">
                     {[
-                      "Authorized Distribution Partner for Amphenol",
-                      "Authorized Distribution Partner for Zolex",
-                      "100% Genuine Direct Manufacturer Sourcing",
-                      "Volume Stock & Technical Design-In Support",
+                      "Amphenol and Zolex product distribution",
+                      "Genuine components from trusted brands",
+                      "Wide range of electronic connectors",
+                      "Product sourcing and technical support",
+                      "Solutions for OEM and industrial applications",
                     ].map((item) => (
                       <li key={item} className="flex items-center gap-2.5 text-xs text-muted-foreground sm:text-sm">
                         <span className="h-1 w-1 rounded-full bg-brand-blue shrink-0" />
@@ -292,9 +293,9 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                 <button
                   type="button"
                   onClick={() => onNavigate("#products", true)}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-brand-blue/10 border border-brand-blue/30 px-3 py-1.5 font-display text-[0.68rem] font-bold uppercase tracking-wider text-brand-blue hover:bg-brand-blue hover:text-white transition-all cursor-pointer shadow-2xs"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-brand-blue/10 border border-brand-blue/30 px-3.5 py-2 font-display text-[0.68rem] font-bold uppercase tracking-wider text-brand-blue hover:bg-brand-blue hover:text-white transition-all cursor-pointer shadow-2xs"
                 >
-                  ⚡ Shop 400+ Connectors Online →
+                  Explore Electronic Connectors →
                 </button>
                 <button
                   type="button"
@@ -334,17 +335,24 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                     </span>
                     <div>
                       <h3 className="font-display text-lg font-bold leading-snug text-graphite sm:text-xl sm:text-2xl">
-                        Manufacturing of Cable Assemblies
+                        Custom Cable Assembly &amp; Wire Harness Manufacturing
                       </h3>
                     </div>
                   </div>
 
                   <p className="mt-4 text-[0.92rem] leading-relaxed text-muted-foreground sm:mt-5 sm:text-[0.95rem]">
-                    Custom wire and cable harness solutions - designed, manufactured and 100% tested to your exact OEM specifications.
+                    We design and manufacture custom wire harnesses and cable assemblies based on specific OEM requirements. Our solutions are developed to meet application needs, with in-house assembly capabilities and electrical testing.
                   </p>
 
                   <ul className="mt-4 space-y-2 sm:mt-5">
-                    {["Custom Cable Assemblies", "Wire Harnesses", "Application-specific Assemblies", "OEM Requirements"].map((item) => (
+                    {[
+                      "Custom Cable Assemblies",
+                      "Wire Harness Manufacturing",
+                      "Application-Specific Assemblies",
+                      "OEM Cable Solutions",
+                      "In-House Production & Assembly",
+                      "Electrical Testing",
+                    ].map((item) => (
                       <li key={item} className="flex items-center gap-2.5 text-xs text-muted-foreground sm:text-sm">
                         <span className="h-1 w-1 rounded-full bg-brand-yellow shrink-0" />
                         {item}
@@ -396,22 +404,19 @@ function About({ onNavigate }: { onNavigate?: (target: string) => void }) {
           </Reveal>
           <Reveal delay={100}>
             <h2 className="mt-7 font-display text-3xl font-bold leading-tight text-graphite sm:text-4xl lg:text-[2.75rem]">
-              Built on Experience.
-              <span className="block text-steel">Driven by Precision.</span>
+              Over Three Decades of Experience in Electronic Connectivity Solutions
             </h2>
           </Reveal>
           <Reveal delay={180}>
-            <div className="mt-7 space-y-5 text-[0.95rem] leading-relaxed text-muted-foreground">
+            <div className="mt-7 space-y-4 text-[0.95rem] leading-relaxed text-muted-foreground">
               <p>
-                Qualitech was established in 1995 by a team of dedicated professionals. Having
-                successfully managed the company for nearly three decades, Qualitech is now a trusted name in
-                distribution of electronics components and manufacturing of high quality custom built
-                wire and cable harnesses for OEMs.
+                Established in 1995, Qualitech Connectronics Private Limited has built its expertise in electronic components distribution and custom cable assembly manufacturing.
               </p>
               <p>
-                The right combination of dedicated and excellent manpower along with the latest
-                technology, is not only helping the company provide the most highly reliable cable
-                harnesses but also helping in resource optimization.
+                We supply electronic connectors from trusted brands and manufacture high-quality custom-built wire and cable harnesses for OEM applications.
+              </p>
+              <p>
+                Our experienced team, manufacturing capabilities and focus on precision help us deliver application-specific connectivity solutions while supporting customer requirements for quality, performance and timely supply.
               </p>
             </div>
           </Reveal>
@@ -446,9 +451,9 @@ function About({ onNavigate }: { onNavigate?: (target: string) => void }) {
             </div>
             <div className="absolute -bottom-6 left-6 hidden rounded-xl bg-background px-8 py-6 shadow-[var(--shadow-panel)] sm:block">
               <p className="font-display text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-                Manufacturing since
+                Manufacturing &amp; Distribution Expertise
               </p>
-              <p className="mt-1 font-display text-3xl font-bold text-graphite">1995</p>
+              <p className="mt-1 font-display text-2xl font-bold text-graphite">Since 1995</p>
             </div>
           </div>
         </Reveal>
@@ -462,38 +467,43 @@ function About({ onNavigate }: { onNavigate?: (target: string) => void }) {
 const INDUSTRIES = [
   {
     name: "Electric Vehicles (EV)",
-    desc: "High-voltage battery harnesses, BMS interconnects, and charging solutions.",
+    desc: "Custom wiring harnesses, battery interconnections and connectivity solutions for electric vehicle applications.",
     image: indEV,
   },
   {
     name: "White Goods",
-    desc: "Custom wiring assemblies and motor/control harnesses for major home appliances.",
+    desc: "Custom wiring assemblies and motor or control harnesses for home appliances and white goods manufacturers.",
     image: indWhiteGoods,
   },
   {
     name: "Consumer Electronics",
-    desc: "High-density micro connectors and flexible flat cabling for smart devices.",
+    desc: "Electronic connectors and cable assembly solutions for consumer electronic devices and equipment.",
     image: indConsumerElectronics,
   },
   {
     name: "Telecommunications",
-    desc: "Reliable connectivity for telecom infrastructure and network equipment.",
+    desc: "Connectivity components and cable solutions for telecom infrastructure and networking applications.",
     image: indTelecom,
   },
   {
-    name: "Power",
-    desc: "High-reliability wiring solutions for power distribution and generation.",
+    name: "Power & Energy",
+    desc: "Electrical connectivity and wiring solutions for power generation and distribution applications.",
     image: indPower,
   },
   {
     name: "Defence",
-    desc: "Ruggedized, high-specification cable assemblies for defence applications.",
+    desc: "Electronic components and application-specific cable assemblies for defence-related requirements.",
     image: indDefense,
   },
   {
     name: "Railways",
-    desc: "Robust wiring systems for railway signalling and rolling stock.",
+    desc: "Robust electrical connectivity and wiring solutions for railway signalling and rolling stock applications.",
     image: indRailways,
+  },
+  {
+    name: "Industrial Automation",
+    desc: "Connectors, components and custom cable assemblies for industrial machinery and automation systems.",
+    image: cardFacilities,
   },
 ];
 
@@ -506,11 +516,10 @@ function Industries() {
           <span className="label-eyebrow">Industries We Serve</span>
         </div>
         <h2 className="mt-7 max-w-2xl font-display text-3xl font-bold leading-tight text-graphite sm:text-4xl">
-          Solutions for Critical Industries
+          Electronic Connectivity Solutions for Critical Industries
         </h2>
         <p className="mt-4 max-w-2xl text-[0.95rem] leading-relaxed text-muted-foreground">
-          Our diversified clientele reflects our strength in supplying application-specific and
-          customized products for demanding sectors.
+          Different industries demand different connectivity requirements. Qualitech supports diverse industrial and OEM applications with electronic components, custom cable assemblies and wire harness solutions designed around specific application needs.
         </p>
       </Reveal>
 
@@ -546,11 +555,11 @@ function Industries() {
 /* ─── Why Qualitech ─── */
 
 const WHY = [
-  { title: "Application-Specific Solutions", copy: "Every product is designed and built to your exact application and specification requirements." },
-  { title: "Quality Focused", copy: "100% electrically tested harnesses with stringent quality checks at every stage of production." },
-  { title: "Experienced Team", copy: "Over 30 years of cumulative expertise in wire harnessing, connectors and cable assembly." },
-  { title: "Competitive Solutions", copy: "Resource optimization and efficient processes deliver the best value for our customers." },
-  { title: "Timely Supply", copy: "Reliable delivery schedules to support your production timelines and OEM requirements." },
+  { title: "Application-Specific Solutions", copy: "Custom cable assemblies and wire harnesses developed to meet individual application and specification requirements." },
+  { title: "Quality-Focused Manufacturing", copy: "Electrical testing and quality checks support product reliability and consistency throughout the manufacturing process." },
+  { title: "Experienced Team", copy: "Established in 1995, our experience in electronic components and cable assembly solutions helps us understand diverse customer requirements." },
+  { title: "Competitive Solutions", copy: "Efficient manufacturing processes and resource optimisation help deliver practical solutions for OEM requirements." },
+  { title: "Reliable Supply", copy: "A commitment to timely supply and customer coordination helps support production schedules and business requirements." },
 ];
 
 function Why() {
@@ -563,11 +572,10 @@ function Why() {
             <span className="label-eyebrow">Why Qualitech</span>
           </div>
           <h2 className="mt-7 max-w-2xl font-display text-3xl font-bold leading-tight text-graphite sm:text-4xl">
-            The Right Partner for Your OEM Requirements
+            Your Reliable Partner for OEM Connectivity Requirements
           </h2>
           <p className="mt-4 max-w-2xl text-[0.95rem] leading-relaxed text-muted-foreground">
-            Providing high quality harnesses at competitive prices and timely supplies has been
-            Qualitech's motto, which has helped the company grow from strength to strength.
+            From electronic component sourcing to custom cable assembly manufacturing, Qualitech combines industry experience, technical capabilities and a quality-focused approach to support demanding OEM requirements.
           </p>
         </Reveal>
 
@@ -620,14 +628,13 @@ function FacilitiesPreview({ onNavigate }: { onNavigate?: (target: string, isPag
         <Reveal className="max-w-xl">
           <div className="flex items-center gap-3">
             <span className="h-px w-10 bg-brand-orange" />
-            <span className="label-eyebrow text-steel">Facilities</span>
+            <span className="label-eyebrow text-steel">Facilities &amp; Infrastructure</span>
           </div>
           <h2 className="mt-7 font-display text-3xl font-bold leading-tight text-background sm:text-4xl lg:text-5xl">
-            Technology Meets Expertise
+            Cable Assembly Manufacturing &amp; Testing Capabilities
           </h2>
           <p className="mt-5 text-[0.95rem] leading-relaxed text-steel">
-            Our modern manufacturing environment combines advanced equipment with experienced
-            craftsmanship to deliver precision-engineered connectivity solutions.
+            Qualitech's manufacturing environment combines equipment, technical expertise and in-house assembly capabilities to produce custom wire harnesses and cable assemblies for OEM applications.
           </p>
           <a
             href="#manufacturing"
@@ -863,7 +870,23 @@ function HomeContent() {
       hash === "#leads"
     ) return "incomplete-payments";
     if (hash === "#checkout" || hash === "#/checkout" || hash === "#order-checkout") return "checkout";
-    if (hash === "#products" || hash === "#shop" || hash === "#catalog" || hash === "#catalogue") return "products";
+    if (
+      hash === "#products" ||
+      hash === "#shop" ||
+      hash === "#/shop" ||
+      hash === "#catalog" ||
+      hash === "#catalogue" ||
+      hash.startsWith("#/connectors") ||
+      hash.startsWith("#connectors") ||
+      hash.startsWith("#/custom-cable-assemblies") ||
+      hash.startsWith("#custom-cable-assemblies") ||
+      hash.startsWith("#/high-speed-io-connectors") ||
+      hash.startsWith("#high-speed-io-connectors") ||
+      hash.startsWith("#/antennas") ||
+      hash.startsWith("#antennas") ||
+      hash.startsWith("#/product/") ||
+      hash.startsWith("#product/")
+    ) return "products";
     if (hash === "#about-page" || hash === "#about-us") return "about";
     if (hash === "#manufacturing" || hash === "#cable-assemblies" || hash === "#facilities") return "manufacturing";
     if (hash === "#qualitech") return "qualitech";

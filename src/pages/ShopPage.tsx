@@ -17,6 +17,90 @@ interface ShopPageProps {
   currentPage?: string | undefined;
 }
 
+export interface CategorySEOInfo {
+  slug: string;
+  url: string;
+  title: string;
+  metaDesc: string;
+  h1: string;
+  intro: string;
+  breadcrumb: string[];
+  category: string;
+}
+
+export const SHOP_CATEGORY_SEO: Record<string, CategorySEOInfo> = {
+  "board-to-board-connectors": {
+    slug: "board-to-board-connectors",
+    url: "#/connectors/board-to-board-connectors/",
+    title: "Board-to-Board Connectors | PCB Interconnects | Qualitech India",
+    metaDesc: "Explore high-density board-to-board and mezzanine PCB connectors from Qualitech India for industrial, telecom and electronics applications.",
+    h1: "Board-to-Board Connectors",
+    intro: "Explore board-to-board connectors designed for reliable PCB-to-PCB interconnection in electronic and industrial applications. Our range includes board-to-board, PCB connectors and mezzanine connector solutions for high-density and high-speed connectivity requirements. Browse available products or contact Qualitech for assistance with your connector requirements.",
+    breadcrumb: ["Connectors", "Board-to-Board Connectors"],
+    category: "Board-to-Board Connectors",
+  },
+  "d-sub-connectors": {
+    slug: "d-sub-connectors",
+    url: "#/connectors/d-sub-connectors/",
+    title: "D-Sub Connectors & Cable Solutions | Qualitech India",
+    metaDesc: "Explore ruggedized D-Subminiature connectors, high-density plugs and receptacles from Qualitech India for industrial automation, defence and telecom.",
+    h1: "D-Subminiature Connectors",
+    intro: "High-reliability D-Sub connectors, high-density D-sub interfaces, and ruggedized shell assemblies for industrial automation, defence, and communications.",
+    breadcrumb: ["Connectors", "D-Sub Connectors"],
+    category: "D-Subminiature Connectors",
+  },
+  "power-connectors": {
+    slug: "power-connectors",
+    url: "#/connectors/power-connectors/",
+    title: "Power Connectors & High-Current Interconnects | Qualitech India",
+    metaDesc: "Explore industrial power connectors, heavy-duty busbar interconnects, RADSOK high-current contacts and energy storage connectors.",
+    h1: "Power Connectors",
+    intro: "Heavy-duty industrial power connectors, RADSOK high-amperage contacts, busbar connections, and battery interconnects for power distribution and EV systems.",
+    breadcrumb: ["Connectors", "Power Connectors"],
+    category: "Power Connectors",
+  },
+  "custom-cable-assemblies": {
+    slug: "custom-cable-assemblies",
+    url: "#/custom-cable-assemblies/",
+    title: "Custom Cable Assemblies & Wire Harnesses | Qualitech India",
+    metaDesc: "Custom cable assemblies, multi-branch wire harnesses and box build wiring manufactured and 100% tested by Qualitech Connectronics.",
+    h1: "Custom Cable Assemblies",
+    intro: "Precision custom-built cable assemblies and wire harnesses for OEM applications, 100% tested for electrical continuity, insulation resistance and hipot safety.",
+    breadcrumb: ["Custom Cable Assemblies"],
+    category: "Custom Cable Assemblies",
+  },
+  "high-speed-io-connectors": {
+    slug: "high-speed-io-connectors",
+    url: "#/high-speed-io-connectors/",
+    title: "High-Speed I/O Connectors & Optical Solutions | Qualitech India",
+    metaDesc: "Explore high-speed I/O connectors, QSFP, SFP, PCIe, and high-density copper and optical interconnect solutions.",
+    h1: "High-Speed I/O Connectors",
+    intro: "High-speed I/O connectors, QSFP, SFP, PCIe, backplane interconnects, and high-bandwidth data transmission solutions for data center and networking equipment.",
+    breadcrumb: ["High-Speed I/O Connectors"],
+    category: "High-Speed I/O Connectors",
+  },
+  "antennas": {
+    slug: "antennas",
+    url: "#/antennas/",
+    title: "Precision GNSS, Cellular & RF Antennas | Qualitech India",
+    metaDesc: "Authorized Amphenol antennas including multi-band GNSS, external, embedded, cellular and IoT RF antenna solutions.",
+    h1: "Antennas",
+    intro: "High-accuracy GNSS, external, embedded, cellular, and multi-protocol RF antennas from Amphenol for industrial, automotive, and IoT applications.",
+    breadcrumb: ["Antennas"],
+    category: "Antennas",
+  },
+  "connectors": {
+    slug: "connectors",
+    url: "#/connectors/",
+    title: "Electronic Connectors | Industrial & OEM Connectors | Qualitech India",
+    metaDesc: "Explore electronic connectors, circular connectors, terminal blocks and interconnect systems from Qualitech Connectronics.",
+    h1: "Electronic Connectors & Components",
+    intro: "Explore electronic connectors designed for reliable PCB, cable-to-board, and industrial interconnection in electronic and OEM applications.",
+    breadcrumb: ["Connectors"],
+    category: "Connectors",
+  },
+};
+
 export function ShopPage({
   onNavigateHome,
   initialBrand = "All Brands",
@@ -57,21 +141,53 @@ export function ShopPage({
   const gridTopRef = useRef<HTMLDivElement>(null);
   const skuHandledRef = useRef(false);
 
+  // Active SEO category mapping
+  const activeSeoCategory = useMemo(() => {
+    return Object.values(SHOP_CATEGORY_SEO).find(
+      (c) => c.category.toLowerCase() === selectedCategory.toLowerCase()
+    );
+  }, [selectedCategory]);
+
   // Scroll to top once on initial component mount
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
   }, []);
 
-  // Handle ?sku= URL query param once when products load (does not reset scroll position)
+  // Handle URL routes (categories, products, and ?sku=)
   useEffect(() => {
     if (skuHandledRef.current || products.length === 0) return;
     try {
-      const hash = window.location.hash;
+      const hash = window.location.hash.toLowerCase();
+      // 1. Check for product URL: #/product/slug
+      if (hash.includes("/product/")) {
+        const slug = hash.split("/product/")[1]?.split("/")[0]?.split("?")[0];
+        if (slug) {
+          const match = products.find(
+            (p) =>
+              p.sku.toLowerCase() === slug.toLowerCase() ||
+              p.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").includes(slug)
+          );
+          if (match) {
+            skuHandledRef.current = true;
+            openQuickView(match);
+          }
+        }
+      }
+
+      // 2. Check for category SEO URLs in hash
+      for (const seo of Object.values(SHOP_CATEGORY_SEO)) {
+        if (hash.includes(seo.slug)) {
+          setSelectedCategory(seo.category);
+          break;
+        }
+      }
+
+      // 3. Handle ?sku= URL query param
       const qIdx = hash.indexOf("?");
       if (qIdx !== -1) {
         const params = new URLSearchParams(hash.slice(qIdx + 1));
         const skuParam = params.get("sku");
-        if (skuParam) {
+        if (skuParam && !skuHandledRef.current) {
           skuHandledRef.current = true;
           const match = products.find((p) => p.sku.toLowerCase() === skuParam.toLowerCase());
           if (match) {
@@ -83,6 +199,35 @@ export function ShopPage({
       }
     } catch (_) {}
   }, [products, openQuickView]);
+
+  // Synchronize document.title & meta description with active category/store
+  useEffect(() => {
+    if (activeSeoCategory) {
+      document.title = activeSeoCategory.title;
+      const metaTag = document.querySelector('meta[name="description"]');
+      if (metaTag) metaTag.setAttribute("content", activeSeoCategory.metaDesc);
+    } else if (selectedBrand === "All Brands" && selectedCategory === "All Categories") {
+      document.title = "Electronic Connectors & Industrial Components | Qualitech India";
+      const metaTag = document.querySelector('meta[name="description"]');
+      if (metaTag) {
+        metaTag.setAttribute(
+          "content",
+          "Explore electronic connectors, cable assemblies, antennas, power solutions and industrial components from Qualitech Connectronics for OEM and industrial applications."
+        );
+      }
+    }
+  }, [activeSeoCategory, selectedBrand, selectedCategory]);
+
+  const handleSelectCategory = (cat: string) => {
+    setSelectedCategory(cat);
+    setSelectedSubCategory(null);
+    const seoMatch = Object.values(SHOP_CATEGORY_SEO).find((c) => c.category === cat);
+    if (seoMatch) {
+      window.history.pushState(null, "", seoMatch.url);
+    } else if (cat === "All Categories") {
+      window.history.pushState(null, "", "#shop");
+    }
+  };
 
 
 
@@ -232,6 +377,41 @@ export function ShopPage({
         <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
+              {/* SEO Breadcrumbs */}
+              <nav className="flex items-center gap-1.5 text-[0.7rem] text-muted-foreground mb-3 font-medium flex-wrap" aria-label="Breadcrumb">
+                <button
+                  type="button"
+                  onClick={() => onNavigateHome("#top", true)}
+                  className="hover:text-brand-blue cursor-pointer transition-colors"
+                >
+                  Home
+                </button>
+                <span className="text-slate-300">/</span>
+                <button
+                  type="button"
+                  onClick={() => handleSelectCategory("All Categories")}
+                  className={`hover:text-brand-blue cursor-pointer transition-colors ${
+                    activeSeoCategory || selectedBrand !== "All Brands" ? "" : "text-graphite font-semibold"
+                  }`}
+                >
+                  Shop
+                </button>
+                {activeSeoCategory?.breadcrumb.map((crumb, idx) => (
+                  <span key={crumb} className="flex items-center gap-1.5">
+                    <span className="text-slate-300">/</span>
+                    <span className={idx === activeSeoCategory.breadcrumb.length - 1 ? "text-graphite font-semibold" : "hover:text-brand-blue cursor-pointer"}>
+                      {crumb}
+                    </span>
+                  </span>
+                ))}
+                {selectedBrand !== "All Brands" && (
+                  <span className="flex items-center gap-1.5">
+                    <span className="text-slate-300">/</span>
+                    <span className="text-graphite font-semibold">{selectedBrand}</span>
+                  </span>
+                )}
+              </nav>
+
               <div className="flex items-center gap-2">
                 <span className="h-px w-8 bg-brand-yellow" />
                 <span className="text-[0.68rem] font-bold uppercase tracking-[0.2em] text-brand-blue">
@@ -239,22 +419,26 @@ export function ShopPage({
                 </span>
               </div>
               <h1 className="mt-3 font-display text-3xl sm:text-4xl font-extrabold text-graphite tracking-tight">
-                {selectedBrand === "Amphenol"
+                {activeSeoCategory
+                  ? activeSeoCategory.h1
+                  : selectedBrand === "Amphenol"
                   ? "Amphenol Product Catalogue"
                   : selectedBrand === "Zolex"
                   ? "Zolex Product Catalogue"
                   : selectedBrand === "Qualitech"
                   ? "Qualitech Product Catalogue (401 Products)"
-                  : "Industrial Components & Assemblies"}
+                  : "Electronic Connectors &amp; Industrial Components"}
               </h1>
-              <p className="mt-2 text-sm text-muted-foreground max-w-2xl">
-                {selectedBrand === "Amphenol"
+              <p className="mt-2 text-sm text-muted-foreground max-w-2xl leading-relaxed">
+                {activeSeoCategory
+                  ? activeSeoCategory.intro
+                  : selectedBrand === "Amphenol"
                   ? "Official line for High Precision GNSS Antennas, Circular MIL-Spec, Industrial M12/SPE, RADSOK Power, RF & Fiber Solutions."
                   : selectedBrand === "Zolex"
                   ? "High-Conductivity Copper Tube Lugs, Bimetallic Lugs, Crimp Terminals, Bootlace Ferrules, SS Cable Ties & Glands."
                   : selectedBrand === "Qualitech"
                   ? "401+ Genuine Qualitech products including precision electronics stock, custom wire harnesses, and turnkey cable assemblies."
-                  : "Authorized lines for Amphenol connectors & antennas, Zolex copper lugs & cable ties, plus Qualitech custom military & OEM wire harnesses."}
+                  : "Explore board-to-board connectors designed for reliable PCB-to-PCB interconnection in electronic and industrial applications. Our range includes board-to-board, PCB connectors and mezzanine connector solutions for high-density and high-speed connectivity requirements. Browse available products or contact Qualitech for assistance with your connector requirements."}
               </p>
             </div>
 
@@ -397,10 +581,7 @@ export function ShopPage({
               </p>
               <div className="space-y-1">
                 <button
-                  onClick={() => {
-                    setSelectedCategory("All Categories");
-                    setSelectedSubCategory(null);
-                  }}
+                  onClick={() => handleSelectCategory("All Categories")}
                   className={`flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-xs text-left transition-colors cursor-pointer ${
                     selectedCategory === "All Categories"
                       ? "bg-brand-blue/10 font-bold text-brand-blue"
@@ -421,11 +602,9 @@ export function ShopPage({
                       <button
                         onClick={() => {
                           if (isSelected) {
-                            setSelectedCategory("All Categories");
-                            setSelectedSubCategory(null);
+                            handleSelectCategory("All Categories");
                           } else {
-                            setSelectedCategory(cat);
-                            setSelectedSubCategory(null);
+                            handleSelectCategory(cat);
                           }
                         }}
                         className={`flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-xs text-left transition-colors cursor-pointer ${
@@ -632,10 +811,7 @@ export function ShopPage({
                   <span className="inline-flex items-center gap-1.5 rounded-lg bg-white px-2.5 py-1 text-xs font-semibold text-graphite border border-border shadow-2xs">
                     Category: <strong className="text-brand-blue">{selectedCategory}</strong>
                     <button
-                      onClick={() => {
-                        setSelectedCategory("All Categories");
-                        setSelectedSubCategory(null);
-                      }}
+                      onClick={() => handleSelectCategory("All Categories")}
                       className="text-muted-foreground hover:text-destructive cursor-pointer"
                       title="Clear category"
                     >
@@ -1064,10 +1240,7 @@ export function ShopPage({
                 </p>
                 <div className="space-y-1 max-h-56 overflow-y-auto pr-1">
                   <button
-                    onClick={() => {
-                      setSelectedCategory("All Categories");
-                      setSelectedSubCategory(null);
-                    }}
+                    onClick={() => handleSelectCategory("All Categories")}
                     className={`flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-xs text-left transition-colors ${
                       selectedCategory === "All Categories"
                         ? "bg-brand-blue/10 font-bold text-brand-blue"
@@ -1088,11 +1261,9 @@ export function ShopPage({
                         <button
                           onClick={() => {
                             if (isSelected) {
-                              setSelectedCategory("All Categories");
-                              setSelectedSubCategory(null);
+                              handleSelectCategory("All Categories");
                             } else {
-                              setSelectedCategory(cat);
-                              setSelectedSubCategory(null);
+                              handleSelectCategory(cat);
                             }
                           }}
                           className={`flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-xs text-left transition-colors ${
