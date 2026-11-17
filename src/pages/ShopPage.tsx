@@ -100,6 +100,156 @@ export const SHOP_CATEGORY_SEO: Record<string, CategorySEOInfo> = {
     breadcrumb: ["Connectors"],
     category: "Connectors",
   },
+  "power-solutions": {
+    slug: "power-solutions",
+    url: "#/power-solutions/",
+    title: "Power Solutions & High-Current Connectors | Qualitech India",
+    metaDesc: "Explore industrial power solutions, high-current connectors, RADSOK contacts and power distribution interconnects from Qualitech Connectronics.",
+    h1: "Power Solutions & Industrial Connectors",
+    intro: "Explore heavy-duty industrial power solutions, high-current contacts, busbar connections, and battery interconnects for power generation, distribution, and EV systems.",
+    breadcrumb: ["Power Solutions"],
+    category: "Power Solutions",
+  },
+  "high-speed-io-solutions": {
+    slug: "high-speed-io-solutions",
+    url: "#/high-speed-io-solutions/",
+    title: "High-Speed I/O Solutions & Interconnects | Qualitech India",
+    metaDesc: "Explore high-speed I/O solutions, QSFP, SFP, and high-bandwidth interconnects from Qualitech Connectronics for networking and telecom applications.",
+    h1: "High-Speed I/O Solutions",
+    intro: "High-speed I/O solutions, backplane interconnects, and high-bandwidth data transmission systems designed for high-frequency networking, computing, and communications.",
+    breadcrumb: ["High-Speed I/O Solutions"],
+    category: "High-Speed I/O Solutions",
+  },
+  "cables-and-cable-assemblies": {
+    slug: "cables-and-cable-assemblies",
+    url: "#/cables-and-cable-assemblies/",
+    title: "Cables & Cable Assemblies | Wire Harness Manufacturer | Qualitech India",
+    metaDesc: "Explore cables and custom cable assemblies manufactured and tested by Qualitech Connectronics for OEM and industrial applications across India.",
+    h1: "Cables & Cable Assemblies",
+    intro: "Explore custom cable assemblies, multi-branch wire harnesses, and industrial cable solutions built to OEM specifications with 100% electrical continuity and hipot testing.",
+    breadcrumb: ["Cables & Cable Assemblies"],
+    category: "Cables & Cable Assemblies",
+  },
+  "cable-and-cable-assemblies": {
+    slug: "cable-and-cable-assemblies",
+    url: "#/cable-and-cable-assemblies/",
+    title: "Cable & Cable Assemblies | Wire Harness Solutions | Qualitech India",
+    metaDesc: "Custom cable assemblies, multi-branch wire harnesses and box build wiring manufactured and 100% tested by Qualitech Connectronics.",
+    h1: "Cable & Cable Assemblies",
+    intro: "Precision custom-built cable assemblies and wire harnesses for OEM applications, 100% tested for electrical continuity, insulation resistance and hipot safety.",
+    breadcrumb: ["Cable & Cable Assemblies"],
+    category: "Cables & Cable Assemblies",
+  },
+  "fiber-optics": {
+    slug: "fiber-optics",
+    url: "#/fiber-optics/",
+    title: "Fiber Optics & Optical Interconnect Solutions | Qualitech India",
+    metaDesc: "High-performance optical fiber connectors, patch cords and optical assemblies from Qualitech Connectronics for telecom, defence and data networks.",
+    h1: "Fiber Optics Solutions",
+    intro: "Explore optical interconnects, ruggedized fiber optic connectors, and high-precision fiber assemblies for high-speed telecommunications and harsh environments.",
+    breadcrumb: ["Fiber Optics"],
+    category: "Fiber Optics",
+  },
+  "copper-lugs-and-connectors": {
+    slug: "copper-lugs-and-connectors",
+    url: "#/copper-lugs-and-connectors/",
+    title: "Copper Lugs & Connectors | Zolex Distributor | Qualitech India",
+    metaDesc: "Explore high-conductivity copper tube crimping lugs, heavy-duty through connectors, and transformer lugs from Qualitech Connectronics.",
+    h1: "Copper Lugs & Connectors",
+    intro: "High-conductivity electrolytic copper tube crimping lugs, two-hole lugs, and inline connectors for electrical power distribution, panels, and switchgear.",
+    breadcrumb: ["Copper Lugs & Connectors"],
+    category: "Copper Lugs & Connectors",
+  },
+  "crimp-terminals": {
+    slug: "crimp-terminals",
+    url: "#/crimp-terminals/",
+    title: "Crimp Terminals & Wire Connectors | Qualitech India",
+    metaDesc: "Explore insulated and non-insulated crimp terminals, ring terminals, spade terminals and pin terminals from Qualitech Connectronics.",
+    h1: "Crimp Terminals",
+    intro: "Precision ring, fork, pin, and blade crimp terminals designed for secure, vibration-resistant electrical terminations in automotive and industrial control panels.",
+    breadcrumb: ["Crimp Terminals"],
+    category: "Crimp Terminals",
+  },
+  "cable-glands-and-accessories": {
+    slug: "cable-glands-and-accessories",
+    url: "#/cable-glands-and-accessories/",
+    title: "Cable Glands & Accessories | Ingress Protection | Qualitech India",
+    metaDesc: "Explore brass, stainless steel, and polyamide cable glands with IP67/IP68 ingress protection and hazardous-area compliance.",
+    h1: "Cable Glands & Accessories",
+    intro: "Heavy-duty industrial cable glands, sealing locknuts, and strain relief accessories providing environmental sealing and cable retention for enclosures.",
+    breadcrumb: ["Cable Glands & Accessories"],
+    category: "Cable Glands & Accessories",
+  },
+  "earthing-accessories": {
+    slug: "earthing-accessories",
+    url: "#/earthing-accessories/",
+    title: "Earthing Accessories & Pure Copper Earth Rods | Qualitech India",
+    metaDesc: "Explore pure copper earth rods, copper bonded rods, earth clamps and grounding accessories for industrial electrical installations.",
+    h1: "Earthing Accessories",
+    intro: "Comprehensive electrical grounding solutions, including pure copper and copper-bonded earth rods, driving studs, and clamps for safe electrical installations.",
+    breadcrumb: ["Earthing Accessories"],
+    category: "Earthing Accessories",
+  },
+  "ss-cable-ties": {
+    slug: "ss-cable-ties",
+    url: "#/ss-cable-ties/",
+    title: "Stainless Steel (SS) Cable Ties | Coated & Uncoated | Qualitech India",
+    metaDesc: "Explore roller ball lock stainless steel cable ties, polyester coated and uncoated 304/316 grade ties for harsh, high-heat, and corrosive environments.",
+    h1: "Stainless Steel (SS) Cable Ties",
+    intro: "Roller-ball lock 304 and 316 grade stainless steel cable ties with polyester coating for extreme temperature, flame resistance, and UV exposure.",
+    breadcrumb: ["SS Cable Ties"],
+    category: "SS Cable Ties",
+  },
+  "aluminium-lugs-and-connectors": {
+    slug: "aluminium-lugs-and-connectors",
+    url: "#/aluminium-lugs-and-connectors/",
+    title: "Aluminium Lugs & Connectors | Power Distribution | Qualitech India",
+    metaDesc: "Explore industrial aluminium crimping lugs and connectors for power cables, transformers and utility electrical terminations.",
+    h1: "Aluminium Lugs & Connectors",
+    intro: "High-purity aluminium cable lugs and through connectors engineered for utility power distribution, switchboards, and overhead line connections.",
+    breadcrumb: ["Aluminium Lugs & Connectors"],
+    category: "Aluminium Lugs & Connectors",
+  },
+  "aluminum-lugs-and-connectors": {
+    slug: "aluminum-lugs-and-connectors",
+    url: "#/aluminum-lugs-and-connectors/",
+    title: "Aluminum Lugs & Connectors | Power Distribution | Qualitech India",
+    metaDesc: "Explore industrial aluminum crimping lugs and connectors for power cables, transformers and utility electrical terminations.",
+    h1: "Aluminum Lugs & Connectors",
+    intro: "High-purity aluminum cable lugs and through connectors engineered for utility power distribution, switchboards, and overhead line connections.",
+    breadcrumb: ["Aluminum Lugs & Connectors"],
+    category: "Aluminium Lugs & Connectors",
+  },
+  "bimetallic-lugs-and-connectors": {
+    slug: "bimetallic-lugs-and-connectors",
+    url: "#/bimetallic-lugs-and-connectors/",
+    title: "Bimetallic Lugs & Connectors (Al/Cu) | Qualitech India",
+    metaDesc: "Explore friction-welded bimetallic Al/Cu crimping lugs and connectors preventing galvanic corrosion in aluminium-to-copper cable terminations.",
+    h1: "Bimetallic Lugs & Connectors",
+    intro: "Friction-welded bimetallic (Al/Cu) lugs eliminating galvanic corrosion between aluminium conductors and copper busbars in industrial power systems.",
+    breadcrumb: ["Bimetallic Lugs & Connectors"],
+    category: "Bimetallic Lugs & Connectors",
+  },
+  "cables": {
+    slug: "cables",
+    url: "#/cables/",
+    title: "Industrial & OEM Electrical Cables | Qualitech India",
+    metaDesc: "Explore multi-core industrial cables, control cables, instrumentation wires, and custom hook-up cables from Qualitech Connectronics.",
+    h1: "Industrial & OEM Cables",
+    intro: "High-grade multi-core, shielded, and flexible cables for machinery, control panels, instrumentation, and custom wire harness integration.",
+    breadcrumb: ["Cables"],
+    category: "Cables",
+  },
+  "fiber-optic-cables": {
+    slug: "fiber-optic-cables",
+    url: "#/fiber-optic-cables/",
+    title: "Fiber Optic Cables & Patch Cords | Qualitech India",
+    metaDesc: "Explore single-mode and multi-mode fiber optic cables, armored optical cables and custom patch cords from Qualitech Connectronics.",
+    h1: "Fiber Optic Cables",
+    intro: "High-bandwidth single-mode and multi-mode optical cables for data communication, telecommunication infrastructure, and industrial optical networking.",
+    breadcrumb: ["Fiber Optic Cables"],
+    category: "Fiber Optic Cables",
+  },
 };
 
 export function ShopPage({
@@ -174,10 +324,19 @@ export function ShopPage({
         }
 
         // 2. Check for category SEO URLs in hash
-        for (const seo of Object.values(SHOP_CATEGORY_SEO)) {
-          if (hash.includes(seo.slug)) {
-            setSelectedCategory(seo.category);
-            break;
+        const matchedSeo = Object.values(SHOP_CATEGORY_SEO).find((seo) => hash.includes(seo.slug));
+        if (matchedSeo) {
+          setSelectedCategory(matchedSeo.category);
+        } else {
+          const hashClean = hash.replace(/^#\/?/, "").split("/")[0]?.replace(/^-+|-+$/g, "");
+          if (hashClean && hashClean !== "shop" && hashClean !== "products") {
+            const foundCat = products.find((p) => {
+              const catSlug = p.category.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+              return catSlug === hashClean;
+            });
+            if (foundCat) {
+              setSelectedCategory(foundCat.category);
+            }
           }
         }
 
@@ -225,11 +384,20 @@ export function ShopPage({
   const handleSelectCategory = (cat: string) => {
     setSelectedCategory(cat);
     setSelectedSubCategory(null);
-    const seoMatch = Object.values(SHOP_CATEGORY_SEO).find((c) => c.category === cat);
+    if (cat === "All Categories") {
+      window.history.pushState(null, "", "#shop");
+      return;
+    }
+    const cleanCat = cat.toLowerCase();
+    const seoMatch = Object.values(SHOP_CATEGORY_SEO).find(
+      (c) => c.category.toLowerCase() === cleanCat ||
+             c.slug === cleanCat.replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")
+    );
     if (seoMatch) {
       window.history.pushState(null, "", seoMatch.url);
-    } else if (cat === "All Categories") {
-      window.history.pushState(null, "", "#shop");
+    } else {
+      const slug = cleanCat.replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+      window.history.pushState(null, "", `#/${slug}/`);
     }
   };
 
@@ -431,7 +599,7 @@ export function ShopPage({
                   ? "Zolex Product Catalogue"
                   : selectedBrand === "Qualitech"
                   ? "Qualitech Product Catalogue (401 Products)"
-                  : "Electronic Connectors & Industrial Components"}
+                  : "Electronic Connectors & Industrial Components | Qualitech India"}
               </h1>
               <p className="mt-2 text-sm text-muted-foreground max-w-2xl leading-relaxed">
                 {activeSeoCategory

@@ -32,7 +32,7 @@ export const NAV: NavItem[] = [
   { label: "Shop", href: "#products", isPage: true },
   { label: "About Us", href: "#about-page", isPage: true },
   { label: "Facilities", href: "#facilities", isPage: true },
-  { label: "Blogs", href: "#blog" },
+  { label: "Blogs", href: "#blogs-page", isPage: true },
   { label: "Contact Us", href: "#contact-page", isPage: true },
 ];
 
