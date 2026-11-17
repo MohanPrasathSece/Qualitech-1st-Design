@@ -86,8 +86,26 @@ export const ProductDetailModal: React.FC = () => {
 
   const handleShareProduct = () => {
     const slug = getProductSlug(product);
-    const url = `${window.location.origin}${window.location.pathname}#/product/${slug}/`;
-    navigator.clipboard?.writeText(url);
+    const origin = window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1")
+      ? window.location.origin
+      : "https://www.qualitechindia.in";
+    const url = `${origin}/#/product/${slug}/`;
+
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url);
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = url;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-9999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+      }
+    } catch (_) {}
     setCopiedLink(true);
     setTimeout(() => setCopiedLink(false), 2500);
   };
