@@ -10,6 +10,7 @@ import { formatINR, getProductDefaultPrice } from "@/lib/ecommerceStore";
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
 import { ProductImage } from "@/components/common/ProductImage";
+import { getProductSlug, findProductBySlug } from "@/lib/productSlug";
 
 interface ShopPageProps {
   onNavigateHome: (sectionId?: string | undefined, isPage?: boolean | undefined) => void;
@@ -155,49 +156,52 @@ export function ShopPage({
 
   // Handle URL routes (categories, products, and ?sku=)
   useEffect(() => {
-    if (skuHandledRef.current || products.length === 0) return;
-    try {
-      const hash = window.location.hash.toLowerCase();
-      // 1. Check for product URL: #/product/slug
-      if (hash.includes("/product/")) {
-        const slug = hash.split("/product/")[1]?.split("/")[0]?.split("?")[0];
-        if (slug) {
-          const match = products.find(
-            (p) =>
-              p.sku.toLowerCase() === slug.toLowerCase() ||
-              p.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").includes(slug)
-          );
-          if (match) {
+    if (products.length === 0) return;
+
+    const processCurrentHash = () => {
+      try {
+        const hash = window.location.hash.toLowerCase();
+        // 1. Check for product URL: #/product/slug
+        if (hash.includes("/product/")) {
+          const rawSlug = hash.split("/product/")[1]?.split("/")[0]?.split("?")[0];
+          if (rawSlug) {
+            const match = findProductBySlug(products, rawSlug);
+            if (match) {
+              skuHandledRef.current = true;
+              openQuickView(match);
+            }
+          }
+        }
+
+        // 2. Check for category SEO URLs in hash
+        for (const seo of Object.values(SHOP_CATEGORY_SEO)) {
+          if (hash.includes(seo.slug)) {
+            setSelectedCategory(seo.category);
+            break;
+          }
+        }
+
+        // 3. Handle ?sku= URL query param
+        const qIdx = hash.indexOf("?");
+        if (qIdx !== -1) {
+          const params = new URLSearchParams(hash.slice(qIdx + 1));
+          const skuParam = params.get("sku");
+          if (skuParam && !skuHandledRef.current) {
             skuHandledRef.current = true;
-            openQuickView(match);
+            const match = findProductBySlug(products, skuParam);
+            if (match) {
+              openQuickView(match);
+            } else {
+              setSearchQuery(skuParam);
+            }
           }
         }
-      }
+      } catch (_) {}
+    };
 
-      // 2. Check for category SEO URLs in hash
-      for (const seo of Object.values(SHOP_CATEGORY_SEO)) {
-        if (hash.includes(seo.slug)) {
-          setSelectedCategory(seo.category);
-          break;
-        }
-      }
-
-      // 3. Handle ?sku= URL query param
-      const qIdx = hash.indexOf("?");
-      if (qIdx !== -1) {
-        const params = new URLSearchParams(hash.slice(qIdx + 1));
-        const skuParam = params.get("sku");
-        if (skuParam && !skuHandledRef.current) {
-          skuHandledRef.current = true;
-          const match = products.find((p) => p.sku.toLowerCase() === skuParam.toLowerCase());
-          if (match) {
-            openQuickView(match);
-          } else {
-            setSearchQuery(skuParam);
-          }
-        }
-      }
-    } catch (_) {}
+    processCurrentHash();
+    window.addEventListener("hashchange", processCurrentHash);
+    return () => window.removeEventListener("hashchange", processCurrentHash);
   }, [products, openQuickView]);
 
   // Synchronize document.title & meta description with active category/store
@@ -427,7 +431,7 @@ export function ShopPage({
                   ? "Zolex Product Catalogue"
                   : selectedBrand === "Qualitech"
                   ? "Qualitech Product Catalogue (401 Products)"
-                  : "Electronic Connectors &amp; Industrial Components"}
+                  : "Electronic Connectors & Industrial Components"}
               </h1>
               <p className="mt-2 text-sm text-muted-foreground max-w-2xl leading-relaxed">
                 {activeSeoCategory
@@ -930,15 +934,24 @@ export function ShopPage({
               <div className="grid gap-5 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
                 {paginatedProducts.map((product) => {
                   const price = getProductDefaultPrice(product);
+                  const productSlug = getProductSlug(product);
 
                   return (
                     <div
                       key={product.id}
                       className="group relative flex flex-col justify-between rounded-2xl border border-border bg-white p-4 transition-all duration-300 hover:border-brand-blue/50 hover:shadow-md"
                     >
-                      {/* Top Badges */}
+                      {/* Top Badges & Image Link */}
                       <div>
-                        <div className="relative aspect-4/3 overflow-hidden rounded-xl border border-border/60 bg-steel-light/20 p-2">
+                        <a
+                          href={`#/product/${productSlug}/`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            openQuickView(product);
+                          }}
+                          className="relative aspect-4/3 overflow-hidden rounded-xl border border-border/60 bg-steel-light/20 p-2 block cursor-pointer"
+                          title={product.name}
+                        >
                           <ProductImage
                             src={product.image}
                             alt={product.name}
@@ -967,7 +980,7 @@ export function ShopPage({
                           >
                             {product.inStock ? "● In Stock" : "○ Out of Stock"}
                           </span>
-                        </div>
+                        </a>
 
                         {/* Title & SKU */}
                         <div className="mt-3">
@@ -976,11 +989,18 @@ export function ShopPage({
                               {product.sku}
                             </p>
                           )}
-                          <h3
-                            onClick={() => openQuickView(product)}
-                            className="mt-0.5 font-display text-sm font-bold text-graphite line-clamp-2 hover:text-brand-blue transition-colors cursor-pointer leading-snug"
-                          >
-                            {product.name}
+                          <h3 className="mt-0.5 leading-snug">
+                            <a
+                              href={`#/product/${productSlug}/`}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                openQuickView(product);
+                              }}
+                              className="font-display text-sm font-bold text-graphite line-clamp-2 hover:text-brand-blue transition-colors cursor-pointer"
+                              title={product.name}
+                            >
+                              {product.name}
+                            </a>
                           </h3>
                         </div>
 
@@ -1009,15 +1029,17 @@ export function ShopPage({
                           )}
                         </div>
 
-
-
                         <div className="grid grid-cols-2 gap-2">
-                          <button
-                            onClick={() => openQuickView(product)}
-                            className="rounded-xl border border-border py-2 text-center text-xs font-bold text-graphite hover:border-brand-blue hover:text-brand-blue transition-colors cursor-pointer"
+                          <a
+                            href={`#/product/${productSlug}/`}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              openQuickView(product);
+                            }}
+                            className="rounded-xl border border-border py-2 text-center text-xs font-bold text-graphite hover:border-brand-blue hover:text-brand-blue transition-colors cursor-pointer flex items-center justify-center"
                           >
                             Quick View
-                          </button>
+                          </a>
                           {(!product.inStock || (product.stockCount !== undefined && product.stockCount <= 0)) ? (
                             <button
                               disabled
@@ -1047,15 +1069,21 @@ export function ShopPage({
               <div className="space-y-3">
                 {paginatedProducts.map((product) => {
                   const price = getProductDefaultPrice(product);
+                  const productSlug = getProductSlug(product);
 
                   return (
                     <div
                       key={product.id}
                       className="flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl border border-border bg-white p-4 transition-all hover:border-brand-blue/50 hover:shadow-xs"
                     >
-                      <div
-                        className="flex items-center gap-4 cursor-pointer flex-1 w-full"
-                        onClick={() => openQuickView(product)}
+                      <a
+                        href={`#/product/${productSlug}/`}
+                        className="flex items-center gap-4 cursor-pointer flex-1 w-full text-left"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          openQuickView(product);
+                        }}
+                        title={product.name}
                       >
                         <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl border border-border/80 bg-steel-light/20 p-1.5">
                           <ProductImage
@@ -1082,7 +1110,7 @@ export function ShopPage({
                             {product.description}
                           </p>
                         </div>
-                      </div>
+                      </a>
 
                       <div className="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto border-t sm:border-t-0 border-border/60 pt-3 sm:pt-0">
                         <div className="text-right">
@@ -1097,12 +1125,16 @@ export function ShopPage({
 
                         <div className="flex items-center gap-2">
 
-                          <button
-                            onClick={() => openQuickView(product)}
-                            className="rounded-xl border border-border px-3.5 py-2 text-xs font-bold text-graphite hover:bg-steel-light transition-colors cursor-pointer"
+                          <a
+                            href={`#/product/${productSlug}/`}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              openQuickView(product);
+                            }}
+                            className="rounded-xl border border-border px-3.5 py-2 text-xs font-bold text-graphite hover:bg-steel-light transition-colors cursor-pointer inline-flex items-center justify-center"
                           >
                             Details
-                          </button>
+                          </a>
                           {(!product.inStock || (product.stockCount !== undefined && product.stockCount <= 0)) ? (
                             <button
                               disabled

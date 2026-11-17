@@ -35,6 +35,7 @@ import { ProductDetailModal } from "@/components/ecommerce/ProductDetailModal";
 import { OrderSuccessModal } from "@/components/ecommerce/OrderSuccessModal";
 import { WhatsAppWidget } from "@/components/common/WhatsAppWidget";
 import { FloatingCartWidget } from "@/components/ecommerce/FloatingCartWidget";
+import { BlogSection } from "@/components/site/BlogSection";
 
 export default function App() {
   return (
@@ -289,21 +290,13 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                 </div>
               </div>
 
-              <div className="px-5 pb-5 sm:px-8 sm:pb-8 pt-0 w-full flex flex-wrap items-center justify-between gap-3">
+              <div className="px-5 pb-5 sm:px-8 sm:pb-8 pt-0 w-full flex items-center">
                 <button
                   type="button"
                   onClick={() => onNavigate("#products", true)}
                   className="inline-flex items-center gap-1.5 rounded-lg bg-brand-blue/10 border border-brand-blue/30 px-3.5 py-2 font-display text-[0.68rem] font-bold uppercase tracking-wider text-brand-blue hover:bg-brand-blue hover:text-white transition-all cursor-pointer shadow-2xs"
                 >
                   Explore Electronic Connectors →
-                </button>
-                <button
-                  type="button"
-                  onClick={() => onNavigate("#amphenol", true)}
-                  className="group/btn inline-flex items-center gap-2.5 font-display text-[0.68rem] font-bold uppercase tracking-[0.14em] text-brand-blue cursor-pointer sm:text-[0.72rem] sm:tracking-[0.2em]"
-                >
-                  Authorised Lines
-                  <span className="h-px w-6 bg-brand-blue transition-all duration-300 group-hover/btn:w-14 sm:w-8" />
                 </button>
               </div>
             </article>
@@ -371,14 +364,13 @@ function BusinessStructure({ onNavigate }: BusinessStructureProps) {
                 </div>
               </div>
 
-              <div className="px-5 pb-5 sm:px-8 sm:pb-8 pt-0 w-full">
+              <div className="px-5 pb-5 sm:px-8 sm:pb-8 pt-0 w-full flex items-center">
                 <button
                   type="button"
                   onClick={() => onNavigate("#manufacturing", true)}
-                  className="group/btn inline-flex items-center gap-2.5 font-display text-[0.68rem] font-bold uppercase tracking-[0.14em] text-graphite cursor-pointer sm:text-[0.72rem] sm:tracking-[0.2em]"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-brand-yellow/20 border border-brand-yellow/50 px-3.5 py-2 font-display text-[0.68rem] font-bold uppercase tracking-wider text-graphite hover:bg-brand-yellow hover:text-graphite transition-all cursor-pointer shadow-2xs"
                 >
-                  Explore Manufacturing Capabilities
-                  <span className="h-px w-6 bg-graphite transition-all duration-300 group-hover/btn:w-14 sm:w-8" />
+                  Explore Manufacturing Capabilities →
                 </button>
               </div>
             </article>
@@ -421,17 +413,18 @@ function About({ onNavigate }: { onNavigate?: (target: string) => void }) {
             </div>
           </Reveal>
           <Reveal delay={260}>
-            <a
-              href="#business"
-              onClick={(e) => {
-                e.preventDefault();
-                onNavigate?.("#business");
-              }}
-              className="group mt-9 inline-flex items-center gap-3 font-display text-[0.72rem] font-bold uppercase tracking-[0.2em] text-graphite"
-            >
-              Discover Our Solutions
-              <span className="h-px w-8 bg-graphite transition-all duration-300 group-hover:w-14" />
-            </a>
+            <div className="mt-9">
+              <a
+                href="#business"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onNavigate?.("#business");
+                }}
+                className="inline-flex items-center gap-2 rounded-lg bg-brand-blue/10 border border-brand-blue/30 px-4 py-2.5 font-display text-[0.72rem] font-bold uppercase tracking-wider text-brand-blue hover:bg-brand-blue hover:text-white transition-all cursor-pointer shadow-2xs"
+              >
+                Discover Our Solutions →
+              </a>
+            </div>
           </Reveal>
         </div>
 
@@ -1116,6 +1109,7 @@ function HomeContent() {
         <Why />
         <FacilitiesPreview onNavigate={handleNavigate} />
         <ProductsOverview onNavigate={handleNavigate} />
+        <BlogSection onNavigate={handleNavigate} />
         <FinalCTA onNavigate={handleNavigate} />
       </main>
       <Footer onNavigate={handleNavigate} />

@@ -223,7 +223,7 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
                 <div className="mt-8 pt-6 border-t border-border">
                   <button
                     onClick={() => onNavigate("#products", true)}
-                    className="inline-flex items-center gap-2 font-display text-xs font-bold uppercase tracking-wider text-brand-blue hover:text-graphite transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-2 rounded-lg bg-brand-blue/10 border border-brand-blue/30 px-4 py-2 font-display text-[0.68rem] font-bold uppercase tracking-wider text-brand-blue hover:bg-brand-blue hover:text-white transition-all cursor-pointer shadow-2xs"
                   >
                     Explore Electronic Connectors
                     <ArrowRight className="h-3.5 w-3.5" />
@@ -279,7 +279,7 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
                 <div className="mt-8 pt-6 border-t border-border">
                   <button
                     onClick={() => onNavigate("#manufacturing", true)}
-                    className="inline-flex items-center gap-2 font-display text-xs font-bold uppercase tracking-wider text-graphite hover:text-brand-blue transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-2 rounded-lg bg-brand-yellow/20 border border-brand-yellow/50 px-4 py-2 font-display text-[0.68rem] font-bold uppercase tracking-wider text-graphite hover:bg-brand-yellow hover:text-graphite transition-all cursor-pointer shadow-2xs"
                   >
                     Explore Manufacturing
                     <ArrowRight className="h-3.5 w-3.5" />
@@ -647,7 +647,7 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
                 window.location.hash = "#industries";
                 onNavigate("#industries");
               }}
-              className="inline-flex items-center gap-2 font-display text-xs font-bold uppercase tracking-wider text-brand-blue hover:text-graphite transition-colors cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-lg bg-brand-blue/10 border border-brand-blue/30 px-5 py-2.5 font-display text-[0.72rem] font-bold uppercase tracking-wider text-brand-blue hover:bg-brand-blue hover:text-white transition-all cursor-pointer shadow-2xs"
             >
               Explore Industries <ArrowRight className="h-3.5 w-3.5" />
             </button>

@@ -7,6 +7,7 @@ import {
 } from "@/lib/ecommerceStore";
 import { ProductImage } from "@/components/common/ProductImage";
 import { downloadProductDatasheet } from "@/lib/datasheetService";
+import { getProductSlug } from "@/lib/productSlug";
 
 export const ProductDetailModal: React.FC = () => {
   const {
@@ -38,10 +39,7 @@ export const ProductDetailModal: React.FC = () => {
     setDownloadSuccess(false);
 
     const prevHash = window.location.hash || "#shop";
-    const slug = (quickViewProduct.sku || quickViewProduct.name)
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-|-$/g, "");
+    const slug = getProductSlug(quickViewProduct);
     window.history.pushState(null, "", `#/product/${slug}/`);
     document.title = `${quickViewProduct.name} | Qualitech Connectronics`;
 
@@ -87,7 +85,8 @@ export const ProductDetailModal: React.FC = () => {
   };
 
   const handleShareProduct = () => {
-    const url = `${window.location.origin}${window.location.pathname}#products?sku=${encodeURIComponent(product.sku)}`;
+    const slug = getProductSlug(product);
+    const url = `${window.location.origin}${window.location.pathname}#/product/${slug}/`;
     navigator.clipboard?.writeText(url);
     setCopiedLink(true);
     setTimeout(() => setCopiedLink(false), 2500);

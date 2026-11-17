@@ -12,6 +12,7 @@ export const FOOTER_COMPANY: NavItem[] = [
   { label: "Shop Connectors Online", href: "#products", isPage: true },
   { label: "About Us", href: "#about-page", isPage: true },
   { label: "Facilities & Infrastructure", href: "#facilities", isPage: true },
+  { label: "Technical Blogs & Insights", href: "#blog" },
   { label: "Contact Us", href: "#contact-page", isPage: true },
 ];
 
